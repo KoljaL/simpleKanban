@@ -1,7 +1,13 @@
 <?php
 
+// show all errors
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
+
 // remove comments.db file
-unlink('comments.db');
+// unlink('comments.db');
 // create a sqlite database
 $db = new PDO('sqlite:comments.db');
 $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -17,7 +23,7 @@ $db->exec("CREATE TABLE IF NOT EXISTS columns(
 $db->exec("CREATE TABLE IF NOT EXISTS topic (
           id    INTEGER PRIMARY KEY,
           topic text DEFAULT 'TOPIC',
-          position int(11) NOT NULL,
+          position int(11) DEFAULT 0,
           column int(11) NOT NULL,
           created datetime NOT NULL,
           title text NOT NULL,
@@ -37,35 +43,35 @@ $db->exec("CREATE TABLE IF NOT EXISTS comment (
         ) ");
 
 
-// columns array
-$columns = array('todo', 'in progress', 'done', 'archive');
+// // columns array
+// $columns = array('todo', 'in progress', 'done', 'archive');
 
-// create columns
-for ($i=0; $i < 4; $i++) {
-    $stmt = $db->prepare("INSERT INTO columns (column_name, position) VALUES (:column_name, $i+1)");
-    $stmt->bindParam(':column_name', $columns[$i]);
-    $stmt->execute();
-}
+// // create columns
+// for ($i=0; $i < 4; $i++) {
+//     $stmt = $db->prepare("INSERT INTO columns (column_name, position) VALUES (:column_name, $i+1)");
+//     $stmt->bindParam(':column_name', $columns[$i]);
+//     $stmt->execute();
+// }
 
-// author array
-$authors = array('John', 'Paul', 'George', 'Ringo');
-// array with animal names
-$title = array('dog', 'cat', 'bird', 'fish', 'snake', 'lizard', 'frog', 'turtle', 'hamster', 'rabbit', 'mouse', 'cow', 'horse', 'pig', 'sheep', 'goat', 'chicken', 'duck', 'goose', 'turkey', 'deer', 'bear', 'wolf', 'fox', 'lion', 'tiger', 'elephant', 'giraffe', 'zebra', 'monkey', 'gorilla', 'panda', 'koala', 'hippo', 'rhino', 'dolphin', 'whale', 'shark', 'seal', 'walrus', 'penguin', 'owl', 'eagle', 'hawk', 'sparrow', 'ant', 'bee', 'butterfly', 'dragonfly', 'mosquito', 'fly', 'spider', 'scorpion', 'crab', 'lobster', 'shrimp', 'snail', 'slug', 'octopus', 'squid', 'starfish', 'seahorse', 'jellyfish', 'clam', 'mushroom', 'tree', 'flower', 'grass', 'leaf', 'bush', 'cactus', 'rock', 'mountain', 'hill', 'valley', 'ocean', 'lake', 'river', 'pond', 'island', 'desert', 'forest', 'cave', 'cloud', 'rain', 'snow', 'sun', 'moon', 'star', 'planet', 'galaxy', 'universe', 'wind', 'rainbow', 'lightning', 'thunder', 'fire', 'water', 'ice', 'earth', 'air', 'time', 'space', 'music', 'dance', 'poetry', 'art', 'painting', 'drawing', 'sculpture', 'photography', 'film', 'television', 'computer', 'phone', 'book', 'magazine', 'newspaper', 'pen', 'pencil', 'eraser', 'notebook', 'paper', 'glass', 'cup', 'plate', 'bowl', 'fork', 'knife', 'spoon', 'chair', 'table', 'bed', 'lamp', 'door', 'window', 'car', 'truck', 'bus', 'train', 'plane', 'boat', 'ship');
-$content = array('Lorem ipsum dolor sit amet, consec tetur adipiscing elit. Nullam auctor, nisl nec luctus aliquam, nunc nisl aliquet nunc, vel aliquet nisl nunc vel nisl. Nullam auctor, nisl nec luctus aliquam, nunc nisl aliquet nunc, vel aliquet nisl nunc vel nisl.', 'Lorem ipsum dolor sit amet, consec tetur adipiscing elit. Nullam auctor, nisl nec luctus aliquam, nunc nisl aliquet nunc, vel aliquet nisl nunc vel nisl. Nullam auctor, nisl nec luctus aliquam, nunc nisl aliquet nunc, vel aliquet nisl nunc vel nisl.', 'Lorem ipsum dolor sit amet, consec tetur adipiscing elit. Nullam auctor, nisl nec luctus aliquam, nunc nisl aliquet nunc, vel aliquet nisl nunc vel nisl. Nullam auctor, nisl nec luctus aliquam, nunc nisl aliquet nunc, vel aliquet nisl nunc vel nisl.', 'Lorem ipsum dolor sit amet, consec tetur adipiscing elit. Nullam auctor, nisl nec luctus aliquam, nunc nisl aliquet nunc, vel aliquet nisl nunc vel nisl. Nullam auctor, nisl nec luctus aliquam, nunc nisl aliquet nunc, vel aliquet nisl nunc vel nisl.', 'Lorem ipsum dolor sit amet, consec tetur adipiscing elit. Nullam auctor, nisl nec luctus aliquam, nunc nisl aliquet nunc, vel aliquet nisl nunc vel nisl. Nullam auctor, nisl nec luctus aliquam, nunc nisl aliquet nunc, vel aliquet nisl nunc vel nisl.', 'Lorem ipsum dolor sit amet, consec tetur adipiscing elit. Nullam auctor, nisl nec luctus aliquam, nunc nisl aliquet nunc, vel aliquet nisl nunc vel nisl. Nullam auctor, nisl nec luctus aliquam, nunc nisl aliquet nunc, vel aliquet nisl nunc vel nisl.', 'Lorem ipsum dolor sit amet, consec tetur adipiscing elit. Nullam auctor, nisl nec ');
-// create ten topics
-for ($i=0; $i < 50; $i++) {
-    $stmt = $db->prepare("INSERT INTO topic (position, column, created, content, title, author) VALUES (:position, :column, datetime('now'), :content, :title, :author)");
-    $column_id= rand(0, count($columns));
-    $position = $i+1;
-    $stmt->bindParam(':position', $position);
-    $stmt->bindParam(':column', $column_id);
-    $stmt->bindParam(':title', $title[rand(0, count($title)-1)]);
-    $stmt->bindParam(':content', $content[rand(0, count($content)-1)]);
-    $stmt->bindParam(':author', $authors[rand(0, count($authors)-1)]);
-    $stmt->execute();
-}
+// // author array
+// $authors = array('John', 'Paul', 'George', 'Ringo');
+// // array with animal names
+// $title = array('dog', 'cat', 'bird', 'fish', 'snake', 'lizard', 'frog', 'turtle', 'hamster', 'rabbit', 'mouse', 'cow', 'horse', 'pig', 'sheep', 'goat', 'chicken', 'duck', 'goose', 'turkey', 'deer', 'bear', 'wolf', 'fox', 'lion', 'tiger', 'elephant', 'giraffe', 'zebra', 'monkey', 'gorilla', 'panda', 'koala', 'hippo', 'rhino', 'dolphin', 'whale', 'shark', 'seal', 'walrus', 'penguin', 'owl', 'eagle', 'hawk', 'sparrow', 'ant', 'bee', 'butterfly', 'dragonfly', 'mosquito', 'fly', 'spider', 'scorpion', 'crab', 'lobster', 'shrimp', 'snail', 'slug', 'octopus', 'squid', 'starfish', 'seahorse', 'jellyfish', 'clam', 'mushroom', 'tree', 'flower', 'grass', 'leaf', 'bush', 'cactus', 'rock', 'mountain', 'hill', 'valley', 'ocean', 'lake', 'river', 'pond', 'island', 'desert', 'forest', 'cave', 'cloud', 'rain', 'snow', 'sun', 'moon', 'star', 'planet', 'galaxy', 'universe', 'wind', 'rainbow', 'lightning', 'thunder', 'fire', 'water', 'ice', 'earth', 'air', 'time', 'space', 'music', 'dance', 'poetry', 'art', 'painting', 'drawing', 'sculpture', 'photography', 'film', 'television', 'computer', 'phone', 'book', 'magazine', 'newspaper', 'pen', 'pencil', 'eraser', 'notebook', 'paper', 'glass', 'cup', 'plate', 'bowl', 'fork', 'knife', 'spoon', 'chair', 'table', 'bed', 'lamp', 'door', 'window', 'car', 'truck', 'bus', 'train', 'plane', 'boat', 'ship');
+// $content = array('Lorem ipsum dolor sit amet, consec tetur adipiscing elit. Nullam auctor, nisl nec luctus aliquam, nunc nisl aliquet nunc, vel aliquet nisl nunc vel nisl. Nullam auctor, nisl nec luctus aliquam, nunc nisl aliquet nunc, vel aliquet nisl nunc vel nisl.', 'Lorem ipsum dolor sit amet, consec tetur adipiscing elit. Nullam auctor, nisl nec luctus aliquam, nunc nisl aliquet nunc, vel aliquet nisl nunc vel nisl. Nullam auctor, nisl nec luctus aliquam, nunc nisl aliquet nunc, vel aliquet nisl nunc vel nisl.', 'Lorem ipsum dolor sit amet, consec tetur adipiscing elit. Nullam auctor, nisl nec luctus aliquam, nunc nisl aliquet nunc, vel aliquet nisl nunc vel nisl. Nullam auctor, nisl nec luctus aliquam, nunc nisl aliquet nunc, vel aliquet nisl nunc vel nisl.', 'Lorem ipsum dolor sit amet, consec tetur adipiscing elit. Nullam auctor, nisl nec luctus aliquam, nunc nisl aliquet nunc, vel aliquet nisl nunc vel nisl. Nullam auctor, nisl nec luctus aliquam, nunc nisl aliquet nunc, vel aliquet nisl nunc vel nisl.', 'Lorem ipsum dolor sit amet, consec tetur adipiscing elit. Nullam auctor, nisl nec luctus aliquam, nunc nisl aliquet nunc, vel aliquet nisl nunc vel nisl. Nullam auctor, nisl nec luctus aliquam, nunc nisl aliquet nunc, vel aliquet nisl nunc vel nisl.', 'Lorem ipsum dolor sit amet, consec tetur adipiscing elit. Nullam auctor, nisl nec luctus aliquam, nunc nisl aliquet nunc, vel aliquet nisl nunc vel nisl. Nullam auctor, nisl nec luctus aliquam, nunc nisl aliquet nunc, vel aliquet nisl nunc vel nisl.', 'Lorem ipsum dolor sit amet, consec tetur adipiscing elit. Nullam auctor, nisl nec ');
+// // create ten topics
+// for ($i=0; $i < 20; $i++) {
+//     $stmt = $db->prepare("INSERT INTO topic (position, column, created, content, title, author) VALUES (:position, :column, datetime('now'), :content, :title, :author)");
+//     $column_id= rand(0, count($columns));
+//     $position = $i+1;
+//     $stmt->bindParam(':position', $position);
+//     $stmt->bindParam(':column', $column_id);
+//     $stmt->bindParam(':title', $title[rand(0, count($title)-1)]);
+//     $stmt->bindParam(':content', $content[rand(0, count($content)-1)]);
+//     $stmt->bindParam(':author', $authors[rand(0, count($authors)-1)]);
+//     $stmt->execute();
+// }
 
-// create 100 comments
+// // create 100 comments
 // for ($i=0; $i < 100; $i++) {
 //     $parent_id = rand(1, 10);
 //     $topic_id = rand(1, 10);
@@ -82,17 +88,31 @@ for ($i=0; $i < 50; $i++) {
 
 
 // create a new topic
-if (isset($_POST['topic'])) {
-    $stmt = $db->prepare("INSERT INTO topic (column, created, content, author) VALUES (:column, datetime('now'), :content, :author)");
-    $stmt->bindParam(':column', $_POST['column']);
-    $stmt->bindParam(':content', $_POST['content']);
-    $stmt->bindParam(':author', $_POST['author']);
+if (isset($_GET['addTopic'])) {
+    $data = json_decode(file_get_contents('php://input'), true);
+    // response($data);
+    if (empty($data['title']) || empty($data['content']) || empty($data['author']) || empty($data['column'])) {
+        response(array('message' => 'Missing data', 'data' => $data));
+    }
+    $stmt = $db->prepare("INSERT INTO topic (column, created, title, content, author) VALUES (:column, :date, :title, :content, :author)");
+    $stmt->bindParam(':date', $data['created']);
+    $stmt->bindParam(':title', $data['title']);
+    $stmt->bindParam(':column', $data['column']);
+    $stmt->bindParam(':content', $data['content']);
+    $stmt->bindParam(':author', $data['author']);
     $stmt->execute();
+
+    $topic_id = $db->lastInsertId();
+
+    response(array('message' => 'success', 'topic_id' => $topic_id));
 }
+
+
 
 // create a new comment
 if (isset($_POST['comment'])) {
-    $stmt = $db->prepare("INSERT INTO comment (created, content, author, topic_id, parent_id) VALUES (datetime('now'), :content, :author, :topic_id, :parent_id)");
+    $stmt = $db->prepare("INSERT INTO comment (created, content, author, topic_id, parent_id) VALUES (:date, :content, :author, :topic_id, :parent_id)");
+    $stmt->bindParam(':date', $data['created']);
     $stmt->bindParam(':content', $_POST['content']);
     $stmt->bindParam(':author', $_POST['author']);
     $stmt->bindParam(':topic_id', $_POST['topic_id']);

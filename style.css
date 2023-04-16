@@ -121,7 +121,8 @@ header > h1 {
 }
 .column__header {
     position: relative;
-    padding: 0.5rem;
+    padding: 0.25rem;
+    padding-bottom: 0rem;
     margin-bottom: 0;
     margin: 0;
 }
@@ -145,6 +146,10 @@ header > h1 {
 }
 .column__footer button {
     margin-bottom: 0;
+}
+
+.column__topics--drag-hover {
+    background-color: var(--dropdown-background-color);
 }
 
 .topic {
@@ -198,9 +203,16 @@ header > h1 {
 .new-topic__footer {
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
+    gap: 1rem;
+    /* justify-content: space-between; */
     align-items: center;
     margin-bottom: 1rem;
+    margin: 0;
+    padding: 0;
+}
+
+.new-topic__footer__error {
+    color: var(--del-color);
     margin: 0;
     padding: 0;
 }
