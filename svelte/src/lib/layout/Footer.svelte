@@ -10,6 +10,7 @@
 	footer {
 		display: flex;
 		justify-content: space-between;
+		align-items: center;
 	}
 	.copyright {
 		font-size: 0.9rem;
