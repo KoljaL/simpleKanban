@@ -1,5 +1,20 @@
 <?php
 
+
+/**
+ * preflight options request.
+ */
+if ('OPTIONS' === $_SERVER['REQUEST_METHOD']) {
+    header('Access-Control-Allow-Origin: *');
+    header('Access-Control-Allow-Methods: *');
+    header('Access-Control-Allow-Headers: *');
+    header('Access-Control-Max-Age: 1728000');
+
+    exit;
+}
+
+
+
 // show all errors
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
@@ -108,6 +123,22 @@ if (isset($_GET['addTopic'])) {
 }
 
 
+// create a new topic
+if (isset($_GET['moveTopic'])) {
+    $data = json_decode(file_get_contents('php://input'), true);
+    if (empty($data['topicId']) || empty($data['columnId'])) {
+        response(array('message' => 'Missing data', 'data' => $data));
+    }
+    $stmt = $db->prepare("UPDATE topic SET column = :column WHERE id = :topic_id");
+    $stmt->bindParam(':column', $data['columnId']);
+    $stmt->bindParam(':topic_id', $data['topicId']);
+    $stmt->execute();
+
+    response(array('message' => 'success'));
+}
+
+
+
 
 // create a new comment
 if (isset($_POST['comment'])) {
@@ -169,13 +200,34 @@ if (isset($_GET['columns'])) {
 }
 
 
+if (isset($_GET['start'])) {
+    $stmt = $db->prepare("SELECT topic.id, topic.created, topic.title,topic.content, topic.author,topic.column,topic.position, columns.column_name FROM topic JOIN columns ON topic.column = columns.id");
 
 
+    // $stmt = $db->prepare("SELECT * FROM topic");
+    $stmt->execute();
+    $topics = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+
+    $sort_topics_by_column=[];
+    foreach ($topics as $topic) {
+        $sort_topics_by_column[$topic['column']][] = $topic;
+    }
+
+    $stmt = $db->prepare("SELECT * FROM columns");
+    $stmt->execute();
+    $columns = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+
+    response(array('columns' => $columns, 'topics' => $sort_topics_by_column));
+}
 
 
 function response($data)
 {
-    header('Content-Type: application/json');
+    header('Access-Control-Allow-Origin: *');
+    header('Content-Type: application/json; charset=UTF-8');
+    header('Access-Control-Allow-Methods: GET');
+    header('Access-Control-Max-Age: 3600');
+    header('Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With');
     echo json_encode($data);
     exit;
 }
