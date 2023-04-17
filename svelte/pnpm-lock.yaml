@@ -1,5 +1,10 @@
 lockfileVersion: '6.0'
 
+dependencies:
+  '@neodrag/svelte':
+    specifier: ^2.0.3
+    version: 2.0.3
+
 devDependencies:
   '@fontsource/fira-mono':
     specifier: ^4.5.10
@@ -43,6 +48,9 @@ devDependencies:
   svelte-check:
     specifier: ^3.0.1
     version: 3.2.0(svelte@3.58.0)
+  svelte-dnd-action:
+    specifier: ^0.9.22
+    version: 0.9.22(svelte@3.58.0)
   typescript:
     specifier: ^5.0.0
     version: 5.0.4
@@ -334,6 +342,10 @@ packages:
   /@neoconfetti/svelte@1.0.0:
     resolution: {integrity: sha512-SmksyaJAdSlMa9cTidVSIqYo1qti+WTsviNDwgjNVm+KQ3DRP2Df9umDIzC4vCcpEYY+chQe0i2IKnLw03AT8Q==}
     dev: true
+
+  /@neodrag/svelte@2.0.3:
+    resolution: {integrity: sha512-/7k4Byv6guBs6NpfzOnqOep8PM3HjhPg1rRPNsJsGNGDXSJNB+tn9NAi/vTXJBos3vN9XPlbnr3g/lNKGfg+Jg==}
+    dev: false
 
   /@nodelib/fs.scandir@2.1.5:
     resolution: {integrity: sha512-vq24Bq3ym5HEQm2NKCr3yXDwjc7vTsEThRDnkp2DK9p1uqLR+DHurm/NOTo0KG7HYHU7eppKZj3MyqYuMBf62g==}
@@ -1383,6 +1395,14 @@ packages:
       - sass
       - stylus
       - sugarss
+    dev: true
+
+  /svelte-dnd-action@0.9.22(svelte@3.58.0):
+    resolution: {integrity: sha512-lOQJsNLM1QWv5mdxIkCVtk6k4lHCtLgfE59y8rs7iOM6erchbLC9hMEFYSveZz7biJV0mpg7yDSs4bj/RT/YkA==}
+    peerDependencies:
+      svelte: '>=3.23.0'
+    dependencies:
+      svelte: 3.58.0
     dev: true
 
   /svelte-hmr@0.15.1(svelte@3.58.0):

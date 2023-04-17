@@ -1,4 +1,4 @@
-export const prerender = false;
+export const prerender = true;
 const API = 'https://dev.rasal.de/skanban/api.php?';
 
 export const load = async ({ fetch }) => {

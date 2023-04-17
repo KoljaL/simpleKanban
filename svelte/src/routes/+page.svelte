@@ -2,6 +2,8 @@
 	import { topicStore } from '$lib/store.js';
 	import Topics from '$lib/components/Topics.svelte';
 	import NewTopic from '$lib/components/NewTopic.svelte';
+	import { flip } from 'svelte/animate';
+	import { dndzone } from 'svelte-dnd-action';
 	export let data;
 
 	$topicStore = data.data.topics;
@@ -35,6 +37,13 @@
 		const walk = x - startX;
 		sliderColumns.scrollLeft = scrollLeft - walk;
 	}
+	let items;
+	function handleDndConsider(e) {
+		items = e.detail.items;
+	}
+	function handleDndFinalize(e) {
+		items = e.detail.items;
+	}
 </script>
 
 <section class="columns" bind:this={sliderColumns}>
@@ -52,10 +61,23 @@
 				</h2>
 				<NewTopic columnId={column.id} columns={data.data.columns} />
 			</header>
-			<ul class="column_content">
-				<Topics columnId={column.id} />
-				<!-- <Topics topics={data.data.topics[column.id]} /> -->
-			</ul>
+			{#if data.data.topics[column.id] ? (items = data.data.topics[column.id]) : (items = [])}
+				<ul
+					class="column_content"
+					use:dndzone={{ items }}
+					on:consider={handleDndConsider}
+					on:finalize={handleDndFinalize}
+				>
+					{#each data.data.topics[column.id] as topic (topic.id)}
+						<li>
+							<Topics {topic} />
+						</li>
+					{/each}
+				</ul>
+			{/if}
+
+			<!-- <Topics columnId={column.id} /> -->
+			<!-- <Topics topics={data.data.topics[column.id]} /> -->
 			<!-- <footer class="column_footer"><button class="add_task">Add Task</button></footer> -->
 		</article>
 	{/each}
@@ -115,7 +137,7 @@
 		flex-direction: column;
 		gap: 0.5rem;
 	}
-	.column_footer {
+	/* .column_footer {
 		position: relative;
 		padding: 0.25rem;
 		padding-bottom: 0rem;
@@ -124,5 +146,5 @@
 		background-color: var(--bg-color-secondary);
 		border-bottom-left-radius: var(--border-radius-column);
 		border-bottom-right-radius: var(--border-radius-column);
-	}
+	} */
 </style>

@@ -51,13 +51,13 @@
 		})
 			.then((res) => res.json())
 			.then((res) => {
-				console.log(res);
+				// console.log(res);
 				if (res.message === 'success') {
 					delete data.column;
 					data.id = res.topic_id;
 					$topicStore[columnId].push(data);
 					$topicStore = $topicStore;
-					console.log($topicStore[columnId]);
+					// console.log($topicStore[columnId]);
 					closeNewTopicForm(e);
 				} else {
 					missingInput = res.message;
@@ -66,7 +66,7 @@
 			.catch((err) => console.log(err));
 	}
 
-	$: console.log('$topicStore', $topicStore);
+	// $: console.log('$topicStore', $topicStore);
 </script>
 
 <button
