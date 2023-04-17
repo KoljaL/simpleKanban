@@ -2,6 +2,7 @@
 	import Header from '$lib/layout/Header.svelte';
 	import Footer from '$lib/layout/Footer.svelte';
 	// import '$lib/styles/pico.css';
+	import '$lib/styles/tooltip.css';
 	import '$lib/styles/styles.css';
 </script>
 

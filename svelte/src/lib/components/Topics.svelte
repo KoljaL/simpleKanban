@@ -1,11 +1,19 @@
 <script>
 	// https://github.com/AndrewLester/svelte-animated-details
 	import animatedDetails from 'svelte-animated-details';
+	import { topicStore } from '$lib/store.js';
+	// $topicStore;
 	import { slide } from 'svelte/transition';
 	let unrelated = false;
 	let duration = 400;
-	export let topics;
-	console.log(topics);
+
+	export let columnId;
+	// console.log(columnId);
+	// console.log($topicStore);
+	// console.log($topicStore[columnId]);
+	// export let topics;
+	// console.log(topics);
+	$: topics = $topicStore[columnId];
 </script>
 
 {#if topics}

@@ -1,9 +1,12 @@
 <script>
+	import { topicStore } from '$lib/store.js';
 	import Topics from '$lib/components/Topics.svelte';
 	import NewTopic from '$lib/components/NewTopic.svelte';
 	export let data;
 
-	console.log(data);
+	$topicStore = data.data.topics;
+	// console.log('topicstore page.svelte'.$topicStore);
+	// console.log(data);
 
 	let sliderColumns;
 	let sliderHandle;
@@ -50,7 +53,8 @@
 				<NewTopic columnId={column.id} columns={data.data.columns} />
 			</header>
 			<ul class="column_content">
-				<Topics topics={data.data.topics[column.id]} />
+				<Topics columnId={column.id} />
+				<!-- <Topics topics={data.data.topics[column.id]} /> -->
 			</ul>
 			<!-- <footer class="column_footer"><button class="add_task">Add Task</button></footer> -->
 		</article>
