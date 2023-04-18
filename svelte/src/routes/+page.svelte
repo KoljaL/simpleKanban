@@ -4,6 +4,7 @@
 	import NewTopic from '$lib/components/NewTopic.svelte';
 	import { flip } from 'svelte/animate';
 	import { dndzone } from 'svelte-dnd-action';
+	import { onMount } from 'svelte';
 	export let data;
 	import { setDebugMode } from 'svelte-dnd-action';
 	// setDebugMode(true);
@@ -18,15 +19,37 @@
 	let draggedColumn;
 	const API = 'https://dev.rasal.de/skanban/api.php?';
 
+	onMount(() => {
+		getColumnPositions();
+		getTopicPositions();
+	});
+
 	function getColumnPositions() {
 		let columnPositions = [];
 		$topicStore.forEach((element) => {
 			columnPositions.push({ id: element.id, position: element.position });
 		});
-		console.log('columnPositions', columnPositions);
+		// console.log('columnPositions', columnPositions);
 		return columnPositions;
 	}
-	let columnPositions = getColumnPositions();
+
+	function getTopicPositions() {
+		let topicPositions = [];
+		$topicStore.forEach((column) => {
+			// console.log('element', column);
+			column.topics.forEach((topic) => {
+				// console.log('topic', topic);
+				topicPositions.push({
+					id: topic.id,
+					position: topic.position,
+					column_id: column.id,
+					name: topic.title
+				});
+			});
+		});
+		console.log('topicPositions', topicPositions);
+		return topicPositions;
+	}
 
 	function onMouseDown(e) {
 		isDown = true;
@@ -51,62 +74,75 @@
 	}
 
 	function handleDragColumn(e, draggedElement) {
-		// console.log('consider columns', e);
-		// console.log('DRAG el', draggedElement);
-		// let draggedId = draggedElement.id.replace('column_', '');
-		// console.log('DRAG id', draggedId);
-		// console.log('DRAG id', e.detail.info.id);
 		$topicStore = e.detail.items;
 	}
 	function handleDropColumn(e, draggedElement) {
-		// let draggedId = draggedElement.id.replace('column_', '');
 		console.log('handleDropColumn');
-		// console.log(draggedColumn);
-		// console.log('DROP columns', e);
-		// console.log('DROP id', e.detail.info.id);
-		// console.log('DROP el', draggedElement);
-		// console.log('DROP id', draggedId);
-
+		// update position of dragged column by index
 		let columns = e.detail.items;
-		console.log('columns before', columns);
 		columns.forEach((c, i) => {
 			c.position = i;
 		});
 		console.log('DROP id', e.detail.info.id);
 		console.log('columns after', columns);
+		// update store
 		$topicStore = columns;
-		let newColumnPositions = getColumnPositions();
 
+		// update position in db
 		fetch(API + 'updatecolumnpositions', {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json'
 			},
-			body: JSON.stringify(newColumnPositions)
+			body: JSON.stringify(getColumnPositions())
+		})
+			.then((res) => res.json())
+			.then((data) => {
+				// console.log('data', data);
+			});
+	}
+
+	//
+	//
+	// TOPICS
+	//
+	//
+	function handleDragTopic(cid, e) {
+		const colIdx = $topicStore.findIndex((c) => c.id === cid);
+		// console.log('Drag cid', cid);
+		// console.log('Drag colIdx', colIdx);
+		$topicStore[colIdx].topics = e.detail.items;
+		$topicStore = [...$topicStore];
+	}
+	function handleDropTopic(cid, e) {
+		const colIdx = $topicStore.findIndex((c) => c.id === cid);
+		console.log('Finalize colIdx', colIdx);
+		let topics = e.detail.items;
+		topics.forEach((t, i) => {
+			t.position = i;
+		});
+		// console.log('topics after', topics);
+		$topicStore[colIdx].topics = topics;
+		$topicStore = [...$topicStore];
+
+		// update position in db
+		fetch(API + 'updatetopicpositions', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify(getTopicPositions())
 		})
 			.then((res) => res.json())
 			.then((data) => {
 				console.log('data', data);
 			});
 	}
-	function handleDragTopic(cid, e) {
-		const colIdx = $topicStore.findIndex((c) => c.id === cid);
-		console.log('Drag cid', cid);
-		console.log('Drag colIdx', colIdx);
-		$topicStore[colIdx].topic = e.detail.items;
-		$topicStore = [...$topicStore];
-	}
-	function handleDropTopic(cid, e) {
-		const colIdx = $topicStore.findIndex((c) => c.id === cid);
-		console.log('Finalize colIdx', colIdx);
-		$topicStore[colIdx].items = e.detail.items;
-		$topicStore = [...$topicStore];
-	}
 	function handleClick(e) {
 		// alert('dragabble elements are still clickable :)');
 	}
 
-	$: console.log('$columnPositions', columnPositions);
+	// $: console.log('$columnPositions', columnPositions);
 	$: console.log('$topicStore page.svelte', $topicStore);
 </script>
 
@@ -214,6 +250,7 @@
 	.column_content {
 		list-style: none;
 		padding-inline: 0.25rem;
+		min-height: 2rem;
 		display: flex;
 		flex-direction: column;
 		gap: 0.5rem;

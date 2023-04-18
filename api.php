@@ -286,6 +286,35 @@ if (isset($_GET['updatecolumnpositions'])) {
     response(array('message' => 'success', 'columnId' => $columnId));
 }
 
+if (isset($_GET['updatetopicpositions'])) {
+    $data = json_decode(file_get_contents('php://input'), true);
+    if (empty($data)) {
+        response(array('message' => 'Missing data', 'data' => $data));
+    }
+    $topicId = [];
+    $sqlArray = [];
+    foreach ($data as $row) {
+        // string to int
+        $row['position'] = (string)$row['position'];
+        $row['id'] = (string)$row['id'];
+        $row['column_id'] = (string)$row['column_id'];
+
+
+        // update topic position and column
+        // $sql = "UPDATE topic SET position = ".$row['position'].", column = ".$row['column_id']." WHERE id = ".$row['id'];
+        // $sqlArray[] = $sql;
+        // $db->exec($sql);
+
+        $stmt = $db->prepare("UPDATE topic SET position = :position, column = :column WHERE id = :topic_id");
+        $stmt->bindParam(':position', $row['position']);
+        $stmt->bindParam(':topic_id', $row['id']);
+        $stmt->bindParam(':column', $row['column_id']);
+        $stmt->execute();
+        $topicId[] = $db->lastInsertId();
+    }
+    response(array('message' => 'success', 'topicId' => $topicId, 'data' => $data, 'sql'=>$sqlArray));
+}
+
 
 
 
