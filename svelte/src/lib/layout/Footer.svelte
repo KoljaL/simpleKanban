@@ -1,5 +1,8 @@
 <footer>
-	<div class="footer_left" />
+	<div class="footer_left">
+		<a href="https://dev.rasal.de/skanban/api.php?init" target="_blank">reset</a>
+		<a href="https://dev.rasal.de/skanban/api.php?dummy=10" target="_blank">dummy</a>
+	</div>
 	<div class="footer_center">
 		<span class="copyright"> SvelteMate </span>
 	</div>

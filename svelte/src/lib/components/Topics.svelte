@@ -1,33 +1,16 @@
 <script>
 	// https://github.com/AndrewLester/svelte-animated-details
 	import animatedDetails from 'svelte-animated-details';
-	import { draggable } from '@neodrag/svelte';
-	import { flip } from 'svelte/animate';
-	import { dndzone } from 'svelte-dnd-action';
-	import { topicStore } from '$lib/store.js';
-	import { slide } from 'svelte/transition';
-	let unrelated = false;
-	let duration = 400;
-	const flipDurationMs = 300;
 
-	// export let columnId;
 	export let topic;
-	// $: topics = $topicStore[columnId];
 </script>
 
-<!-- {#if topics}
-	{#each topics as topic (topic.id)}
-		<li animate:flip={{ duration: flipDurationMs }}> -->
 <details use:animatedDetails>
 	<summary>{topic.title}</summary>
 	<p class="topic_header">{topic.created}</p>
 	<p class="topic_content">{topic.content}</p>
 	<p class="topic_footer">{topic.author}</p>
 </details>
-
-<!-- </li>
-	{/each}
-{/if} -->
 
 <style>
 	details {
