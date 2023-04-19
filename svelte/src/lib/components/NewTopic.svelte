@@ -113,9 +113,9 @@
 
 <style>
 	.openNewTopicButton {
-		position: absolute;
+		/* position: absolute;
 		top: 0.5rem;
-		right: 0.5rem;
+		right: 0.5rem; */
 	}
 	.openNewTopicButton :global(svg g) {
 		stroke: var(--malibu);
@@ -165,18 +165,5 @@
 	.newTopicMissingInput {
 		padding-left: 1rem;
 		color: var(--error);
-	}
-
-	textarea,
-	select,
-	input {
-		padding: 0.5rem;
-		padding-bottom: 0.25rem;
-		border: 1px solid var(--color-border);
-		border-radius: 0.25rem;
-		background-color: var(--bg-color-secondary);
-		color: var(--color-text);
-		font-family: 'Overpass', sans-serif;
-		font-size: 1rem;
 	}
 </style>

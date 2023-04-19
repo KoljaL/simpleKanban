@@ -3,8 +3,9 @@
 	import Topics from '$lib/components/Topics.svelte';
 	import NewTopic from '$lib/components/NewTopic.svelte';
 	import { flip } from 'svelte/animate';
-	import { dndzone } from 'svelte-dnd-action';
+	import { dndzone, SOURCES, TRIGGERS } from 'svelte-dnd-action';
 	import { onMount } from 'svelte';
+	import MoveH from '$lib/icons/MoveH.svelte';
 	export let data;
 	import { setDebugMode } from 'svelte-dnd-action';
 	// setDebugMode(true);
@@ -74,9 +75,20 @@
 	}
 
 	function handleDragColumn(e, draggedElement) {
+		const {
+			items: newItems,
+			info: { source, trigger }
+		} = e.detail;
 		$topicStore = e.detail.items;
+		if (source === SOURCES.KEYBOARD && trigger === TRIGGERS.DRAG_STOPPED) {
+			dragDisabled = true;
+		}
 	}
 	function handleDropColumn(e, draggedElement) {
+		const {
+			items: newItems,
+			info: { source }
+		} = e.detail;
 		console.log('handleDropColumn');
 		// update position of dragged column by index
 		let columns = e.detail.items;
@@ -100,6 +112,9 @@
 			.then((data) => {
 				// console.log('data', data);
 			});
+		if (source === SOURCES.POINTER) {
+			dragDisabled = true;
+		}
 	}
 
 	//
@@ -141,7 +156,15 @@
 	function handleClick(e) {
 		// alert('dragabble elements are still clickable :)');
 	}
-
+	let dragDisabled = true;
+	function startDrag(e) {
+		// preventing default to prevent lag on touch devices (because of the browser checking for screen scrolling)
+		e.preventDefault();
+		dragDisabled = false;
+	}
+	function handleKeyDown(e) {
+		if ((e.key === 'Enter' || e.key === ' ') && dragDisabled) dragDisabled = false;
+	}
 	// $: console.log('$columnPositions', columnPositions);
 	$: console.log('$topicStore page.svelte', $topicStore);
 </script>
@@ -156,7 +179,17 @@
 	<section
 		class="columns"
 		bind:this={sliderColumns}
-		use:dndzone={{ items: $topicStore, flipDurationMs, type: 'columns' }}
+		use:dndzone={{
+			items: $topicStore,
+			dragDisabled,
+			flipDurationMs,
+			type: 'columns',
+			dropTargetStyle: {
+				outline: 'rgba(255, 64, 0, 0.5) solid 2px',
+				outlineOffset: '2px',
+				'border-radius': '5px'
+			}
+		}}
 		on:consider={(e) => handleDragColumn(e, draggedColumn)}
 		on:finalize={(e) => handleDropColumn(e, draggedColumn)}
 	>
@@ -168,6 +201,16 @@
 				animate:flip={{ duration: flipDurationMs }}
 			>
 				<header class="column_header">
+					<div
+						aria-label="drag-handle"
+						class="dragHandle"
+						style={dragDisabled ? 'cursor: grab' : 'cursor: grabbing'}
+						on:mousedown={startDrag}
+						on:touchstart={startDrag}
+						on:keydown={handleKeyDown}
+					>
+						<MoveH />
+					</div>
 					<h2
 						bind:this={sliderHandle}
 						on:mousedown={onMouseDown}
@@ -181,7 +224,15 @@
 				</header>
 				<ul
 					class="column_content"
-					use:dndzone={{ items: column.topics, flipDurationMs }}
+					use:dndzone={{
+						items: column.topics,
+						flipDurationMs,
+						dropTargetStyle: {
+							outline: 'rgba(255, 64, 0, 0.5) solid 2px',
+							outlineOffset: '2px',
+							'border-radius': '5px'
+						}
+					}}
 					on:consider={(e) => handleDragTopic(column.id, e)}
 					on:finalize={(e) => handleDropTopic(column.id, e)}
 				>
@@ -221,17 +272,30 @@
 		max-height: 100%;
 		margin: 0;
 		padding: 0;
-		border: 1px solid var(--color-border);
+		/* border: 1px solid var(--color-border);
 		--border-radius-column: 0.5rem;
-		border-radius: var(--border-radius-column);
+		border-radius: var(--border-radius-column); */
 	}
 	.column_header {
 		position: relative;
-		background-color: var(--bg-color-secondary);
+		display: flex;
+		flex-direction: row;
+		justify-content: space-between;
+		/* background-color: var(--bg-color-secondary);
 		border-top-left-radius: var(--border-radius-column);
-		border-top-right-radius: var(--border-radius-column);
+		border-top-right-radius: var(--border-radius-column); */
 	}
 
+	.dragHandle :global(path) {
+		stroke: var(--color-text-secondary);
+		filter: brightness(0.5);
+		transition: all 0.2s;
+	}
+
+	.dragHandle:hover :global(path) {
+		stroke: var(--color-text);
+		filter: brightness(1);
+	}
 	.column_header h2 {
 		margin-block: 0rem;
 		padding-block: 0.25rem;
@@ -241,6 +305,7 @@
 		user-select: none;
 		cursor: grab;
 		transition: all 0.2s;
+		color: var(--color-text-secondary);
 	}
 	.columns:global(.active) .column_header h2 {
 		filter: brightness(1.4);
