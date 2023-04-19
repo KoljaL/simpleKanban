@@ -25,6 +25,11 @@
 		--bg-color-secondary: #3e4451;
 		--bg-color-tertiary: #545c6f;
 
+		--bg-color-primary: hsl(218.2, 26.8%, 8%);
+		--bg-color-secondary: hsl(222, 16.1%, 12.2%);
+		--bg-color-tertiary: #545c6f;
+		--color-border: hsl(216, 11.1%, 17.6%);
+
 		--color-svelte: #ff3e00;
 		--color-green: #00ab74;
 		--color-yellow: #ffa000;
@@ -62,9 +67,31 @@
 		--v-deepRed: #be5046;
 	}
 
+	@media (prefers-color-scheme: dark) {
+		:root {
+			--text-color: hsl(222.9, 18.9%, 92.7%);
+			--text-color-secondary: hsl(208.2, 7.3%, 45.7%);
+			--bg-color-primary: hsl(218.2, 26.8%, 8%);
+			--bg-color-secondary: hsl(222, 16.1%, 12.2%);
+			--bg-color-tertiary: #545c6f;
+			--color-border: hsl(216, 11.1%, 17.6%);
+		}
+	}
+
+	@media (prefers-color-scheme: light) {
+		:root {
+			--text-color: hsl(226.7, 18.4%, 28.8%);
+			--text-color-secondary: hsl(208.2, 7.3%, 45.7%);
+			--bg-color-primary: hsl(204, 45.5%, 97.8%);
+			--bg-color-secondary: hsl(0, 0%, 100%);
+			--bg-color-tertiary: #545c6f;
+			--color-border: hsl(0, 0%, 87.8%);
+		}
+	}
+
 	:global(body) {
 		min-height: 100svh;
-		color: var(--lightWhite);
+		color: var(--text-color);
 		background-color: var(--bg-color-primary);
 		margin: 0;
 		padding: 0;

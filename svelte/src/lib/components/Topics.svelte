@@ -16,7 +16,7 @@
 	details {
 		overflow: hidden;
 		--border-radius-topic: 0.25rem;
-		border: 1px solid var(--v-lightDark);
+		border: 1px solid var(--color-border);
 		border-radius: var(--border-radius-topic);
 	}
 	summary {
@@ -25,7 +25,7 @@
 		padding: 0.25rem;
 		padding-left: 0.4rem;
 		padding-top: 0.4rem;
-		border-bottom: 1px solid var(--v-lightDark);
+		border-bottom: 1px solid var(--color-border);
 		margin-bottom: -1px;
 		background-color: var(--bg-color-secondary);
 	}

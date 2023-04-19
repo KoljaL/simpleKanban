@@ -172,7 +172,7 @@
 	input {
 		padding: 0.5rem;
 		padding-bottom: 0.25rem;
-		border: 1px solid var(--v-lightDark);
+		border: 1px solid var(--color-border);
 		border-radius: 0.25rem;
 		background-color: var(--bg-color-secondary);
 		color: var(--color-text);
