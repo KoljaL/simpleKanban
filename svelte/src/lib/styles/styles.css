@@ -1,6 +1,6 @@
 @font-face {
 	font-family: 'Overpass';
-	src: url('./font/Overpass-Light.woff2');
+	src: url('$lib/styles/font/Overpass-Light.woff2');
 	font-weight: 400;
 	font-style: normal;
 }

@@ -7,7 +7,14 @@
 <svelte:head>
 	<title>Skanban</title>
 	<meta name="description" content="Svelte demo app" />
-	<link rel="preload" href="./font/Overpass-Light.woff2" as="font" crossOrigin="anonymous" />
+	<!-- <link rel="preload" href="./font/Overpass-Light.woff2" as="font" crossOrigin="anonymous" />
+	<link
+		rel="preload"
+		href="$lib/styles/font/Overpass-Light.woff2"
+		as="font"
+		type="font/woff2"
+		crossorigin
+	/> -->
 </svelte:head>
 
 <header>

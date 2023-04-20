@@ -120,9 +120,10 @@
 	.openNewTopicButton :global(svg g) {
 		stroke: var(--malibu);
 		transition: all 0.2s;
+		filter: brightness(0.6);
 	}
 	.openNewTopicButton:hover :global(svg g) {
-		filter: brightness(1.2);
+		filter: brightness(1);
 	}
 
 	.newTopic_header {

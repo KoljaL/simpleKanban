@@ -6,6 +6,7 @@
 	import { dndzone, SOURCES, TRIGGERS } from 'svelte-dnd-action';
 	import { onMount } from 'svelte';
 	import MoveH from '$lib/icons/MoveH.svelte';
+	import { PUBLIC_API_URL } from '$env/static/public';
 	export let data;
 	import { setDebugMode } from 'svelte-dnd-action';
 	// setDebugMode(true);
@@ -18,7 +19,6 @@
 	let startX;
 	let scrollLeft;
 	let draggedColumn;
-	const API = 'https://dev.rasal.de/skanban/api.php?';
 
 	onMount(() => {
 		getColumnPositions();
@@ -48,7 +48,7 @@
 				});
 			});
 		});
-		console.log('topicPositions', topicPositions);
+		// console.log('topicPositions', topicPositions);
 		return topicPositions;
 	}
 
@@ -141,7 +141,7 @@
 		$topicStore = [...$topicStore];
 
 		// update position in db
-		fetch(API + 'updatetopicpositions', {
+		fetch(PUBLIC_API_URL + 'updatetopicpositions', {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json'
@@ -166,7 +166,7 @@
 		if ((e.key === 'Enter' || e.key === ' ') && dragDisabled) dragDisabled = false;
 	}
 	// $: console.log('$columnPositions', columnPositions);
-	$: console.log('$topicStore page.svelte', $topicStore);
+	// $: console.log('$topicStore page.svelte', $topicStore);
 </script>
 
 <!-- {#if $topicStore}
@@ -220,7 +220,9 @@
 					>
 						{column.column_name}
 					</h2>
-					<NewTopic columnId={column.id} columns={$topicStore} />
+					<div class="newTopic">
+						<NewTopic columnId={column.id} columns={$topicStore} />
+					</div>
 				</header>
 				<ul
 					class="column_content"
@@ -246,10 +248,6 @@
 		{/each}
 	</section>
 {/if}
-
-<!-- <Topics columnId={column.id} /> -->
-<!-- <Topics topics={data.data.topics[column.id]} /> -->
-<!-- <footer class="column_footer"><button class="add_task">Add Task</button></footer> -->
 
 <style>
 	.columns {
@@ -281,6 +279,8 @@
 		display: flex;
 		flex-direction: row;
 		justify-content: space-between;
+		align-items: center;
+		padding-inline: 0.5rem;
 		/* background-color: var(--bg-color-secondary);
 		border-top-left-radius: var(--border-radius-column);
 		border-top-right-radius: var(--border-radius-column); */
@@ -296,6 +296,7 @@
 		stroke: var(--color-text);
 		filter: brightness(1);
 	}
+
 	.column_header h2 {
 		margin-block: 0rem;
 		padding-block: 0.25rem;
@@ -306,6 +307,10 @@
 		cursor: grab;
 		transition: all 0.2s;
 		color: var(--color-text-secondary);
+	}
+
+	.newTopic :global(svg) {
+		filter: brightness(0.7);
 	}
 	.columns:global(.active) .column_header h2 {
 		filter: brightness(1.4);
