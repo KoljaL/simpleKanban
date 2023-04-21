@@ -1,10 +1,5 @@
 lockfileVersion: '6.0'
 
-dependencies:
-  '@neodrag/svelte':
-    specifier: ^2.0.3
-    version: 2.0.3
-
 devDependencies:
   '@fontsource/fira-mono':
     specifier: ^4.5.10
@@ -12,6 +7,9 @@ devDependencies:
   '@neoconfetti/svelte':
     specifier: ^1.0.0
     version: 1.0.0
+  '@perfectthings/ui':
+    specifier: ^6.4.0
+    version: 6.4.0
   '@sveltejs/adapter-auto':
     specifier: ^2.0.0
     version: 2.0.0(@sveltejs/kit@1.15.5)
@@ -51,9 +49,6 @@ devDependencies:
   svelte-dnd-action:
     specifier: ^0.9.22
     version: 0.9.22(svelte@3.58.0)
-  typescript:
-    specifier: ^5.0.0
-    version: 5.0.4
   vite:
     specifier: ^4.2.0
     version: 4.2.1
@@ -343,10 +338,6 @@ packages:
     resolution: {integrity: sha512-SmksyaJAdSlMa9cTidVSIqYo1qti+WTsviNDwgjNVm+KQ3DRP2Df9umDIzC4vCcpEYY+chQe0i2IKnLw03AT8Q==}
     dev: true
 
-  /@neodrag/svelte@2.0.3:
-    resolution: {integrity: sha512-/7k4Byv6guBs6NpfzOnqOep8PM3HjhPg1rRPNsJsGNGDXSJNB+tn9NAi/vTXJBos3vN9XPlbnr3g/lNKGfg+Jg==}
-    dev: false
-
   /@nodelib/fs.scandir@2.1.5:
     resolution: {integrity: sha512-vq24Bq3ym5HEQm2NKCr3yXDwjc7vTsEThRDnkp2DK9p1uqLR+DHurm/NOTo0KG7HYHU7eppKZj3MyqYuMBf62g==}
     engines: {node: '>= 8'}
@@ -366,6 +357,13 @@ packages:
     dependencies:
       '@nodelib/fs.scandir': 2.1.5
       fastq: 1.15.0
+    dev: true
+
+  /@perfectthings/ui@6.4.0:
+    resolution: {integrity: sha512-xddSDSvVU5h0AaY3E87qy4DCTfyaEn9ZTzQr8ha3HDrJbw0uwNt49DH9Ummm1vEy1LlSOx0T91hvRY4XwmPuWA==}
+    dependencies:
+      vanillajs-datepicker: 1.3.1
+      zxcvbn: 4.4.2
     dev: true
 
   /@polka/url@1.0.0-next.21:
@@ -1520,6 +1518,10 @@ packages:
       punycode: 2.3.0
     dev: true
 
+  /vanillajs-datepicker@1.3.1:
+    resolution: {integrity: sha512-LYYnXXYDw7oqnNbJleLIRXFUjrG2WYOQtU1A2u3FmW3rgzp7lNJ7DGF35CJ3/Dg1OHUh10D9XnJBfSfIKTyeng==}
+    dev: true
+
   /vite@4.2.1:
     resolution: {integrity: sha512-7MKhqdy0ISo4wnvwtqZkjke6XN4taqQ2TBaTccLIpOKv7Vp2h4Y+NpmWCnGDeSvvn45KxvWgGyb0MkHvY1vgbg==}
     engines: {node: ^14.18.0 || >=16.0.0}
@@ -1584,4 +1586,8 @@ packages:
   /yocto-queue@0.1.0:
     resolution: {integrity: sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==}
     engines: {node: '>=10'}
+    dev: true
+
+  /zxcvbn@4.4.2:
+    resolution: {integrity: sha512-Bq0B+ixT/DMyG8kgX2xWcI5jUvCwqrMxSFam7m0lAf78nf04hv6lNCsyLYdyYTrCVMqNDY/206K7eExYCeSyUQ==}
     dev: true
