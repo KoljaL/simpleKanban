@@ -1,30 +1,36 @@
 <script>
+	import { PUBLIC_API_URL } from '$env/static/public';
+	import { flip } from 'svelte/animate';
+	import { onMount } from 'svelte';
+	import { dndzone, SOURCES, TRIGGERS } from 'svelte-dnd-action';
 	import { topicStore } from '$lib/store.js';
+	// components
 	import Topics from '$lib/components/Topics.svelte';
 	import NewTopic from '$lib/components/NewTopic.svelte';
-	import { flip } from 'svelte/animate';
-	import { dndzone, SOURCES, TRIGGERS } from 'svelte-dnd-action';
-	import { onMount } from 'svelte';
+	// icons
 	import MoveH from '$lib/icons/MoveH.svelte';
-	import { PUBLIC_API_URL } from '$env/static/public';
+	// get data from page.js and add it to the store
 	export let data;
-	import { setDebugMode } from 'svelte-dnd-action';
-	// setDebugMode(true);
 	$topicStore = data.data;
-	// console.log(data.data);
+	// define variables
 	const flipDurationMs = 200;
 	let sliderColumns;
 	let sliderHandle;
 	let isDown = false;
 	let startX;
 	let scrollLeft;
-	let draggedColumn;
+	let draggedColumn; // maybe obsolete
+	let dragDisabled = true;
 
 	onMount(() => {
 		getColumnPositions();
 		getTopicPositions();
 	});
 
+	/**
+	 * @description get the positions of the columns and topics
+	 * @returns {array} columnPositions
+	 */
 	function getColumnPositions() {
 		let columnPositions = [];
 		$topicStore.forEach((element) => {
@@ -34,6 +40,10 @@
 		return columnPositions;
 	}
 
+	/**
+	 * @description get the positions of the columns and topics
+	 * @returns {array} topicPositions
+	 */
 	function getTopicPositions() {
 		let topicPositions = [];
 		$topicStore.forEach((column) => {
@@ -52,27 +62,33 @@
 		return topicPositions;
 	}
 
-	function onMouseDown(e) {
+	function columnSliderOnMouseDown(e) {
 		isDown = true;
 		sliderColumns.classList.add('active');
 		startX = e.pageX - sliderColumns.offsetLeft;
 		scrollLeft = sliderColumns.scrollLeft;
 	}
-	function onMouseLeave() {
+	function columnSliderOnMouseLeave() {
 		isDown = false;
 		sliderColumns.classList.remove('active');
 	}
-	function onMouseUp() {
+	function columnSliderOnMouseUp() {
 		isDown = false;
 		sliderColumns.classList.remove('active');
 	}
-	function onMouseMove(e) {
+	function columnSliderOnMouseMove(e) {
 		if (!isDown) return;
 		e.preventDefault();
 		const x = e.pageX - sliderColumns.offsetLeft;
 		const walk = x - startX;
 		sliderColumns.scrollLeft = scrollLeft - walk;
 	}
+
+	//
+	//
+	// DRAG&DROP COLUMNS
+	//
+	//
 
 	function handleDragColumn(e, draggedElement) {
 		const {
@@ -101,7 +117,7 @@
 		$topicStore = columns;
 
 		// update position in db
-		fetch(API + 'updatecolumnpositions', {
+		fetch(PUBLIC_API_URL + 'updatecolumnpositions', {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json'
@@ -119,7 +135,7 @@
 
 	//
 	//
-	// TOPICS
+	// DRAG&DROP TOPICS
 	//
 	//
 	function handleDragTopic(cid, e) {
@@ -129,6 +145,7 @@
 		$topicStore[colIdx].topics = e.detail.items;
 		$topicStore = [...$topicStore];
 	}
+
 	function handleDropTopic(cid, e) {
 		const colIdx = $topicStore.findIndex((c) => c.id === cid);
 		console.log('Finalize colIdx', colIdx);
@@ -153,18 +170,32 @@
 				console.log('data', data);
 			});
 	}
-	function handleClick(e) {
-		// alert('dragabble elements are still clickable :)');
+	function handleClickOnTopic(e) {
+		// console.log(e);
+		// console.log(e.target.firstChild);
+		if ((e.type === 'keydown' && e.key === 'Enter') || e.key === ' ') {
+			// simulate a mouseklick
+			let open = e.target.firstChild.getAttribute('open');
+			console.log('open', open);
+			if (open === null) {
+				e.target.firstChild.setAttribute('open', 'true');
+			} else {
+				e.target.firstChild.removeAttribute('open');
+			}
+		}
 	}
-	let dragDisabled = true;
-	function startDrag(e) {
-		// preventing default to prevent lag on touch devices (because of the browser checking for screen scrolling)
+	// https://svelte.dev/repl/61a0549c05bd45369134213d57bfd4a6?version=3.58.0
+	function startDragByHandle(e) {
 		e.preventDefault();
 		dragDisabled = false;
 	}
-	function handleKeyDown(e) {
+	function handleKeyDownByHandle(e) {
 		if ((e.key === 'Enter' || e.key === ' ') && dragDisabled) dragDisabled = false;
 	}
+
+	//
+	// REACTIVE CONSOLE OUTPUT
+	//
 	// $: console.log('$columnPositions', columnPositions);
 	// $: console.log('$topicStore page.svelte', $topicStore);
 </script>
@@ -205,18 +236,19 @@
 						aria-label="drag-handle"
 						class="dragHandle"
 						style={dragDisabled ? 'cursor: grab' : 'cursor: grabbing'}
-						on:mousedown={startDrag}
-						on:touchstart={startDrag}
-						on:keydown={handleKeyDown}
+						on:mousedown={startDragByHandle}
+						on:touchstart={startDragByHandle}
+						on:keydown={handleKeyDownByHandle}
 					>
 						<MoveH />
 					</div>
 					<h2
 						bind:this={sliderHandle}
-						on:mousedown={onMouseDown}
-						on:mouseleave={onMouseLeave}
-						on:mouseup={onMouseUp}
-						on:mousemove={onMouseMove}
+						on:mousedown={columnSliderOnMouseDown}
+						on:mouseleave={columnSliderOnMouseLeave}
+						on:mouseup={columnSliderOnMouseUp}
+						on:mousemove={columnSliderOnMouseMove}
+						style="color:{column.color}"
 					>
 						{column.column_name}
 					</h2>
@@ -224,6 +256,7 @@
 						<NewTopic columnId={column.id} columns={$topicStore} />
 					</div>
 				</header>
+
 				<ul
 					class="column_content"
 					use:dndzone={{
@@ -239,7 +272,7 @@
 					on:finalize={(e) => handleDropTopic(column.id, e)}
 				>
 					{#each column.topics as topic (topic.id)}
-						<li on:click={handleClick} on:keydown={handleClick}>
+						<li on:click={handleClickOnTopic} on:keydown={handleClickOnTopic}>
 							<Topics {topic} />
 						</li>
 					{/each}
@@ -256,6 +289,7 @@
 		flex-direction: row;
 		flex-wrap: nowrap;
 		gap: 1rem;
+		padding-inline: 0.5rem;
 		overflow-x: auto;
 		transition: all 0.2s;
 	}
@@ -264,7 +298,7 @@
 	}
 
 	.column {
-		min-width: 300px;
+		min-width: 365px;
 		max-width: 100%;
 		min-height: 0;
 		max-height: 100%;

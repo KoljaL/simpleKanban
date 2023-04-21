@@ -58,11 +58,20 @@
 	--border-radius-m: 0.25rem;
 	--border-radius-l: 0.5rem;
 
+	--white: hsl(219, 14%, 71%);
+	--black: hsl(220, 13%, 18%);
+	--red: hsl(15, 100%, 50%);
+	--yellow: hsl(75, 100%, 50%);
+	--green: hsl(120, 100%, 32%);
+	--blue: hsl(211, 100%, 47%);
+	--purple: hsl(270, 32%, 45%);
+	--pink: hsl(320, 56%, 47%);
+
 	--chalky: #e5c07b;
 	--coral: #e06c75;
 	--dark: #5c6370;
 	--error: #f44747;
-	--fountainBlue: hsl(187, 47%, 55%);
+	--fountainBlue: #56b6c2;
 	--green: #98c379;
 	--invalid: #ffffff;
 	--lightDark: #7f848e;

@@ -23,6 +23,8 @@ error_reporting(E_ALL);
 
 $columns = array('todo', 'in progress', 'done', 'archive');
 
+$colors = array('#e5c07b','#e06c75','#5c6370','#f44747','#56b6c2','#98c379','#7f848e','#abb2bf','#61afef','#c678dd','#d19a66','#be5046');
+
 $response = array();
 
 if (isset($_GET['init'])) {
@@ -41,25 +43,27 @@ if (isset($_GET['init'])) {
     $db->exec("CREATE TABLE IF NOT EXISTS columns(
           id    INTEGER PRIMARY KEY,
           position int(11) NOT NULL,
-          column_name text NOT NULL
+          column_name text NOT NULL,
+          color text DEFAULT '#fff'
         ) ");
 
+    // topic text DEFAULT 'TOPIC',
 
     $db->exec("CREATE TABLE IF NOT EXISTS topic (
           id    INTEGER PRIMARY KEY,
-          topic text DEFAULT 'TOPIC',
           position int(11) DEFAULT 0,
           column int(11) NOT NULL,
           created datetime NOT NULL,
+          author varchar(255) NOT NULL,
           title text NOT NULL,
           content text NOT NULL,
-          author varchar(255) NOT NULL
+          color text DEFAULT '#fff'
         ) ");
 
     // create comment table
+    // comment text DEFAULT 'COMMENT',
     $db->exec("CREATE TABLE IF NOT EXISTS comment (
           id    INTEGER PRIMARY KEY,
-          comment text DEFAULT 'COMMENT',
           created datetime NOT NULL,
           content text NOT NULL,
           author varchar(255) NOT NULL,
@@ -71,8 +75,9 @@ if (isset($_GET['init'])) {
 
     // create columns
     for ($i=0; $i < 4; $i++) {
-        $stmt = $db->prepare("INSERT INTO columns (column_name, position) VALUES (:column_name, $i)");
+        $stmt = $db->prepare("INSERT INTO columns (column_name, position, color) VALUES (:column_name, $i,:color)");
         $stmt->bindParam(':column_name', $columns[$i]);
+        $stmt->bindParam(':color', $colors[rand(0, count($colors)-1)]);
         $stmt->execute();
     }
     // get columns
@@ -88,6 +93,8 @@ if (isset($_GET['init'])) {
 
 if (isset($_GET['dummy'])) {
     global $db, $columns;
+
+
     $topic_count = $_GET['dummy'] ? $_GET['dummy'] : 10;
     // author array
     $authors = array('John', 'Paul', 'George', 'Ringo');
@@ -96,7 +103,7 @@ if (isset($_GET['dummy'])) {
     $content = array('Lorem ipsum dolor sit amet, consec tetur adipiscing elit. Nullam auctor, nisl nec luctus aliquam, nunc nisl aliquet nunc, vel aliquet nisl nunc vel nisl. Nullam auctor, nisl nec luctus aliquam, nunc nisl aliquet nunc, vel aliquet nisl nunc vel nisl.', 'Lorem ipsum dolor sit amet, consec tetur adipiscing elit. Nullam auctor, nisl nec luctus aliquam, nunc nisl aliquet nunc, vel aliquet nisl nunc vel nisl. Nullam auctor, nisl nec luctus aliquam, nunc nisl aliquet nunc, vel aliquet nisl nunc vel nisl.', 'Lorem ipsum dolor sit amet, consec tetur adipiscing elit. Nullam auctor, nisl nec luctus aliquam, nunc nisl aliquet nunc, vel aliquet nisl nunc vel nisl. Nullam auctor, nisl nec luctus aliquam, nunc nisl aliquet nunc, vel aliquet nisl nunc vel nisl.', 'Lorem ipsum dolor sit amet, consec tetur adipiscing elit. Nullam auctor, nisl nec luctus aliquam, nunc nisl aliquet nunc, vel aliquet nisl nunc vel nisl. Nullam auctor, nisl nec luctus aliquam, nunc nisl aliquet nunc, vel aliquet nisl nunc vel nisl.', 'Lorem ipsum dolor sit amet, consec tetur adipiscing elit. Nullam auctor, nisl nec luctus aliquam, nunc nisl aliquet nunc, vel aliquet nisl nunc vel nisl. Nullam auctor, nisl nec luctus aliquam, nunc nisl aliquet nunc, vel aliquet nisl nunc vel nisl.', 'Lorem ipsum dolor sit amet, consec tetur adipiscing elit. Nullam auctor, nisl nec luctus aliquam, nunc nisl aliquet nunc, vel aliquet nisl nunc vel nisl. Nullam auctor, nisl nec luctus aliquam, nunc nisl aliquet nunc, vel aliquet nisl nunc vel nisl.', 'Lorem ipsum dolor sit amet, consec tetur adipiscing elit. Nullam auctor, nisl nec ');
     // create ten topics
     for ($i=0; $i < $topic_count; $i++) {
-        $stmt = $db->prepare("INSERT INTO topic (position, column, created, content, title, author) VALUES (:position, :column, datetime('now'), :content, :title, :author)");
+        $stmt = $db->prepare("INSERT INTO topic (position, column, created, content, title, author, color) VALUES (:position, :column, datetime('now'), :content, :title, :author,:color)");
         $column_id= rand(0, count($columns));
         $position = $i;
         $stmt->bindParam(':position', $position);
@@ -104,6 +111,7 @@ if (isset($_GET['dummy'])) {
         $stmt->bindParam(':title', $title[rand(0, count($title)-1)]);
         $stmt->bindParam(':content', $content[rand(0, count($content)-1)]);
         $stmt->bindParam(':author', $authors[rand(0, count($authors)-1)]);
+        $stmt->bindParam(':color', $colors[rand(0, count($colors)-1)]);
         $stmt->execute();
     }
 
@@ -132,8 +140,9 @@ if (isset($_GET['addTopic'])) {
     if (empty($data['title']) || empty($data['content']) || empty($data['author']) || empty($data['column'])) {
         response(array('message' => 'Missing data', 'data' => $data));
     }
-    $stmt = $db->prepare("INSERT INTO topic (column, created, title, content, author) VALUES (:column, :date, :title, :content, :author)");
+    $stmt = $db->prepare("INSERT INTO topic (column, created, title, content, author,color) VALUES (:column, :date, :title, :content, :author,:color)");
     $stmt->bindParam(':date', $data['created']);
+    $stmt->bindParam(':color', $data['color']);
     $stmt->bindParam(':title', $data['title']);
     $stmt->bindParam(':column', $data['column']);
     $stmt->bindParam(':content', $data['content']);

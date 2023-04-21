@@ -1,19 +1,20 @@
 <script>
+	import { PUBLIC_API_URL } from '$env/static/public';
+	import { getDatetimeNow } from '$lib/utils.js';
 	import { onMount } from 'svelte';
 	import { topicStore } from '$lib/store.js';
+	import ColorPicker from '$lib/components/ColorPicker.svelte';
 
 	import Plus from '$lib/icons/Plus.svelte';
 	import Close from '$lib/icons/Close.svelte';
 	import { clickOutside } from '$lib/utils.js';
 	export let columnId;
 	export let columns;
-	const API = 'https://dev.rasal.de/skanban/api.php?';
 
 	let formDialog, authorName, columnName;
 	let missingInput = '';
 
 	onMount(() => {
-		// window.localStorage.setItem('SkanbanName', 'Kolja');
 		authorName = window.localStorage.getItem('SkanbanName') || '';
 	});
 
@@ -31,18 +32,21 @@
 		e.preventDefault();
 		// console.log(e.target);
 		const formData = new FormData(e.target);
-		const data = Object.fromEntries(formData);
-		const date = new Date().toLocaleDateString('de-de', {
-			year: 'numeric',
-			month: 'numeric',
-			day: 'numeric',
-			hour: 'numeric',
-			minute: 'numeric'
-		});
-		data.created = date;
+		let data = Object.fromEntries(formData);
+		data.id = 0;
+		const order = ['author', 'column', 'content', 'ceated', 'id', 'position', 'title'];
+		// sort data by order
+		data = Object.keys(data)
+			.sort((a, b) => order.indexOf(a) - order.indexOf(b))
+			.reduce((obj, key) => {
+				obj[key] = data[key];
+				return obj;
+			}, {});
+
+		data.created = getDatetimeNow();
 		window.localStorage.setItem('SkanbanName', data.author);
 
-		fetch(API + 'addTopic', {
+		fetch(PUBLIC_API_URL + 'addTopic', {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json'
@@ -53,9 +57,11 @@
 			.then((res) => {
 				// console.log(res);
 				if (res.message === 'success') {
-					delete data.column;
+					// delete data.column;
 					data.id = res.topic_id;
-					$topicStore[columnId].push(data);
+					// add data to column in store
+					var col = $topicStore.find((col) => col.id === columnId);
+					col.topics.push(data);
 					$topicStore = $topicStore;
 					// console.log($topicStore[columnId]);
 					closeNewTopicForm(e);
@@ -100,7 +106,11 @@
 				</button>
 			</header>
 
-			<input type="text" name="title" placeholder="Topic title" value="title" />
+			<div class="flex">
+				<input type="text" name="title" placeholder="Topic title" value="title" />
+				<ColorPicker />
+			</div>
+
 			<textarea name="content" placeholder="Topic content">text</textarea>
 			<input type="text" name="author" placeholder="Name" value={authorName} />
 			<footer class="newTopic_footer">
@@ -112,6 +122,11 @@
 </dialog>
 
 <style>
+	.flex {
+		display: flex;
+		flex-direction: row;
+		gap: 0.5rem;
+	}
 	.openNewTopicButton {
 		/* position: absolute;
 		top: 0.5rem;
@@ -166,5 +181,9 @@
 	.newTopicMissingInput {
 		padding-left: 1rem;
 		color: var(--error);
+	}
+
+	textarea {
+		height: 5rem;
 	}
 </style>

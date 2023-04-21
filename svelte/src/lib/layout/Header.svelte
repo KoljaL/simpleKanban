@@ -1,9 +1,14 @@
 <script>
-	import { page } from '$app/stores';
-	import logo from '$lib/images/svelte-logo.svg';
-	import github from '$lib/images/github.svg';
+	import { browser } from '$app/environment';
+	import ThemeToggle from '$lib/components/ThemeToggle.svelte';
+	function colorCallback(rgba) {
+		console.log(rgba.detail);
+	}
 </script>
 
+<!-- {#if browser}
+
+{/if} -->
 <svelte:head>
 	<title>Skanban</title>
 	<meta name="description" content="Svelte demo app" />
@@ -22,7 +27,9 @@
 	<div class="header_center">
 		<span class="pagename"> Skanban </span>
 	</div>
-	<div class="header_right" />
+	<div class="header_right">
+		<ThemeToggle />
+	</div>
 </header>
 
 <style>
@@ -33,5 +40,8 @@
 	}
 	.pagename {
 		font-size: 1.75rem;
+	}
+
+	.header_right {
 	}
 </style>
