@@ -4,6 +4,7 @@
 	import { onMount } from 'svelte';
 	import { topicStore } from '$lib/store.js';
 	import ColorPicker from '$lib/components/ColorPicker.svelte';
+	import { fade } from 'svelte/transition';
 
 	import Plus from '$lib/icons/Plus.svelte';
 	import Close from '$lib/icons/Close.svelte';
@@ -12,18 +13,21 @@
 	export let columns;
 
 	let formDialog, authorName, columnName;
+	let showDialog = false;
 	let missingInput = '';
-
+	$: formDialog = formDialog;
 	onMount(() => {
 		authorName = window.localStorage.getItem('SkanbanName') || '';
 	});
 
 	function openNewTopicForm() {
+		showDialog = true;
 		formDialog.showModal();
 		columnName = columns[columnId].column_name;
 	}
 
 	function closeNewTopicForm(event) {
+		showDialog = false;
 		event.preventDefault();
 		formDialog.close();
 	}
@@ -83,7 +87,8 @@
 	<Plus />
 </button>
 
-<dialog class="newTopicFormDialog" bind:this={formDialog}>
+<!-- {#if showDialog} -->
+<dialog class="newTopicFormDialog" bind:this={formDialog} transition:fade={{ duration: 200 }}>
 	<div class="innerDialog" use:clickOutside on:click_outside={closeNewTopicForm}>
 		<form class="newTopic_form" on:submit={createNewTopic}>
 			<header class="newTopic_header">
@@ -120,6 +125,8 @@
 		</form>
 	</div>
 </dialog>
+
+<!-- {/if} -->
 
 <style>
 	.flex {

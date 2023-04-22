@@ -58,6 +58,8 @@
 	--border-radius-m: 0.25rem;
 	--border-radius-l: 0.5rem;
 
+	--duration-hover: 250ms;
+
 	--white: hsl(219, 14%, 71%);
 	--black: hsl(220, 13%, 18%);
 	--red: hsl(15, 100%, 50%);
@@ -96,7 +98,7 @@
 	--v-deepRed: #be5046;
 }
 
-@media (prefers-color-scheme: dark) {
+/* @media (prefers-color-scheme: dark) {
 	:root {
 		--text-color: hsl(223, 16%, 82%);
 		--text-color-secondary: hsl(208.2, 7.3%, 45.7%);
@@ -116,6 +118,24 @@
 		--bg-color-tertiary: #545c6f;
 		--color-border: hsl(0, 0%, 87.8%);
 	}
+} */
+
+:root[data-theme='dark'] {
+	--text-color: hsl(223, 16%, 82%);
+	--text-color-secondary: hsl(208.2, 7.3%, 45.7%);
+	--bg-color-primary: hsl(218.2, 26.8%, 8%);
+	--bg-color-secondary: hsl(222, 16.1%, 12.2%);
+	--bg-color-tertiary: #545c6f;
+	--color-border: hsl(216, 11.1%, 17.6%);
+}
+
+:root[data-theme='light'] {
+	--text-color: hsl(226.7, 18.4%, 28.8%);
+	--text-color-secondary: hsl(208.2, 7.3%, 45.7%);
+	--bg-color-primary: hsl(204, 45.5%, 97.8%);
+	--bg-color-secondary: hsl(0, 0%, 100%);
+	--bg-color-tertiary: #545c6f;
+	--color-border: hsl(0, 0%, 87.8%);
 }
 
 html {

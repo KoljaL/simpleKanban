@@ -1,5 +1,5 @@
-// export const prerender = true;
-// export const ssr = false;
+export const prerender = true;
+export const ssr = true;
 // const API = 'https://dev.rasal.de/skanban/api.php?';
 import { PUBLIC_API_URL } from '$env/static/public';
 import { building } from '$app/environment';
