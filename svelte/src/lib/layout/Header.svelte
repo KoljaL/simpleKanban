@@ -68,7 +68,7 @@
 
 	nav {
 		position: absolute;
-		top: 5rem;
+		top: 2rem;
 		right: 0;
 		z-index: 10;
 		width: max-content;

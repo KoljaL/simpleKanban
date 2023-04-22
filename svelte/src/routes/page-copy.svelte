@@ -304,7 +304,6 @@
 		max-height: 100%;
 		margin: 0;
 		padding: 0;
-
 		/* border: 1px solid var(--color-border);
 		--border-radius-column: 0.5rem;
 		border-radius: var(--border-radius-column); */

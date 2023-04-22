@@ -30,7 +30,7 @@
 		width: var(--hamburger-width);
 		height: var(--hamburger-height);
 		position: relative;
-		margin: 50px auto;
+		/* margin: 50px auto; */
 		transform: rotate(0deg);
 		transition: 0.5s ease-in-out;
 		cursor: pointer;

@@ -39,6 +39,7 @@
 		overflow: hidden;
 		border: 1px solid var(--color-border);
 		border-radius: var(--border-radius-m);
+		box-shadow: var(--shadow-4);
 	}
 	.topicHeader {
 		position: relative;

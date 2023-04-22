@@ -14,21 +14,5 @@
 
 *   Adminer for SQLite <https://gist.github.com/FMCorz/f7819107c6848841372624d1becc8958>
 
-# build1
-
-310 kb
-
-
-
-![image.png](image.png)
-
-# build2
-
-removed:&#x20;
-
-```javascript
-"dependencies": {
-"@neodrag/svelte": "^2.0.3"
-}
-```
-
+- https://github.com/KittyGiraudel/a11y-dialog
+ 
