@@ -16,3 +16,12 @@
 
 - https://github.com/KittyGiraudel/a11y-dialog
  
+## todo
+
+- [ ] new topic modal position next to button
+- [ ] all API calls in one file
+- [ ] database name dynamicallly set from url
+- [ ] edit topic
+- [ ] create / edit column
+- [ ] handle for dnd topic
+- [ ] 

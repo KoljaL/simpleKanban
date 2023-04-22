@@ -4,32 +4,20 @@
 	import { onMount } from 'svelte';
 	import { topicStore } from '$lib/store.js';
 	import ColorPicker from '$lib/components/ColorPicker.svelte';
-	import { fade } from 'svelte/transition';
-
+	import Modal from '$lib/components/Modal.svelte';
 	import Plus from '$lib/icons/Plus.svelte';
-	import Close from '$lib/icons/Close.svelte';
-	import { clickOutside } from '$lib/utils.js';
 	export let columnId;
 	export let columns;
-
-	let formDialog, authorName, columnName;
-	let showDialog = false;
+	let open = false;
+	let authorName, columnName;
 	let missingInput = '';
-	$: formDialog = formDialog;
 	onMount(() => {
 		authorName = window.localStorage.getItem('SkanbanName') || '';
 	});
 
 	function openNewTopicForm() {
-		showDialog = true;
-		formDialog.showModal();
+		open = true;
 		columnName = columns[columnId].column_name;
-	}
-
-	function closeNewTopicForm(event) {
-		showDialog = false;
-		event.preventDefault();
-		formDialog.close();
 	}
 
 	function createNewTopic(e) {
@@ -37,16 +25,6 @@
 		// console.log(e.target);
 		const formData = new FormData(e.target);
 		let data = Object.fromEntries(formData);
-		data.id = 0;
-		const order = ['author', 'column', 'content', 'ceated', 'id', 'position', 'title'];
-		// sort data by order
-		data = Object.keys(data)
-			.sort((a, b) => order.indexOf(a) - order.indexOf(b))
-			.reduce((obj, key) => {
-				obj[key] = data[key];
-				return obj;
-			}, {});
-
 		data.created = getDatetimeNow();
 		window.localStorage.setItem('SkanbanName', data.author);
 
@@ -68,7 +46,7 @@
 					col.topics.push(data);
 					$topicStore = $topicStore;
 					// console.log($topicStore[columnId]);
-					closeNewTopicForm(e);
+					open = false;
 				} else {
 					missingInput = res.message;
 				}
@@ -87,46 +65,34 @@
 	<Plus />
 </button>
 
-<!-- {#if showDialog} -->
-<dialog class="newTopicFormDialog" bind:this={formDialog} transition:fade={{ duration: 200 }}>
-	<div class="innerDialog" use:clickOutside on:click_outside={closeNewTopicForm}>
-		<form class="newTopic_form" on:submit={createNewTopic}>
-			<header class="newTopic_header">
-				<h2>
-					New Topic in
-					<select name="column">
-						{#each columns as column}
-							<option value={column.id} selected={column.id === columnId}>
-								{column.column_name}
-							</option>
-						{/each}
-					</select>
-				</h2>
-				<button
-					class="closeNewTopicButton styleLessButton"
-					title="close Form"
-					on:click={closeNewTopicForm}
-				>
-					<Close />
-				</button>
-			</header>
+<Modal bind:open>
+	<form class="newTopic_form" on:submit={createNewTopic}>
+		<header class="newTopic_header">
+			<h2>
+				New Topic in
+				<select name="column">
+					{#each columns as column}
+						<option value={column.id} selected={column.id === columnId}>
+							{column.column_name}
+						</option>
+					{/each}
+				</select>
+			</h2>
+		</header>
 
-			<div class="flex">
-				<input type="text" name="title" placeholder="Topic title" value="title" />
-				<ColorPicker />
-			</div>
+		<div class="flex">
+			<input type="text" name="title" placeholder="Topic title" value="title" />
+			<ColorPicker />
+		</div>
 
-			<textarea name="content" placeholder="Topic content">text</textarea>
-			<input type="text" name="author" placeholder="Name" value={authorName} />
-			<footer class="newTopic_footer">
-				<input type="submit" value="submit" />
-				<span class="newTopicMissingInput">{missingInput}</span>
-			</footer>
-		</form>
-	</div>
-</dialog>
-
-<!-- {/if} -->
+		<textarea name="content" placeholder="Topic content">text</textarea>
+		<input type="text" name="author" placeholder="Name" value={authorName} />
+		<footer class="newTopic_footer">
+			<input type="submit" value="submit" />
+			<span class="newTopicMissingInput">{missingInput}</span>
+		</footer>
+	</form>
+</Modal>
 
 <style>
 	.flex {
@@ -134,11 +100,7 @@
 		flex-direction: row;
 		gap: 0.5rem;
 	}
-	.openNewTopicButton {
-		/* position: absolute;
-		top: 0.5rem;
-		right: 0.5rem; */
-	}
+
 	.openNewTopicButton :global(svg g) {
 		stroke: var(--malibu);
 		transition: all 0.2s;
@@ -167,22 +129,6 @@
 		flex-direction: column;
 		gap: 0.5rem;
 		padding: 0.5rem;
-	}
-	.newTopicFormDialog {
-		max-width: 30rem;
-	}
-
-	.closeNewTopicButton {
-		/* position: absolute; */
-		top: 0.5rem;
-		right: 0.5rem;
-	}
-	.closeNewTopicButton :global(svg path) {
-		stroke: var(--malibu);
-		transition: all 0.2s;
-	}
-	.closeNewTopicButton:hover :global(svg path) {
-		filter: brightness(1.2);
 	}
 
 	.newTopicMissingInput {
