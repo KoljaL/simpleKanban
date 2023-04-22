@@ -68,10 +68,10 @@
 		color: var(--color-text-secondary);
 	}
 
-	:global(.topicWrapper[open]) .topicTitleWrapper {
+	/* :global(.topicWrapper[open]) .topicTitleWrapper {
 		height: 3rem;
 		white-space: normal;
-	}
+	} */
 	.topicTitle {
 		color: var(--color-text);
 	}
@@ -88,7 +88,7 @@
 	} */
 
 	.manageTopic {
-		position: absolute;
+		/* position: absolute; */
 		right: 0.5rem;
 		top: 0.5rem;
 		z-index: 10;

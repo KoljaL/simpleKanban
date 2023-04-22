@@ -1,20 +1,14 @@
 <script>
 	import { browser } from '$app/environment';
 	import ThemeToggle from '$lib/components/ThemeToggle.svelte';
-	import { Button, Menu, MenuItem, MenuSeparator, Icon } from '@perfectthings/ui';
-	let menu1, menu2;
-	function closeSomething(e) {
-		e.preventDefault(); // prevents menu auto-closing
-		menu1.close(); // manually close the menu
-	}
-	function onMenuClick(e) {
-		const { target, button } = e.detail;
-		console.log(target.dataset, button.dataset);
-	}
-	function action1(e) {
-		e.preventDefault();
-		console.log('action1');
-	}
+	import { fade } from 'svelte/transition';
+	import { clickOutside } from '$lib/utils.js';
+
+	import Hamburger from '$lib/components/Hamburger.svelte';
+	export let open = false;
+	export let onClick = () => {
+		open = !open;
+	};
 </script>
 
 <svelte:head>
@@ -23,28 +17,32 @@
 </svelte:head>
 
 <header>
-	<div class="header_left">
-		<Menu bind:this={menu1}>
-			<MenuItem data-value="add-something"><Icon name="plus" /> Add some</MenuItem>
-			<MenuItem>Add some more</MenuItem>
-			<MenuSeparator />
-			<MenuItem on:click={closeSomething}><Icon name="close" /> Close something</MenuItem>
-		</Menu>
-		<Button on:click={() => menu1.open()}>Open menu</Button>
-
-		<div class="div1">Tab</div>
-		<Menu type="context" targetSelector=".div1" bind:this={menu2}>
-			<MenuItem shortcut="cmd+n" on:click={action1}>New window</MenuItem>
-			<MenuItem shortcut="cmd+shift+n" on:click={action1}>New private window</MenuItem>
-			<MenuSeparator />
-			<MenuItem shortcut="cmd+shift+q" on:click={action1}>Close All Windows</MenuItem>
-		</Menu>
-	</div>
+	<div class="header_left" />
 	<div class="header_center">
 		<span class="pagename"> Skanban </span>
 	</div>
 	<div class="header_right">
-		<ThemeToggle />
+		<Hamburger {open} {onClick} />
+		{#if open}
+			<nav
+				transition:fade={{ duration: 200 }}
+				use:clickOutside
+				on:click_outside={() => (open = false)}
+			>
+				<!-- <ThemeToggle /> -->
+				<ul>
+					<li>
+						<button class="styleLessButton">new Column</button>
+					</li>
+					<li>
+						<button class="styleLessButton">toggle Theme</button>
+					</li>
+					<li>
+						<button class="styleLessButton">...</button>
+					</li>
+				</ul>
+			</nav>
+		{/if}
 	</div>
 </header>
 
@@ -59,5 +57,34 @@
 	}
 
 	.header_right {
+		position: relative;
+	}
+
+	nav {
+		position: absolute;
+		top: 5rem;
+		right: 0;
+		z-index: 10;
+		width: max-content;
+		padding: 0.25rem 1rem;
+		background-color: var(--bg-color-secondary);
+		border: 1px solid var(--color-border);
+		border-radius: var(--border-radius-m);
+	}
+	ul {
+		list-style: none;
+		padding: 0;
+		margin: 0;
+	}
+	li {
+		margin: 0.5rem 0;
+	}
+	button {
+		color: var(--text-color-secondary);
+		transition: all 0.2s ease-in-out;
+	}
+
+	button:hover {
+		color: var(--color-svelte);
 	}
 </style>
