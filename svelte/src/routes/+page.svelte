@@ -24,7 +24,6 @@
 
 	onMount(() => {
 		getColumnPositions();
-		getTopicPositions();
 	});
 
 	/**
@@ -38,28 +37,6 @@
 		});
 		// console.log('columnPositions', columnPositions);
 		return columnPositions;
-	}
-
-	/**
-	 * @description get the positions of the columns and topics
-	 * @returns {array} topicPositions
-	 */
-	function getTopicPositions() {
-		let topicPositions = [];
-		$topicStore.forEach((column) => {
-			// console.log('element', column);
-			column.topics.forEach((topic) => {
-				// console.log('topic', topic);
-				topicPositions.push({
-					id: topic.id,
-					position: topic.position,
-					column_id: column.id,
-					name: topic.title
-				});
-			});
-		});
-		// console.log('topicPositions', topicPositions);
-		return topicPositions;
 	}
 
 	function columnSliderOnMouseDown(e) {
@@ -133,57 +110,6 @@
 		}
 	}
 
-	//
-	//
-	// DRAG&DROP TOPICS
-	//
-	//
-	function handleDragTopic(cid, e) {
-		const colIdx = $topicStore.findIndex((c) => c.id === cid);
-		// console.log('Drag cid', cid);
-		// console.log('Drag colIdx', colIdx);
-		$topicStore[colIdx].topics = e.detail.items;
-		$topicStore = [...$topicStore];
-	}
-
-	function handleDropTopic(cid, e) {
-		const colIdx = $topicStore.findIndex((c) => c.id === cid);
-		console.log('Finalize colIdx', colIdx);
-		let topics = e.detail.items;
-		topics.forEach((t, i) => {
-			t.position = i;
-		});
-		// console.log('topics after', topics);
-		$topicStore[colIdx].topics = topics;
-		$topicStore = [...$topicStore];
-
-		// update position in db
-		fetch(PUBLIC_API_URL + 'updatetopicpositions', {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json'
-			},
-			body: JSON.stringify(getTopicPositions())
-		})
-			.then((res) => res.json())
-			.then((data) => {
-				console.log('data', data);
-			});
-	}
-	function handleClickOnTopic(e) {
-		// console.log(e);
-		// console.log(e.target.firstChild);
-		if ((e.type === 'keydown' && e.key === 'Enter') || e.key === ' ') {
-			// simulate a mouseklick
-			let open = e.target.firstChild.getAttribute('open');
-			console.log('open', open);
-			if (open === null) {
-				e.target.firstChild.setAttribute('open', 'true');
-			} else {
-				e.target.firstChild.removeAttribute('open');
-			}
-		}
-	}
 	// https://svelte.dev/repl/61a0549c05bd45369134213d57bfd4a6?version=3.58.0
 	function startDragByHandle(e) {
 		e.preventDefault();
@@ -197,7 +123,7 @@
 	// REACTIVE CONSOLE OUTPUT
 	//
 	// $: console.log('$columnPositions', columnPositions);
-	$: console.log('dragColumnDisabled', dragColumnDisabled);
+	// $: console.log('dragColumnDisabled', dragColumnDisabled);
 	// $: console.log('$topicStore page.svelte', $topicStore);
 </script>
 
@@ -206,7 +132,6 @@
 	{JSON.stringify($topicStore, null, 2)}
 </pre>
 {/if} -->
-
 {#if $topicStore}
 	<section
 		class="columns"
@@ -258,26 +183,7 @@
 					</div>
 				</header>
 
-				<ul
-					class="column_content"
-					use:dndzone={{
-						items: column.topics,
-						flipDurationMs,
-						dropTargetStyle: {
-							outline: 'rgba(255, 64, 0, 0.5) solid 2px',
-							outlineOffset: '2px',
-							'border-radius': '5px'
-						}
-					}}
-					on:consider={(e) => handleDragTopic(column.id, e)}
-					on:finalize={(e) => handleDropTopic(column.id, e)}
-				>
-					{#each column.topics as topic (topic.id)}
-						<li on:click={handleClickOnTopic} on:keydown={handleClickOnTopic}>
-							<Topics {topic} />
-						</li>
-					{/each}
-				</ul>
+				<Topics topics={column.topics} columnId={column.id} />
 			</article>
 		{/each}
 	</section>
@@ -353,14 +259,7 @@
 		cursor: grabbing;
 		cursor: -webkit-grabbing;
 	}
-	.column_content {
-		list-style: none;
-		padding-inline: 0.25rem;
-		min-height: 2rem;
-		display: flex;
-		flex-direction: column;
-		gap: 0.5rem;
-	}
+
 	/* .column_footer {
 		position: relative;
 		padding: 0.25rem;

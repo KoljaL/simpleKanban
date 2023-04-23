@@ -58,6 +58,7 @@
 	--border-radius-m: 0.25rem;
 	--border-radius-l: 0.5rem;
 
+	--font-family: 'Overpass', sans-serif;
 	--duration-hover: 250ms;
 
 	--white: hsl(219, 14%, 71%);
@@ -185,7 +186,7 @@ body {
 	background-color: var(--bg-color-primary);
 	margin: 0;
 	padding: 0;
-	font-family: 'Overpass', sans-serif;
+	font-family: var(--font-family);
 	font-size: 1rem;
 	font-weight: 400;
 	line-height: 1.5;
@@ -225,7 +226,7 @@ input {
 	border-radius: var(--border-radius-s);
 	background-color: var(--bg-color-secondary);
 	color: var(--color-text);
-	font-family: 'Overpass', sans-serif;
+	font-family: var(--font-family);
 	font-size: 1rem;
 }
 
@@ -236,4 +237,16 @@ input {
 	font: inherit;
 	cursor: pointer;
 	outline: inherit;
+	color: var(--malibu);
+	transition: all 0.2s;
+	filter: brightness(0.6);
+}
+.styleLessButton:hover {
+	color: var(--color-svelte);
+	filter: brightness(0.9);
+}
+
+.styleLessButton:active {
+	color: var(--color-svelte);
+	filter: brightness(1);
 }

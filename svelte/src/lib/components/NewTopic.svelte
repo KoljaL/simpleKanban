@@ -101,14 +101,14 @@
 		gap: 0.5rem;
 	}
 
-	.openNewTopicButton :global(svg g) {
+	/* .openNewTopicButton :global(svg g) {
 		stroke: var(--malibu);
 		transition: all 0.2s;
 		filter: brightness(0.6);
 	}
 	.openNewTopicButton:hover :global(svg g) {
 		filter: brightness(1);
-	}
+	} */
 
 	.newTopic_header {
 		display: flex;

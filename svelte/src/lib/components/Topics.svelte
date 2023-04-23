@@ -1,9 +1,27 @@
 <script>
+	import { PUBLIC_API_URL } from '$env/static/public';
+	import { onMount } from 'svelte';
 	// https://github.com/AndrewLester/svelte-animated-details
 	import animatedDetails from 'svelte-animated-details';
 	import { formatDatetime } from '$lib/utils.js';
+	import { dndzone, SOURCES, TRIGGERS } from 'svelte-dnd-action';
+	import { topicStore } from '$lib/store.js';
 
-	export let topic;
+	// ICONS
+	import Edit from '$lib/icons/Edit.svelte';
+	import Delete from '$lib/icons/Delete.svelte';
+
+	export let columnId;
+	export let topics;
+	const flipDurationMs = 200;
+	let dragTopicDisabled = true;
+	onMount(() => {
+		getTopicPositions();
+
+		document.addEventListener('keypress', (e) => {
+			console.log('click', e);
+		});
+	});
 
 	function editTopic(e) {
 		e.stopPropagation();
@@ -15,32 +33,191 @@
 	function deleteTopic() {
 		console.log('delete topic');
 	}
+
+	/**
+	 * @description get the positions of the columns and topics
+	 * @returns {array} topicPositions
+	 */
+	function getTopicPositions() {
+		let topicPositions = [];
+		$topicStore.forEach((column) => {
+			// console.log('element', column);
+			column.topics.forEach((topic) => {
+				// console.log('topic', topic);
+				topicPositions.push({
+					id: topic.id,
+					position: topic.position,
+					column_id: column.id,
+					name: topic.title
+				});
+			});
+		});
+		// console.log('topicPositions', topicPositions);
+		return topicPositions;
+	}
+
+	//
+	//
+	// DRAG&DROP TOPICS
+	//
+	//
+	function handleDragTopic(cid, e) {
+		const {
+			items: newItems,
+			info: { source, trigger }
+		} = e.detail;
+		const colIdx = $topicStore.findIndex((c) => c.id === cid);
+		// console.log('Drag cid', cid);
+		// console.log('Drag colIdx', colIdx);
+		$topicStore[colIdx].topics = e.detail.items;
+		$topicStore = [...$topicStore];
+
+		if (source === SOURCES.KEYBOARD && trigger === TRIGGERS.DRAG_STOPPED) {
+			dragTopicDisabled = true;
+		}
+	}
+
+	function handleDropTopic(cid, e) {
+		const {
+			items: newItems,
+			info: { source }
+		} = e.detail;
+		const colIdx = $topicStore.findIndex((c) => c.id === cid);
+		// console.log('Finalize colIdx', colIdx);
+		let topics = e.detail.items;
+		topics.forEach((t, i) => {
+			t.position = i;
+		});
+		// console.log('topics after', topics);
+		$topicStore[colIdx].topics = topics;
+		$topicStore = [...$topicStore];
+
+		// update position in db
+		fetch(PUBLIC_API_URL + 'updatetopicpositions', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify(getTopicPositions())
+		})
+			.then((res) => res.json())
+			.then((data) => {
+				console.log('data', data);
+			});
+		if (source === SOURCES.POINTER) {
+			dragTopicDisabled = true;
+		}
+	}
+	function handleClickOnTopic(e) {
+		// console.log(e);
+		dragTopicDisabled = true;
+		// console.log(e.target.firstChild);
+		if ((e.type === 'keydown' && e.key === 'Enter') || e.key === ' ') {
+			// simulate a mouseklick
+			let open = e.target.firstChild.getAttribute('open');
+			console.log('open', open);
+			if (open === null) {
+				e.target.firstChild.setAttribute('open', 'true');
+			} else {
+				e.target.firstChild.removeAttribute('open');
+			}
+		}
+	}
+
+	function startDragByHandle(e) {
+		e.preventDefault();
+		dragTopicDisabled = false;
+	}
+	function handleKeyDownByHandle(e) {
+		if ((e.key === 'Enter' || e.key === ' ') && dragTopicDisabled) dragTopicDisabled = false;
+	}
+
+	//
+	// reactive console
+	//
+	// $: console.log('dragTopicDisabled', dragTopicDisabled);
 </script>
 
-<details id="topic_{topic.id}" class="topicWrapper" use:animatedDetails>
-	<summary class="topicHeader">
-		<span class="topicTitleWrapper">
-			<span class="topicTitle" style="color:{topic.color}">{topic.title}</span>
-		</span>
-		<span class="topicDate" title={formatDatetime(topic.created)}>
-			{formatDatetime(topic.created).split(' ')[0]}
-		</span>
-	</summary>
-	<div class="manageTopic">
-		<span class="editTopic" on:click|preventDefault={editTopic} on:keydown={editTopic}>x</span>
-		<span class="deleteTopic" on:click={deleteTopic} on:keydown={deleteTopic}>x</span>
-	</div>
-	<p class="topicContentMain">{topic.content}</p>
-	<p class="topicContentFooter">{topic.author}</p>
-</details>
+<ul
+	class="column_content"
+	use:dndzone={{
+		items: topics,
+		dragDisabled: dragTopicDisabled,
+		flipDurationMs,
+		dropTargetStyle: {
+			outline: 'rgba(255, 64, 0, 0.5) solid 2px',
+			outlineOffset: '2px',
+			'border-radius': '5px'
+		}
+	}}
+	on:consider={(e) => handleDragTopic(columnId, e)}
+	on:finalize={(e) => handleDropTopic(columnId, e)}
+>
+	{#each topics as topic (topic.id)}
+		<li on:click={handleClickOnTopic} on:keydown={handleClickOnTopic}>
+			<details id="topic_{topic.id}" class="topicWrapper" use:animatedDetails>
+				<summary
+					class="topicHeader dragHandle"
+					aria-label="drag-handle"
+					style={dragTopicDisabled ? 'cursor: grab' : 'cursor: grabbing'}
+					on:mousedown={startDragByHandle}
+					on:touchstart={startDragByHandle}
+					on:keydown={handleKeyDownByHandle}
+					tabindex="-1"
+				>
+					<span class="topicTitleWrapper">
+						<span class="topicTitle" style="color:{topic.color}">{topic.title}</span>
+					</span>
+					<span class="topicDate" title={formatDatetime(topic.created)}>
+						{formatDatetime(topic.created).split(' ')[0]}
+					</span>
+				</summary>
+				<div class="manageTopic">
+					<button
+						class="editTopicButton styleLessButton"
+						title="edit Topic"
+						on:click|preventDefault={editTopic}
+						on:keydown={editTopic}
+					>
+						<Edit />
+					</button>
+					<button
+						class="deleteTopicButton styleLessButton"
+						title="remove Topic"
+						on:click={deleteTopic}
+						on:keydown={deleteTopic}
+					>
+						<Delete />
+					</button>
+				</div>
+				<p class="topicContentMain">{topic.content}</p>
+				<p class="topicContentFooter">{topic.author}</p>
+			</details>
+		</li>
+	{/each}
+</ul>
 
 <style>
+	.column_content {
+		list-style: none;
+		padding-inline: 0.25rem;
+		min-height: 2rem;
+		display: flex;
+		flex-direction: column;
+		gap: 0.5rem;
+	}
+
 	.topicWrapper {
 		overflow: hidden;
 		border: 1px solid var(--color-border);
 		border-radius: var(--border-radius-m);
 		box-shadow: var(--shadow-4);
 	}
+
+	:global(.topicWrapper[open].extended) {
+		transform: scale(1.5);
+	}
+
 	.topicHeader {
 		position: relative;
 		display: flex;
@@ -69,37 +246,30 @@
 		color: var(--color-text-secondary);
 	}
 
-	/* :global(.topicWrapper[open]) .topicTitleWrapper {
-		height: 3rem;
-		white-space: normal;
-	} */
 	.topicTitle {
 		color: var(--color-text);
 	}
 
-	/* .topicHeader::after {
-		content: '+';
-		width: 1em;
-		float: right;
-		text-align: center;
-		transition: transform 0.3s;
-	} */
-	/* :global(.topicWrapper[open]) .topicHeader::after {
-		content: '-';
-	} */
-
 	.manageTopic {
-		/* position: absolute; */
-		right: 0.5rem;
-		top: 0.5rem;
-		z-index: 10;
-		pointer-events: none;
-		display: none;
+		display: flex;
+		justify-content: end;
 	}
 
-	:global(.topicWrapper[open]) .manageTopic {
-		display: block;
+	.manageTopic > button {
+		display: inline-block;
+		padding: 0.25rem;
+		border-radius: 50%;
+		margin-left: 0.25rem;
+		cursor: pointer;
+		transition: all 0.2s;
 	}
+
+	/* .manageTopic > button :global(path) {
+		color: var(--malibu);
+	}
+	.manageTopic > button:hover :global(path) {
+		color: red;
+	} */
 
 	.topicWrapper > p {
 		padding-inline: 0.5rem;

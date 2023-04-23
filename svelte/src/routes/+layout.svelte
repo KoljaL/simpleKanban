@@ -1,16 +1,19 @@
 <script>
+	import { onMount } from 'svelte';
 	import Header from '$lib/layout/Header.svelte';
 	import Footer from '$lib/layout/Footer.svelte';
+	import ScrollArea from '$lib/components/ScrollArea.svelte';
 	// import '$lib/styles/pico.css';
-	import '$lib/styles/tooltip.css';
 	// import '$lib/styles/ui.css';
+	// import '$lib/styles/tooltip.css';
 	import '$lib/styles/styles.css';
 </script>
 
 <Header />
-
 <main>
-	<slot />
+	<ScrollArea>
+		<slot />
+	</ScrollArea>
 </main>
 
 <Footer />
@@ -27,6 +30,7 @@
 	}
 
 	:global(#SKA) > main {
+		display: flex;
 		width: 100%;
 		max-width: var(--max-width);
 		height: var(--main-height);
