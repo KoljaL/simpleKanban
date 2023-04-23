@@ -30,6 +30,7 @@
 	}
 
 	:global(#SKA) > main {
+		position: relative;
 		display: flex;
 		width: 100%;
 		max-width: var(--max-width);

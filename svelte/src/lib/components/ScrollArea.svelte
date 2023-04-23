@@ -75,8 +75,10 @@
 
 <style>
 	.scrollElement {
+		--element-width: 2.5rem;
+		position: absolute;
 		height: 100%;
-		width: 2.5rem;
+		width: var(--element-width);
 		background-color: var(--bg-color-secondary);
 		border: 1px solid var(--color-border);
 		border-radius: var(--border-radius-m);
@@ -90,10 +92,12 @@
 		opacity: 0.8;
 	}
 
-	.scrollRight {
+	.scrollRight.active {
+		right: calc(var(--element-width) * -1);
 		cursor: e-resize;
 	}
-	.scrollLeft {
+	.scrollLeft.active {
+		left: calc(var(--element-width) * -1);
 		cursor: w-resize;
 	}
 </style>

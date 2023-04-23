@@ -3,7 +3,7 @@
 	import { onDestroy, createEventDispatcher } from 'svelte';
 	import { fade } from 'svelte/transition';
 	import { cubicOut } from 'svelte/easing';
-	import { BROWSER } from 'esm-env';
+	// import { BROWSER } from 'esm-env';
 	// import Portal from '$components/portal.svelte';
 	onDestroy(() => {
 		open = false;
@@ -15,9 +15,9 @@
 	let wasOpen = true;
 	$: handleOpen(open);
 	function handleOpen() {
-		if (!BROWSER) {
-			return;
-		}
+		// if (!BROWSER) {
+		// 	return;
+		// }
 		if (open) {
 			wasOpen = document?.body?.classList?.contains('modal-open');
 			if (!wasOpen) {

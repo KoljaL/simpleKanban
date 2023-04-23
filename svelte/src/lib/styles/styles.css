@@ -35,7 +35,7 @@
 	--header-height: 3rem;
 	--footer-height: 2rem;
 	--main-height: calc(100svh - var(--header-height) - var(--footer-height));
-	--max-width: 64rem;
+	--max-width: 70rem;
 
 	--bg-color-primary: #282c34;
 	--bg-color-secondary: #3e4451;
@@ -249,4 +249,18 @@ input {
 .styleLessButton:active {
 	color: var(--color-svelte);
 	filter: brightness(1);
+}
+
+.styleLessButton:focus {
+	outline: 2px solid var(--color-svelte);
+}
+
+.styleLessButton:disabled {
+	color: var(--color-border);
+	filter: brightness(1);
+}
+
+.styleLessButton.small svg {
+	width: 1.2rem;
+	height: 1.2rem;
 }

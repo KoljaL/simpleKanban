@@ -174,7 +174,7 @@
 				</summary>
 				<div class="manageTopic">
 					<button
-						class="editTopicButton styleLessButton"
+						class="editTopicButton styleLessButton small"
 						title="edit Topic"
 						on:click|preventDefault={editTopic}
 						on:keydown={editTopic}
@@ -182,7 +182,7 @@
 						<Edit />
 					</button>
 					<button
-						class="deleteTopicButton styleLessButton"
+						class="deleteTopicButton styleLessButton small"
 						title="remove Topic"
 						on:click={deleteTopic}
 						on:keydown={deleteTopic}
@@ -190,8 +190,8 @@
 						<Delete />
 					</button>
 				</div>
+				<p class="topicContentAuthor">{topic.author}</p>
 				<p class="topicContentMain">{topic.content}</p>
-				<p class="topicContentFooter">{topic.author}</p>
 			</details>
 		</li>
 	{/each}
@@ -208,6 +208,7 @@
 	}
 
 	.topicWrapper {
+		position: relative;
 		overflow: hidden;
 		border: 1px solid var(--color-border);
 		border-radius: var(--border-radius-m);
@@ -219,7 +220,6 @@
 	}
 
 	.topicHeader {
-		position: relative;
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
@@ -251,6 +251,8 @@
 	}
 
 	.manageTopic {
+		position: absolute;
+		width: 100%;
 		display: flex;
 		justify-content: end;
 	}
@@ -264,13 +266,6 @@
 		transition: all 0.2s;
 	}
 
-	/* .manageTopic > button :global(path) {
-		color: var(--malibu);
-	}
-	.manageTopic > button:hover :global(path) {
-		color: red;
-	} */
-
 	.topicWrapper > p {
 		padding-inline: 0.5rem;
 	}
@@ -278,10 +273,14 @@
 	.topicDate {
 		font-size: 0.8rem;
 	}
+
 	.topicContentMain {
+		margin-block: 0.5rem;
 		padding-bottom: 0.5rem;
 	}
-	.topicContentFooter {
+	.topicContentAuthor {
+		margin-top: 0.5rem;
+		margin-bottom: 0rem;
 		font-size: 0.8rem;
 	}
 </style>
