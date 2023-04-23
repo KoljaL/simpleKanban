@@ -20,7 +20,7 @@
 	let startX;
 	let scrollLeft;
 	let draggedColumn; // maybe obsolete
-	let dragDisabled = true;
+	let dragColumnDisabled = true;
 
 	onMount(() => {
 		getColumnPositions();
@@ -97,7 +97,7 @@
 		} = e.detail;
 		$topicStore = e.detail.items;
 		if (source === SOURCES.KEYBOARD && trigger === TRIGGERS.DRAG_STOPPED) {
-			dragDisabled = true;
+			dragColumnDisabled = true;
 		}
 	}
 	function handleDropColumn(e, draggedElement) {
@@ -105,14 +105,14 @@
 			items: newItems,
 			info: { source }
 		} = e.detail;
-		console.log('handleDropColumn');
+		// console.log('handleDropColumn');
 		// update position of dragged column by index
 		let columns = e.detail.items;
 		columns.forEach((c, i) => {
 			c.position = i;
 		});
-		console.log('DROP id', e.detail.info.id);
-		console.log('columns after', columns);
+		// console.log('DROP id', e.detail.info.id);
+		// console.log('columns after', columns);
 		// update store
 		$topicStore = columns;
 
@@ -129,7 +129,7 @@
 				// console.log('data', data);
 			});
 		if (source === SOURCES.POINTER) {
-			dragDisabled = true;
+			dragColumnDisabled = true;
 		}
 	}
 
@@ -187,16 +187,17 @@
 	// https://svelte.dev/repl/61a0549c05bd45369134213d57bfd4a6?version=3.58.0
 	function startDragByHandle(e) {
 		e.preventDefault();
-		dragDisabled = false;
+		dragColumnDisabled = false;
 	}
 	function handleKeyDownByHandle(e) {
-		if ((e.key === 'Enter' || e.key === ' ') && dragDisabled) dragDisabled = false;
+		if ((e.key === 'Enter' || e.key === ' ') && dragColumnDisabled) dragColumnDisabled = false;
 	}
 
 	//
 	// REACTIVE CONSOLE OUTPUT
 	//
 	// $: console.log('$columnPositions', columnPositions);
+	$: console.log('dragColumnDisabled', dragColumnDisabled);
 	// $: console.log('$topicStore page.svelte', $topicStore);
 </script>
 
@@ -212,7 +213,7 @@
 		bind:this={sliderColumns}
 		use:dndzone={{
 			items: $topicStore,
-			dragDisabled,
+			dragDisabled: dragColumnDisabled,
 			flipDurationMs,
 			type: 'columns',
 			dropTargetStyle: {
@@ -235,7 +236,7 @@
 					<div
 						aria-label="drag-handle"
 						class="dragHandle"
-						style={dragDisabled ? 'cursor: grab' : 'cursor: grabbing'}
+						style={dragColumnDisabled ? 'cursor: grab' : 'cursor: grabbing'}
 						on:mousedown={startDragByHandle}
 						on:touchstart={startDragByHandle}
 						on:keydown={handleKeyDownByHandle}
