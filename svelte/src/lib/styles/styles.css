@@ -217,6 +217,13 @@ dialog::backdrop {
 	background: rgb(0 0 0 / 0.15);
 }
 
+form label {
+	display: flex;
+	flex-direction: column;
+	margin-bottom: 0.5rem;
+	color: var(--text-color-secondary);
+	font-size: 0.9rem;
+}
 textarea,
 select,
 input {

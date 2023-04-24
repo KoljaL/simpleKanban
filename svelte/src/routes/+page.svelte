@@ -231,9 +231,12 @@
 	.dragHandle :global(path) {
 		stroke: var(--color-text-secondary);
 		filter: brightness(0.5);
+		opacity: 0.2;
 		transition: all 0.2s;
 	}
-
+	.column_header:hover .dragHandle :global(path) {
+		opacity: 1;
+	}
 	.dragHandle:hover :global(path) {
 		stroke: var(--color-text);
 		filter: brightness(1);
@@ -259,15 +262,4 @@
 		cursor: grabbing;
 		cursor: -webkit-grabbing;
 	}
-
-	/* .column_footer {
-		position: relative;
-		padding: 0.25rem;
-		padding-bottom: 0rem;
-		margin-bottom: 0;
-		margin: 0;
-		background-color: var(--bg-color-secondary);
-		border-bottom-left-radius: var(--border-radius-column);
-		border-bottom-right-radius: var(--border-radius-column);
-	} */
 </style>

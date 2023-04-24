@@ -1,23 +1,43 @@
 <script>
 	import { PUBLIC_API_URL } from '$env/static/public';
 	import { getDatetimeNow } from '$lib/utils.js';
+	import { topicStore, isModal, modalMessage } from '$lib/store.js';
 	import { onMount } from 'svelte';
-	import { topicStore } from '$lib/store.js';
-	import ColorPicker from '$lib/components/ColorPicker.svelte';
+	import TopicForm from '$lib/components/TopicForm.svelte';
 	import Modal from '$lib/components/Modal.svelte';
 	import Plus from '$lib/icons/Plus.svelte';
+
 	export let columnId;
 	export let columns;
-	let open = false;
-	let authorName, columnName;
-	let missingInput = '';
+
+	let openModal = false;
+	let topicData = {
+		id: '',
+		position: '',
+		column: columnId,
+		created: '',
+		deadline: '',
+		author: '',
+		title: '',
+		content: '',
+		color: '#abb2bf'
+	};
+
+	$: if ($isModal === false) {
+		openModal = false;
+		// console.log('isModal', $isModal);
+	}
+
+	// $: modalPosition = modalPosition;
 	onMount(() => {
-		authorName = window.localStorage.getItem('SkanbanName') || '';
+		topicData.authorName = window.localStorage.getItem('SkanbanName') || '';
 	});
 
-	function openNewTopicForm() {
-		open = true;
-		columnName = columns[columnId].column_name;
+	function openNewTopicForm(e) {
+		topicData.position = e;
+		// console.log(topicData);
+		openModal = true;
+		topicData.columnName = columns[columnId].column_name;
 	}
 
 	function createNewTopic(e) {
@@ -46,9 +66,9 @@
 					col.topics.push(data);
 					$topicStore = $topicStore;
 					// console.log($topicStore[columnId]);
-					open = false;
+					openModal = false;
 				} else {
-					missingInput = res.message;
+					$modalMessage = res.message;
 				}
 			})
 			.catch((err) => console.log(err));
@@ -64,59 +84,33 @@
 >
 	<Plus />
 </button>
+<TopicForm {openModal} {topicData} callback={(e) => createNewTopic(e)} />
 
-<Modal bind:open>
-	<form class="newTopic_form" on:submit={createNewTopic}>
-		<header class="newTopic_header">
-			<h2>
-				New Topic in
-				<select name="column">
-					{#each columns as column}
-						<option value={column.id} selected={column.id === columnId}>
-							{column.column_name}
-						</option>
-					{/each}
-				</select>
-			</h2>
-		</header>
-
-		<div class="flex">
-			<input type="text" name="title" placeholder="Topic title" value="title" />
-			<ColorPicker />
-		</div>
-
-		<textarea name="content" placeholder="Topic content">text</textarea>
-		<input type="text" name="author" placeholder="Name" value={authorName} />
-		<footer class="newTopic_footer">
-			<input type="submit" value="submit" />
-			<span class="newTopicMissingInput">{missingInput}</span>
-		</footer>
-	</form>
-</Modal>
+<!-- {#if openModal}
+	<Modal bind:openModal position={modalPosition}>
+		<TopicForm {topicData} callback={(e) => createNewTopic(e)} />
+	</Modal>
+{/if} -->
 
 <style>
-	.flex {
+	/* .row {
 		display: flex;
 		flex-direction: row;
 		gap: 0.5rem;
 	}
-
-	/* .openNewTopicButton :global(svg g) {
-		stroke: var(--malibu);
-		transition: all 0.2s;
-		filter: brightness(0.6);
-	}
-	.openNewTopicButton:hover :global(svg g) {
-		filter: brightness(1);
-	} */
 
 	.newTopic_header {
 		display: flex;
 		flex-direction: row;
 		justify-content: space-between;
 		align-items: center;
-		padding: 0.5rem;
+		padding-left: 1rem;
+		padding-right: 2rem;
+		padding-top: 0.5rem;
+		padding-bottom: 0.5rem;
+		border-bottom: 1px solid var(--color-border);
 	}
+
 	.newTopic_header h2 {
 		color: var(--color-text);
 		text-align: center;
@@ -128,7 +122,6 @@
 		display: flex;
 		flex-direction: column;
 		gap: 0.5rem;
-		padding: 0.5rem;
 	}
 
 	.newTopicMissingInput {
@@ -136,7 +129,10 @@
 		color: var(--error);
 	}
 
+	.column {
+		margin-left: 0.5rem;
+	}
 	textarea {
 		height: 5rem;
-	}
+	} */
 </style>

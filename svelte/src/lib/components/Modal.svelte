@@ -1,24 +1,28 @@
 <script>
-	export let open = false;
+	export let openModal = false;
+	export let position;
 	import { onDestroy, createEventDispatcher } from 'svelte';
+	import { isModal } from '$lib/store.js';
+
 	import { fade } from 'svelte/transition';
 	import { cubicOut } from 'svelte/easing';
-	// import { BROWSER } from 'esm-env';
-	// import Portal from '$components/portal.svelte';
+	import Close from '$lib/icons/Close.svelte';
+
 	onDestroy(() => {
-		open = false;
+		openModal = false;
 	});
 	const dispatch = createEventDispatcher();
 	let clicked = false;
 	let scrolled = false;
 	let canClose = true;
 	let wasOpen = true;
-	$: handleOpen(open);
+	let innerWidth = 0;
+	let modalWidth = 0;
+	$: modalWidth;
+	$: handleOpen(openModal);
+
 	function handleOpen() {
-		// if (!BROWSER) {
-		// 	return;
-		// }
-		if (open) {
+		if (openModal) {
 			wasOpen = document?.body?.classList?.contains('modal-open');
 			if (!wasOpen) {
 				document?.body?.classList?.add('modal-open');
@@ -32,17 +36,19 @@
 		}
 	}
 	function close(force = false) {
+		console.log('close', force, canClose);
 		if (force || canClose) {
-			open = false;
+			openModal = false;
+			isModal.set(false);
 		}
 	}
 	function handleEscape(e) {
-		if (open && e.key === 'Escape') {
+		if (openModal && e.key === 'Escape') {
 			close();
 		}
 	}
 	function handleMouseDown() {
-		if (open) {
+		if (openModal) {
 			clicked = true;
 		}
 	}
@@ -57,90 +63,84 @@
 			scrolled = true;
 		}
 	}
+
+	if (position) {
+		setTimeout(() => {
+			let posY = position.y + 32;
+			let posX = position.x - modalWidth / 2;
+			if (posX < 0) posX = 16;
+			if (posX + modalWidth > innerWidth) posX = innerWidth - modalWidth - 16;
+			position = `top: ${posY}px; left: ${posX}px;`;
+		}, 1);
+	}
 </script>
 
-<svelte:window on:keyup={handleEscape} on:mousedown={handleMouseDown} />
-{#if open}
-	<!-- <Portal> -->
+<svelte:window on:keyup={handleEscape} on:mousedown={handleMouseDown} bind:innerWidth />
+{#if openModal}
 	<div
-		id="background"
+		id="modal-background"
 		on:mouseup|self={handleMouseUp}
 		on:scroll={handleScroll}
 		transition:fade={{ duration: 200 }}
 	>
 		<div
-			id="container"
+			id="modal-container"
+			style={position}
+			bind:clientWidth={modalWidth}
 			on:mousedown|stopPropagation={() => (canClose = false)}
 			transition:fade={{ y: 500, easing: cubicOut, duration: 400 }}
 		>
-			<div id="title-container">
-				<div id="title">
-					<slot name="title" />
-				</div>
-				<div on:click={() => close(true)} on:keyup={() => close(true)}>
-					<slot name="close">
-						<div id="close">&times;</div>
-					</slot>
-				</div>
-			</div>
+			<button
+				class="openNewTopicButton styleLessButton close-modal-button"
+				title="close Modal"
+				on:click={() => close(true)}
+				on:keyup={() => close(true)}
+			>
+				<Close />
+			</button>
+
 			<div>
 				<slot />
 			</div>
-			{#if $$slots.actions}
-				<div id="actions">
-					<slot name="actions" />
-				</div>
-			{/if}
 		</div>
 	</div>
-	<!-- </Portal> -->
 {/if}
 
 <style>
 	:global(.modal-open) {
 		overflow: hidden;
 	}
-	#background {
+	#modal-background {
 		position: fixed;
 		top: 0;
 		left: 0;
 		z-index: 999;
-		display: grid;
 		height: 100%;
 		width: 100%;
 		overflow-y: auto;
 		background: rgba(0, 0, 0, 0.5);
-		padding-bottom: 100px;
 	}
-	#container {
-		margin-top: 1rem;
-		place-self: start center;
+	#modal-container {
+		position: relative;
+		top: 30%;
+		left: 50%;
+		/* transform: translate(-50%); */
+		/* margin-top: 1rem; */
+		border: 1px solid var(--color-border);
 		border-radius: var(--border-radius-m);
+		box-shadow: var(--shadow-4);
 		background: var(--bg-color-primary);
-		padding: 1rem;
-		box-shadow: var(--box-shadow);
+		padding: 0.75rem;
+		padding-top: 0;
 		width: max-content;
 		max-width: 90vw;
+		max-height: 90vh;
 	}
 
-	#title-container {
-		display: flex;
-		align-items: center;
-		margin: 0.75rem 0;
-	}
-	#title {
-		flex: 1 1 auto;
-		font-size: 1.2rem;
-	}
-	#close {
-		cursor: pointer;
-		font-size: 40px;
-		line-height: 0.6;
-	}
-	#actions {
-		display: flex;
-		justify-content: flex-end;
-		margin-top: 1rem;
-		gap: 0.5rem;
+	.close-modal-button {
+		position: absolute;
+		top: 0;
+		right: 0;
+		margin: 0.5rem;
 	}
 </style>

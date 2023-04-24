@@ -5,7 +5,8 @@
 	import animatedDetails from 'svelte-animated-details';
 	import { formatDatetime } from '$lib/utils.js';
 	import { dndzone, SOURCES, TRIGGERS } from 'svelte-dnd-action';
-	import { topicStore } from '$lib/store.js';
+	import { topicStore, isModal } from '$lib/store.js';
+	import TopicForm from './TopicForm.svelte';
 
 	// ICONS
 	import Edit from '$lib/icons/Edit.svelte';
@@ -15,23 +16,45 @@
 	export let topics;
 	const flipDurationMs = 200;
 	let dragTopicDisabled = true;
+	let edit = false;
+	let topicToEdit;
+	// $: console.log('isModal', $isModal);
+	$: if ($isModal === false) {
+		edit = false;
+		// console.log('isModal', $isModal);
+	}
+	// $: edit = $isModal;
+
 	onMount(() => {
 		getTopicPositions();
 
-		document.addEventListener('keypress', (e) => {
-			console.log('click', e);
-		});
+		// document.addEventListener('keypress', (e) => {
+		// 	console.log('click', e);
+		// });
 	});
 
-	function editTopic(e) {
-		e.stopPropagation();
-		// e.target.parentElement.parentElement.parentElement.preventDefault();
-		console.log('edit topic', e);
-		console.log('edit topic', e.target.parentElement.parentElement.parentElement);
+	function editTopicForm(e, topicId) {
+		// console.log('edit topic form', e);
+		edit = true;
+		isModal.set(true);
+		$topicStore.forEach((column) => {
+			column.topics.forEach((topic) => {
+				if (topic.id === topicId) {
+					topicToEdit = topic;
+					topicToEdit.position = e;
+				}
+			});
+		});
+		// console.log('topicToEdit', topicToEdit);
 	}
 
-	function deleteTopic() {
-		console.log('delete topic');
+	function editTopic(e) {
+		console.log('edit topic', e);
+		edit = false;
+	}
+
+	function deleteTopic(topicId) {
+		console.log('delete topic', topicId);
 	}
 
 	/**
@@ -138,6 +161,10 @@
 	// $: console.log('dragTopicDisabled', dragTopicDisabled);
 </script>
 
+<!-- {#if edit} -->
+<TopicForm openModal={edit} topicData={topicToEdit} callback={(e) => editTopic(e)} />
+<!-- {/if} -->
+
 <ul
 	class="column_content"
 	use:dndzone={{
@@ -176,22 +203,33 @@
 					<button
 						class="editTopicButton styleLessButton small"
 						title="edit Topic"
-						on:click|preventDefault={editTopic}
-						on:keydown={editTopic}
+						on:click={(e) => {
+							editTopicForm(e, topic.id);
+						}}
+						on:keydown={(e) => {
+							editTopicForm(e, topic.id);
+						}}
 					>
 						<Edit />
 					</button>
 					<button
 						class="deleteTopicButton styleLessButton small"
 						title="remove Topic"
-						on:click={deleteTopic}
-						on:keydown={deleteTopic}
+						on:click={(e) => {
+							deleteTopic(e, topic.id);
+						}}
+						on:keydown={(e) => {
+							deleteTopic(e, topic.id);
+						}}
 					>
 						<Delete />
 					</button>
 				</div>
 				<p class="topicContentAuthor">{topic.author}</p>
 				<p class="topicContentMain">{topic.content}</p>
+				{#if topic.deadline}
+					<p class="topicContentDeadline">Deadline: <span>{topic.deadline}</span></p>
+				{/if}
 			</details>
 		</li>
 	{/each}
@@ -282,5 +320,13 @@
 		margin-top: 0.5rem;
 		margin-bottom: 0rem;
 		font-size: 0.8rem;
+	}
+	.topicContentDeadline {
+		margin-top: 0.5rem;
+		margin-bottom: 0rem;
+		font-size: 0.8rem;
+	}
+	.topicContentDeadline span {
+		color: var(--color-svelte);
 	}
 </style>

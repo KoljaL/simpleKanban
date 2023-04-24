@@ -26,8 +26,8 @@
 		pink2: 'hsl(320, 56%, 37%)'
 	};
 
-	let colorValue = '#abb2bf';
-	let colorName = 'white1';
+	export let colorValue = '#abb2bf';
+	console.log(colorValue);
 	let columns = 3;
 	let showColorPicker = false;
 
@@ -39,12 +39,12 @@
 	function setColor(event) {
 		event.preventDefault();
 		colorValue = HSLToHex(event.target.dataset.colorvalue);
-		colorName = event.target.title;
 		showColorPicker = false;
 	}
 
 	function HSLToHex(h, s = null, l = null) {
 		if (s === null && l === null) {
+			console.log(h);
 			h.split(',').map((item, index) => {
 				if (index === 0) {
 					h = item.replace('hsl(', '');
@@ -100,21 +100,23 @@
 		if (r.length == 1) r = '0' + r;
 		if (g.length == 1) g = '0' + g;
 		if (b.length == 1) b = '0' + b;
-
+		console.log('#' + r + g + b);
 		return '#' + r + g + b;
 	}
 </script>
 
 <div class="wrapper">
-	<input
-		type="color"
-		name="color"
-		class="colorValueInput"
-		on:click={openColorPicker}
-		on:keydown={openColorPicker}
-		bind:value={colorValue}
-	/>
-	<input type="hidden" name="colorName" bind:value={colorName} />
+	<label
+		>Color
+		<input
+			type="color"
+			name="color"
+			class="colorValueInput"
+			on:click={openColorPicker}
+			on:keydown={openColorPicker}
+			bind:value={colorValue}
+		/>
+	</label>
 
 	{#if showColorPicker}
 		<div class="colors" style="--grid-template-columns: repeat({columns},1.5rem)">
@@ -138,9 +140,18 @@
 	}
 
 	.colorValueInput {
-		height: 2rem;
+		height: 2.15rem;
 		padding: 0.25rem;
-		width: 2rem;
+		width: 2.15rem;
+	}
+
+	.colorValueInput::-webkit-color-swatch {
+		border-radius: var(--border-radius-s);
+		border: none;
+	}
+	.colorValueInput::-moz-color-swatch {
+		border-radius: var(--border-radius-s);
+		border: none;
 	}
 	.colors {
 		position: absolute;

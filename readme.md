@@ -23,5 +23,5 @@
 - [ ] database name dynamicallly set from url
 - [ ] edit topic
 - [ ] create / edit column
-- [ ] handle for dnd topic
+- [x] handle for dnd topic
 - [ ] 

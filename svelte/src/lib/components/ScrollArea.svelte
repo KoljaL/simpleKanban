@@ -57,20 +57,20 @@
 	class="scrollElement scrollLeft"
 	class:active={scrollLeftActive}
 	bind:this={scrollLeft}
-	on:mousedown={handleScrollLeft}
-	on:keydown={handleScrollLeft}
-	on:mouseup={handleScrollStop}
-	on:keyup={handleScrollStop}
+	on:mouseover={handleScrollLeft}
+	on:focus={handleScrollLeft}
+	on:mouseout={handleScrollStop}
+	on:blur={handleScrollStop}
 />
 <slot />
 <div
 	class="scrollElement scrollRight"
 	class:active={scrollRightActive}
 	bind:this={scrollRight}
-	on:mousedown={handleScrollRight}
-	on:keydown={handleScrollRight}
-	on:mouseup={handleScrollStop}
-	on:keyup={handleScrollStop}
+	on:mouseover={handleScrollRight}
+	on:focus={handleScrollRight}
+	on:mouseout={handleScrollStop}
+	on:blur={handleScrollStop}
 />
 
 <style>
@@ -92,12 +92,17 @@
 		opacity: 0.8;
 	}
 
+	.scrollRight {
+		right: calc(var(--element-width) * -1 - 0.5rem);
+	}
+	.scrollLeft {
+		left: calc(var(--element-width) * -1 - 0.5rem);
+	}
+
 	.scrollRight.active {
-		right: calc(var(--element-width) * -1);
 		cursor: e-resize;
 	}
 	.scrollLeft.active {
-		left: calc(var(--element-width) * -1);
 		cursor: w-resize;
 	}
 </style>

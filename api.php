@@ -54,6 +54,7 @@ if (isset($_GET['init'])) {
           position int(11) DEFAULT 0,
           column int(11) NOT NULL,
           created datetime NOT NULL,
+          deadline datetime DEFAULT NULL,
           author varchar(255) NOT NULL,
           title text NOT NULL,
           content text NOT NULL,
@@ -140,13 +141,14 @@ if (isset($_GET['addTopic'])) {
     if (empty($data['title']) || empty($data['content']) || empty($data['author']) || empty($data['column'])) {
         response(array('message' => 'Missing data', 'data' => $data));
     }
-    $stmt = $db->prepare("INSERT INTO topic (column, created, title, content, author,color) VALUES (:column, :date, :title, :content, :author,:color)");
+    $stmt = $db->prepare("INSERT INTO topic (column, created, title, content, author,color,deadline) VALUES (:column, :date, :title, :content, :author,:color,:deadline)");
     $stmt->bindParam(':date', $data['created']);
     $stmt->bindParam(':color', $data['color']);
     $stmt->bindParam(':title', $data['title']);
     $stmt->bindParam(':column', $data['column']);
     $stmt->bindParam(':content', $data['content']);
     $stmt->bindParam(':author', $data['author']);
+    $stmt->bindParam(':deadline', $data['deadline']);
     $stmt->execute();
 
     $topic_id = $db->lastInsertId();
