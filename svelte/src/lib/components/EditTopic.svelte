@@ -18,8 +18,7 @@
 
 	function openEditTopicForm(e) {
 		// console.log('topicId', topicId);
-
-		console.log('edit topic form', e);
+		// console.log('edit topic form', e);
 		isModal.set(true);
 		openModal = true;
 
@@ -31,7 +30,7 @@
 				}
 			});
 		});
-		// console.log('topicData', topicData);
+		console.log('topicData', topicData);
 	}
 
 	function editTopicApiCall(e) {
@@ -53,11 +52,60 @@
 			.then((res) => {
 				// console.log(res);
 				if (res.message === 'success') {
-					// update topic in store with
-					let columnId = data.column;
-					// columnId to ineger
-					columnId = parseInt(columnId);
-					console.log('columnId', $topicStore[columnId]);
+					// let columnId = parseInt(data.column);
+
+					topicStore.update((topicStore) => {
+						return topicStore.map((column) => {
+							if (column.id === data.column) {
+								return {
+									...column,
+									topics: column.topics.map((topic) => {
+										if (topic.id === topicId) {
+											return {
+												...topic,
+												...data
+											};
+										}
+										return topic;
+									})
+								};
+							}
+							return column;
+						});
+					});
+
+					// find index of column in $topicStore
+					// let columnIndex;
+					// $topicStore.forEach((column) => {
+					// 	if (column.id === data.column) {
+					// 		columnIndex = $topicStore.indexOf(column);
+					// 	}
+					// });
+
+					// let topicIndex;
+					// $topicStore[columnIndex].topics.forEach((topic) => {
+					// 	if (topic.id === topicId) {
+					// 		topicIndex = $topicStore[columnIndex].topics.indexOf(topic);
+					// 	}
+					// });
+					// $topicStore[columnIndex].topics[topicIndex] = { ...data };
+					// $topicStore = $topicStore;
+
+					// console.log('index', $topicStore[columnIndex].topics[topicIndex]);
+
+					// console.log('topicStore', $topicStore);
+					// console.log('columnId', $topicStore[columnId]);
+
+					// var col = $topicStore.find((col) => col.id == columnId);
+					// var top = col.topics.find((top) => top.id === topicId);
+					// console.log('top', top);
+					// make data to array
+					// data = [data];
+					// console.log('data', data);
+					// col.push(data);
+
+					// add new topic to store
+					// $topicStore[columnId].topics.push(data);
 
 					// // update $topicStore with data
 					// let index;
@@ -95,6 +143,8 @@
 					// var col = $topicStore.find((col) => col.id === data.column);
 					// col.topics.push(data);
 					$topicStore = $topicStore;
+					console.log('topicStore', $topicStore);
+
 					// console.log($topicStore[columnId]);
 					isModal.set(false);
 					openModal = false;

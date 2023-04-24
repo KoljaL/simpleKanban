@@ -55,6 +55,7 @@
 				<input type="date" name="deadline" value={topicData.deadline} />
 			</label>
 			<footer class="newTopic_footer">
+				<input type="hidden" name="created" value={topicData.created} />
 				<input type="submit" value="submit" />
 				<span class="newTopicMissingInput">{missingInput}</span>
 			</footer>
