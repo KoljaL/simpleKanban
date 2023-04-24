@@ -27,7 +27,7 @@
 	};
 
 	export let colorValue = '#abb2bf';
-	console.log(colorValue);
+	// console.log(colorValue);
 	let columns = 3;
 	let showColorPicker = false;
 

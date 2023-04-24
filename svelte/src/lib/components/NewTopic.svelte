@@ -4,7 +4,6 @@
 	import { topicStore, isModal, modalMessage } from '$lib/store.js';
 	import { onMount } from 'svelte';
 	import TopicForm from '$lib/components/TopicForm.svelte';
-	import Modal from '$lib/components/Modal.svelte';
 	import Plus from '$lib/icons/Plus.svelte';
 
 	export let columnId;
@@ -84,6 +83,7 @@
 >
 	<Plus />
 </button>
+
 <TopicForm {openModal} {topicData} callback={(e) => createNewTopic(e)} />
 
 <!-- {#if openModal}

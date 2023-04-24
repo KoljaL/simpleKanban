@@ -155,6 +155,24 @@ if (isset($_GET['addTopic'])) {
 
     response(array('message' => 'success', 'topic_id' => $topic_id));
 }
+if (isset($_GET['editTopic'])) {
+    $data = json_decode(file_get_contents('php://input'), true);
+    // response($data);
+    if (empty($data['title']) || empty($data['content']) || empty($data['author']) || empty($data['column'])) {
+        response(array('message' => 'Missing data', 'data' => $data));
+    }
+    $stmt = $db->prepare("UPDATE topic SET column = :column, title = :title, content = :content, author = :author, color = :color, deadline = :deadline WHERE id = :topic_id");
+    $stmt->bindParam(':column', $data['column']);
+    $stmt->bindParam(':title', $data['title']);
+    $stmt->bindParam(':content', $data['content']);
+    $stmt->bindParam(':author', $data['author']);
+    $stmt->bindParam(':color', $data['color']);
+    $stmt->bindParam(':deadline', $data['deadline']);
+    $stmt->bindParam(':topic_id', $data['id']);
+    $stmt->execute();
+
+    response(array('message' => 'success'));
+}
 
 
 // create a new topic

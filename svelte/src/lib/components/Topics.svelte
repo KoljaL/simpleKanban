@@ -6,7 +6,8 @@
 	import { formatDatetime } from '$lib/utils.js';
 	import { dndzone, SOURCES, TRIGGERS } from 'svelte-dnd-action';
 	import { topicStore, isModal } from '$lib/store.js';
-	import TopicForm from './TopicForm.svelte';
+	import TopicForm from '$lib/components/TopicForm.svelte';
+	import EditTopic from '$lib/components/EditTopic.svelte';
 
 	// ICONS
 	import Edit from '$lib/icons/Edit.svelte';
@@ -33,25 +34,25 @@
 		// });
 	});
 
-	function editTopicForm(e, topicId) {
-		// console.log('edit topic form', e);
-		edit = true;
-		isModal.set(true);
-		$topicStore.forEach((column) => {
-			column.topics.forEach((topic) => {
-				if (topic.id === topicId) {
-					topicToEdit = topic;
-					topicToEdit.position = e;
-				}
-			});
-		});
-		// console.log('topicToEdit', topicToEdit);
-	}
+	// function editTopicForm(e, topicId) {
+	// 	// console.log('edit topic form', e);
+	// 	edit = true;
+	// 	isModal.set(true);
+	// 	$topicStore.forEach((column) => {
+	// 		column.topics.forEach((topic) => {
+	// 			if (topic.id === topicId) {
+	// 				topicToEdit = topic;
+	// 				topicToEdit.position = e;
+	// 			}
+	// 		});
+	// 	});
+	// 	// console.log('topicToEdit', topicToEdit);
+	// }
 
-	function editTopic(e) {
-		console.log('edit topic', e);
-		edit = false;
-	}
+	// function editTopic(e) {
+	// 	console.log('edit topic', e);
+	// 	edit = false;
+	// }
 
 	function deleteTopic(topicId) {
 		console.log('delete topic', topicId);
@@ -200,7 +201,9 @@
 					</span>
 				</summary>
 				<div class="manageTopic">
-					<button
+					<EditTopic topicId={topic.id} />
+					<!-- <EditTopic openModal={edit} topicData={topicToEdit} callback={(e) => editTopic(e)} /> -->
+					<!-- <button
 						class="editTopicButton styleLessButton small"
 						title="edit Topic"
 						on:click={(e) => {
@@ -211,7 +214,7 @@
 						}}
 					>
 						<Edit />
-					</button>
+					</button> -->
 					<button
 						class="deleteTopicButton styleLessButton small"
 						title="remove Topic"
