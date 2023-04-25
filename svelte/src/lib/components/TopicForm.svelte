@@ -75,7 +75,7 @@
 		flex-direction: row;
 		justify-content: space-between;
 		align-items: center;
-		padding-left: 1rem;
+		padding-left: 0rem;
 		padding-right: 2rem;
 		padding-top: 0.5rem;
 		padding-bottom: 0.5rem;
@@ -106,5 +106,10 @@
 	}
 	textarea {
 		height: 5rem;
+		transition: all 0.3s ease;
+	}
+
+	:global(.expanded) textarea {
+		height: 50vh;
 	}
 </style>

@@ -1,7 +1,7 @@
 <script>
 	import { PUBLIC_API_URL } from '$env/static/public';
 	import { getDatetimeNow } from '$lib/utils.js';
-	import { topicStore, isModal, modalMessage } from '$lib/store.js';
+	import { topicStore, isModalOpen, modalMessage } from '$lib/store.js';
 	import { onMount } from 'svelte';
 	import TopicForm from '$lib/components/TopicForm.svelte';
 	import Plus from '$lib/icons/Plus.svelte';
@@ -22,9 +22,9 @@
 		color: '#abb2bf'
 	};
 
-	$: if ($isModal === false) {
+	$: if ($isModalOpen === false) {
 		openModal = false;
-		// console.log('isModal', $isModal);
+		// console.log('isModalOpen', $isModalOpen);
 	}
 
 	// $: modalPosition = modalPosition;

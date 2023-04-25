@@ -2,14 +2,16 @@
 	export let openModal = false;
 	export let position;
 	import { onDestroy, createEventDispatcher } from 'svelte';
-	import { isModal } from '$lib/store.js';
+	import { isModalOpen } from '$lib/store.js';
 
 	import { fade } from 'svelte/transition';
 	import { cubicOut } from 'svelte/easing';
 	import Close from '$lib/icons/Close.svelte';
-
+	import Expand from '$lib/icons/Expand.svelte';
+	import Shrink from '$lib/icons/Shrink.svelte';
 	onDestroy(() => {
 		openModal = false;
+		expanded = false;
 	});
 	const dispatch = createEventDispatcher();
 	let clicked = false;
@@ -18,6 +20,11 @@
 	let wasOpen = true;
 	let innerWidth = 0;
 	let modalWidth = 0;
+	let showShrink = true;
+	export let expanded = false;
+	if (expanded) {
+		showShrink = false;
+	}
 	$: modalWidth;
 	$: handleOpen(openModal);
 
@@ -39,7 +46,8 @@
 		console.log('close', force, canClose);
 		if (force || canClose) {
 			openModal = false;
-			isModal.set(false);
+			isModalOpen.set(false);
+			expanded = false;
 		}
 	}
 	function handleEscape(e) {
@@ -85,20 +93,38 @@
 	>
 		<div
 			id="modal-container"
+			class:expanded
 			style={position}
 			bind:clientWidth={modalWidth}
 			on:mousedown|stopPropagation={() => (canClose = false)}
 			transition:fade={{ y: 500, easing: cubicOut, duration: 400 }}
 		>
-			<button
-				class="openNewTopicButton styleLessButton close-modal-button"
-				title="close Modal"
-				on:click={() => close(true)}
-				on:keyup={() => close(true)}
-			>
-				<Close />
-			</button>
-
+			<div class="modal-header">
+				<button
+					class="openNewTopicButton styleLessButton expand-modal-button"
+					title="expand Modal"
+					on:click={() => {
+						expanded = !expanded;
+					}}
+					on:keyup={() => {
+						expanded = !expanded;
+					}}
+				>
+					{#if expanded && showShrink}
+						<Shrink />
+					{:else if showShrink}
+						<Expand />
+					{/if}
+				</button>
+				<button
+					class="openNewTopicButton styleLessButton close-modal-button"
+					title="close Modal"
+					on:click={() => close(true)}
+					on:keyup={() => close(true)}
+				>
+					<Close />
+				</button>
+			</div>
 			<div>
 				<slot />
 			</div>
@@ -122,8 +148,8 @@
 	}
 	#modal-container {
 		position: relative;
-		top: 30%;
-		left: 50%;
+		/* top: 30%;
+		left: 50%; */
 		/* transform: translate(-50%); */
 		/* margin-top: 1rem; */
 		border: 1px solid var(--color-border);
@@ -132,15 +158,29 @@
 		background: var(--bg-color-primary);
 		padding: 0.75rem;
 		padding-top: 0;
-		width: max-content;
+		width: 370px;
 		max-width: 90vw;
 		max-height: 90vh;
+		transition: all 0.3s ease-in-out;
+	}
+	#modal-container.expanded {
+		top: 2rem !important;
+		left: 2rem !important;
+		width: calc(60vw - 2rem);
+		height: calc(100% - 2rem);
+		transform: translate(30%);
 	}
 
-	.close-modal-button {
+	.modal-header {
 		position: absolute;
 		top: 0;
 		right: 0;
 		margin: 0.5rem;
+		display: flex;
+		justify-content: space-between;
+		gap: 0.5rem;
+		align-items: center;
+	}
+	.close-modal-button {
 	}
 </style>

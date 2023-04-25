@@ -3,56 +3,32 @@
 	import { onMount } from 'svelte';
 	// https://github.com/AndrewLester/svelte-animated-details
 	import animatedDetails from 'svelte-animated-details';
-	import { formatDatetime } from '$lib/utils.js';
+	import { formatDatetime, md } from '$lib/utils.js';
 	import { dndzone, SOURCES, TRIGGERS } from 'svelte-dnd-action';
-	import { topicStore, isModal } from '$lib/store.js';
+	import { topicStore, isModalOpen } from '$lib/store.js';
 	import TopicForm from '$lib/components/TopicForm.svelte';
 	import EditTopic from '$lib/components/EditTopic.svelte';
-
+	import ExpandedTopic from '$lib/components/ExpandedTopic.svelte';
 	// ICONS
-	import Edit from '$lib/icons/Edit.svelte';
+	import Shrink from '$lib/icons/Shrink.svelte';
+	import Expand from '$lib/icons/Expand.svelte';
 	import Delete from '$lib/icons/Delete.svelte';
 
 	export let columnId;
 	export let topics;
 	const flipDurationMs = 200;
 	let dragTopicDisabled = true;
-	let edit = false;
+	let editTopic = false;
 	let topicToEdit;
-	// $: console.log('isModal', $isModal);
-	$: if ($isModal === false) {
-		edit = false;
-		// console.log('isModal', $isModal);
+	let expanded = false;
+	$: if ($isModalOpen === false) {
+		editTopic = false;
+		// console.log('isModalOpen', $isModalOpen);
 	}
-	// $: edit = $isModal;
 
 	onMount(() => {
 		getTopicPositions();
-
-		// document.addEventListener('keypress', (e) => {
-		// 	console.log('click', e);
-		// });
 	});
-
-	// function editTopicForm(e, topicId) {
-	// 	// console.log('edit topic form', e);
-	// 	edit = true;
-	// 	isModal.set(true);
-	// 	$topicStore.forEach((column) => {
-	// 		column.topics.forEach((topic) => {
-	// 			if (topic.id === topicId) {
-	// 				topicToEdit = topic;
-	// 				topicToEdit.position = e;
-	// 			}
-	// 		});
-	// 	});
-	// 	// console.log('topicToEdit', topicToEdit);
-	// }
-
-	// function editTopic(e) {
-	// 	console.log('edit topic', e);
-	// 	edit = false;
-	// }
 
 	function deleteTopic(topicId) {
 		console.log('delete topic', topicId);
@@ -156,15 +132,23 @@
 		if ((e.key === 'Enter' || e.key === ' ') && dragTopicDisabled) dragTopicDisabled = false;
 	}
 
+	function handleDblClick(e) {
+		e.preventDefault();
+		let element = e.target;
+		if (element.tagName !== 'DETAILS') {
+			element = element.closest('details');
+		}
+		element.querySelector('.expandTopicButton').click();
+		console.log('dblclick');
+	}
 	//
 	// reactive console
 	//
 	// $: console.log('dragTopicDisabled', dragTopicDisabled);
 </script>
 
-<!-- {#if edit} -->
-<TopicForm openModal={edit} topicData={topicToEdit} callback={(e) => editTopic(e)} />
-<!-- {/if} -->
+<!-- callback={(e) => editTopic(e)}  -->
+<TopicForm openModal={editTopic} topicData={topicToEdit} />
 
 <ul
 	class="column_content"
@@ -182,8 +166,13 @@
 	on:finalize={(e) => handleDropTopic(columnId, e)}
 >
 	{#each topics as topic (topic.id)}
-		<li on:click={handleClickOnTopic} on:keydown={handleClickOnTopic}>
-			<details id="topic_{topic.id}" class="topicWrapper" use:animatedDetails>
+		<li
+			class="listItem"
+			on:click={handleClickOnTopic}
+			on:keydown={handleClickOnTopic}
+			on:dblclick={(e) => handleDblClick(e)}
+		>
+			<details id="topic_{topic.id}" class="topicWrapper" class:expanded use:animatedDetails>
 				<summary
 					class="topicHeader dragHandle"
 					aria-label="drag-handle"
@@ -201,20 +190,8 @@
 					</span>
 				</summary>
 				<div class="manageTopic">
+					<ExpandedTopic topicId={topic.id} />
 					<EditTopic topicId={topic.id} />
-					<!-- <EditTopic openModal={edit} topicData={topicToEdit} callback={(e) => editTopic(e)} /> -->
-					<!-- <button
-						class="editTopicButton styleLessButton small"
-						title="edit Topic"
-						on:click={(e) => {
-							editTopicForm(e, topic.id);
-						}}
-						on:keydown={(e) => {
-							editTopicForm(e, topic.id);
-						}}
-					>
-						<Edit />
-					</button> -->
 					<button
 						class="deleteTopicButton styleLessButton small"
 						title="remove Topic"
@@ -228,11 +205,17 @@
 						<Delete />
 					</button>
 				</div>
-				<p class="topicContentAuthor">{topic.author}</p>
-				<p class="topicContentMain">{topic.content}</p>
-				{#if topic.deadline}
-					<p class="topicContentDeadline">Deadline: <span>{topic.deadline}</span></p>
-				{/if}
+				<p class="topicContentMain">{@html md(topic.content)}</p>
+
+				<div class="topicFooter">
+					<span class="topicContentAuthor" style="color:{topic.color}">
+						<span>Author: </span>{topic.author}
+					</span>
+
+					{#if topic.deadline}
+						<span class="topicContentDeadline">Deadline: <span>{topic.deadline}</span></span>
+					{/if}
+				</div>
 			</details>
 		</li>
 	{/each}
@@ -248,16 +231,18 @@
 		gap: 0.5rem;
 	}
 
+	.listItem {
+		position: relative;
+	}
+
 	.topicWrapper {
 		position: relative;
 		overflow: hidden;
+		background-color: var(--bg-color-secondary);
 		border: 1px solid var(--color-border);
 		border-radius: var(--border-radius-m);
 		box-shadow: var(--shadow-4);
-	}
-
-	:global(.topicWrapper[open].extended) {
-		transform: scale(1.5);
+		--transition: all 0.1s linear;
 	}
 
 	.topicHeader {
@@ -283,7 +268,7 @@
 		text-overflow: ellipsis;
 		padding-right: 1rem;
 		height: 1.5rem;
-		transition: all 0.2s;
+		transition: var(--transition);
 		color: var(--color-text-secondary);
 	}
 
@@ -293,42 +278,66 @@
 
 	.manageTopic {
 		position: absolute;
-		width: 100%;
+		top: 0.15rem;
+		right: 0rem;
+		width: max-content;
 		display: flex;
 		justify-content: end;
-	}
-
-	.manageTopic > button {
-		display: inline-block;
+		gap: 0.5rem;
 		padding: 0.25rem;
-		border-radius: 50%;
-		margin-left: 0.25rem;
-		cursor: pointer;
-		transition: all 0.2s;
+		opacity: 0;
+		transition: var(--transition);
 	}
 
-	.topicWrapper > p {
+	:global(.topicWrapper[open]) .manageTopic {
+		opacity: 1;
+	}
+
+	.topicWrapper > * {
 		padding-inline: 0.5rem;
 	}
 
 	.topicDate {
 		font-size: 0.8rem;
+		opacity: 1;
+		transition: var(--transition);
+	}
+	:global(.topicWrapper[open]) .topicDate {
+		transition: var(--transition);
+		opacity: 0;
 	}
 
 	.topicContentMain {
+		padding-top: 1rem;
 		margin-block: 0.5rem;
 		padding-bottom: 0.5rem;
 	}
+
+	.topicFooter {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		padding: 0.25rem;
+		padding-inline: 0.5rem;
+		border-top: 1px solid var(--color-border);
+		background-color: var(--bg-color-secondary);
+	}
+
 	.topicContentAuthor {
 		margin-top: 0.5rem;
 		margin-bottom: 0rem;
 		font-size: 0.8rem;
 	}
+	.topicContentAuthor > span {
+		color: var(--color-text);
+	}
+
 	.topicContentDeadline {
 		margin-top: 0.5rem;
 		margin-bottom: 0rem;
 		font-size: 0.8rem;
 	}
+
 	.topicContentDeadline span {
 		color: var(--color-svelte);
 	}
