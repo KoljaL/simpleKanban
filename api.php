@@ -21,6 +21,7 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
+$database_folder = 'databases';
 
 $columns = array('todo', 'in progress', 'done', 'archive');
 
@@ -28,18 +29,27 @@ $colors = array('#e5c07b','#e06c75','#5c6370','#f44747','#56b6c2','#98c379','#7f
 
 $response = array();
 
+// check if database fiolder exists
+if (!file_exists($database_folder)) {
+    mkdir($database_folder);
+}
 
-if (isset($_GET['db'])) {
-    $db_name = $_GET['db'];
+// get 'dbKey' from GET request
+if (isset($_GET['dbKey'])) {
+    $db_name = $database_folder.'/'.$_GET['dbKey'];
     $response['meta']['db']['name'] = $db_name;
+
+    // check if db file exists
     if (!file_exists($db_name)) {
         $response['meta']['new file'] = 'new file created';
+        // set init to create new db file
         $_GET['init'] = 'true';
     }
-    $response['meta']['GET'] = $_GET;
-
+// $response['meta']['GET'] = $_GET;
 // response($response);
-} else {
+}
+// if no dbKey is set in GET request return error
+else {
     $response['error'] = 'no db name';
     response($response);
 }
@@ -325,31 +335,37 @@ if (isset($_GET['start_alt'])) {
 }
 
 if (isset($_GET['start'])) {
-    // get all tiopics
-    $stmt = $db->prepare("SELECT * FROM topic ORDER BY position ASC");
-    $stmt->execute();
-    $topics = $stmt->fetchAll(\PDO::FETCH_ASSOC);
-    $response['meta']['topicCount'] =  count($topics);
+    try {
+        // get all tiopics
+        $stmt = $db->prepare("SELECT * FROM topic ORDER BY position ASC");
+        $stmt->execute();
+        $topics = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        $response['meta']['topicCount'] =  count($topics);
 
-    // get all columns
-    $stmt = $db->prepare("SELECT * FROM columns ORDER BY position ASC");
-    $stmt->execute();
-    $columns = $stmt->fetchAll(\PDO::FETCH_ASSOC);
-    $response['meta']['columnCount'] =  count($columns);
+        // get all columns
+        $stmt = $db->prepare("SELECT * FROM columns ORDER BY position ASC");
+        $stmt->execute();
+        $columns = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        $response['meta']['columnCount'] =  count($columns);
 
-    // loop over columns and add topics
-    foreach ($columns as $key => $column) {
-        $columns[$key]['topics'] = [];
-        foreach ($topics as $topic) {
-            if ($topic['column'] == $column['id']) {
-                $topic['column_name'] = $column['column_name'];
-                $columns[$key]['topics'][] = $topic;
+        // loop over columns and add topics
+        foreach ($columns as $key => $column) {
+            $columns[$key]['topics'] = [];
+            foreach ($topics as $topic) {
+                if ($topic['column'] == $column['id']) {
+                    $topic['column_name'] = $column['column_name'];
+                    $columns[$key]['topics'][] = $topic;
+                }
             }
         }
+        $response['columns'] = $columns;
     }
-    $response['columns'] = $columns;
+    // handle errors
+    catch (\Throwable $th) {
+        $response['error'] = $th->errorInfo;
+    }
 
-    response($response);
+        response($response);
 }
 
 

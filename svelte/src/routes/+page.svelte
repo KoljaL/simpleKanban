@@ -1,7 +1,11 @@
 <script>
+	// console.info('+page.svelte');
+
 	import { PUBLIC_API_URL } from '$env/static/public';
 	import { flip } from 'svelte/animate';
 	import { onMount } from 'svelte';
+	import { fade } from 'svelte/transition';
+
 	import { dndzone, SOURCES, TRIGGERS } from 'svelte-dnd-action';
 	import { topicStore } from '$lib/store.js';
 	import { API_updateColumnPositions } from '$lib/api.js';
@@ -13,7 +17,8 @@
 	// get data from page.js and add it to the store
 	export let data;
 	console.log('data', data);
-	$topicStore = data.db.columns;
+	$topicStore = data.db?.columns || [];
+
 	// define variables
 	const flipDurationMs = 200;
 	let sliderColumns;
@@ -23,6 +28,12 @@
 	let scrollLeft;
 	let draggedColumn; // maybe obsolete
 	let dragColumnDisabled = true;
+	let errorMessage = 'missing database key';
+
+	$: if (data.db.error) {
+		console.error(data.db.error);
+		errorMessage = 'database not found';
+	}
 
 	onMount(() => {
 		getColumnPositions();
@@ -126,7 +137,7 @@
 	{JSON.stringify($topicStore, null, 2)}
 </pre>
 {/if} -->
-{#if $topicStore}
+{#if $topicStore.length > 0}
 	<section
 		class="columns"
 		bind:this={sliderColumns}
@@ -150,6 +161,7 @@
 				id="column_{column.id}"
 				bind:this={draggedColumn}
 				animate:flip={{ duration: flipDurationMs }}
+				transition:fade={{ duration: flipDurationMs }}
 			>
 				<header class="column_header">
 					<div
@@ -181,6 +193,8 @@
 			</article>
 		{/each}
 	</section>
+{:else}
+	<p class="missingDb"><span class="missingDbText">{errorMessage}</span></p>
 {/if}
 
 <style>
@@ -257,5 +271,39 @@
 		filter: brightness(1.4);
 		cursor: grabbing;
 		cursor: -webkit-grabbing;
+	}
+
+	.missingDb {
+		width: 100%;
+		margin-inline: auto;
+		margin-top: 2rem;
+	}
+
+	.missingDbText {
+		display: block;
+		font-size: 1.5rem;
+		color: var(--color-svelte);
+		text-align: center;
+		animation: marquee 3s ease-in-out infinite;
+	}
+
+	@keyframes marquee {
+		0% {
+			opacity: 0;
+
+			transform: translateX(80%) scale(0.5);
+		}
+		30% {
+			opacity: 1;
+			transform: translateX(0%) scale(1);
+		}
+		70% {
+			opacity: 1;
+			transform: translateX(0%) scale(1);
+		}
+		100% {
+			opacity: 0;
+			transform: translateX(-80%) scale(0.5);
+		}
 	}
 </style>

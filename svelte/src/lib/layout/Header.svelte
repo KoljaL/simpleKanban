@@ -3,15 +3,26 @@
 	import ThemeToggle from '$lib/components/ThemeToggle.svelte';
 	import { fade } from 'svelte/transition';
 	import { clickOutside } from '$lib/utils.js';
+	import { layoutCustomisation } from '$lib/store.js';
 	import Github from '$lib/icons/Github.svelte';
+	import Typewriter from 'svelte-typewriter';
+	import Delete from '$lib/icons/Delete.svelte';
 	import LayoutCustomizer from '$lib/components/LayoutCustomizer.svelte';
 	import Hamburger from '$lib/components/Hamburger.svelte';
 	export let open = false;
+	// $: $layoutCustomisation = $layoutCustomisation;
 	open = true;
 	export let openMenu = () => {
 		open = !open;
 	};
 	// $: console.log(open);
+
+	function deleteLocalStorage() {
+		// remove all entries from local storage starts with Skanban-
+		Object.keys(localStorage)
+			.filter((key) => key.startsWith('Skanban-'))
+			.forEach((key) => localStorage.removeItem(key));
+	}
 </script>
 
 <svelte:head>
@@ -28,10 +39,18 @@
 </svelte:head>
 
 <header>
-	<div class="header_left" />
-	<div class="header_center">
-		<span class="pagename"> Skanban </span>
+	<div class="header_left">
+		<div class="dbKey">
+			{$layoutCustomisation.dbKey}
+		</div>
 	</div>
+
+	<div class="header_center">
+		<span class="pagename">
+			<Typewriter interval={50} cursor={false}>Skanban</Typewriter>
+		</span>
+	</div>
+
 	<div class="header_right" use:clickOutside on:click_outside={() => (open = false)}>
 		<Hamburger {open} {openMenu} />
 		{#if open}
@@ -41,7 +60,11 @@
 						<button class="styleLessButton">new Column</button>
 					</li>
 					<li>
-						<button class="styleLessButton">...</button>
+						<button
+							class="styleLessButton"
+							on:click={deleteLocalStorage}
+							on:keydown={deleteLocalStorage}><Delete /> delete all Settings</button
+						>
 					</li>
 					<LayoutCustomizer />
 					<li class="bottom">

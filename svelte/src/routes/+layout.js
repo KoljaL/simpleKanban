@@ -1,13 +1,2 @@
-// import { onMount } from 'svelte';
-
-// onMount(async () => {
-// 	console.log('onMount #layout.js');
-// });
-
-// export async function load() {
-// 	return {
-// 		posts: localStorage.getItem('Skanban-maxWidthPage')
-// 	};
-// }
-
+// console.info('+layout.js');
 export const ssr = false;

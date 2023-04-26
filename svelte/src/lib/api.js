@@ -11,8 +11,10 @@ let $dbHash = 'abs';
 /**
  * @description API call to get all data to initialize the app
  */
-export function API_start() {
-	return fetch(PUBLIC_API_URL + 'start&db=' + $dbHash)
+export function API_start(dbKey) {
+	if (!dbKey) return;
+
+	return fetch(PUBLIC_API_URL + 'start&dbKey=' + dbKey)
 		.then((res) => res.json())
 		.then((data) => {
 			return data;
@@ -20,7 +22,7 @@ export function API_start() {
 }
 
 export function API_editTopic(data) {
-	return fetch(PUBLIC_API_URL + 'editTopic&db=' + $dbHash, {
+	return fetch(PUBLIC_API_URL + 'editTopic&dbKey=' + $dbHash, {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json'
@@ -34,7 +36,7 @@ export function API_editTopic(data) {
 }
 
 export function API_addTopic(data) {
-	return fetch(PUBLIC_API_URL + 'addTopic&db=' + $dbHash, {
+	return fetch(PUBLIC_API_URL + 'addTopic&dbKey=' + $dbHash, {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json'
@@ -48,7 +50,7 @@ export function API_addTopic(data) {
 }
 
 export function API_updateColumnPositions(data) {
-	return fetch(PUBLIC_API_URL + 'updatecolumnpositions&db=' + $dbHash, {
+	return fetch(PUBLIC_API_URL + 'updatecolumnpositions&dbKey=' + $dbHash, {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json'
@@ -62,7 +64,7 @@ export function API_updateColumnPositions(data) {
 }
 
 export function API_updateTopicPositions(data) {
-	return fetch(PUBLIC_API_URL + 'updatetopicpositions&db=' + $dbHash, {
+	return fetch(PUBLIC_API_URL + 'updatetopicpositions&dbKey=' + $dbHash, {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json'

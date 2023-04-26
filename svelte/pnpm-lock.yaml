@@ -54,6 +54,9 @@ devDependencies:
   svelte-dnd-action:
     specifier: ^0.9.22
     version: 0.9.22(svelte@3.58.0)
+  svelte-typewriter:
+    specifier: ^3.1.6
+    version: 3.1.6(svelte@3.58.0)
   vite:
     specifier: ^4.2.0
     version: 4.2.1
@@ -1481,6 +1484,14 @@ packages:
       strip-indent: 3.0.0
       svelte: 3.58.0
       typescript: 5.0.4
+    dev: true
+
+  /svelte-typewriter@3.1.6(svelte@3.58.0):
+    resolution: {integrity: sha512-KmY0IWfq6RhTosfLMkZwmBwvwjIKh72jZnWE2taBivtfJJfvBAIrJ3oByObDzisnwUDqyV+ynQZP27SK5UUygg==}
+    peerDependencies:
+      svelte: '>=3.47.x'
+    dependencies:
+      svelte: 3.58.0
     dev: true
 
   /svelte@3.58.0:

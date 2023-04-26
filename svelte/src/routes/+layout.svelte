@@ -1,4 +1,6 @@
 <script>
+	// console.info('+layout.svelte');
+
 	import { onMount } from 'svelte';
 	import Header from '$lib/layout/Header.svelte';
 	import Footer from '$lib/layout/Footer.svelte';
