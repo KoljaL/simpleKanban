@@ -1,11 +1,11 @@
 <script>
 	export let open = false;
-	export let onClick = () => {
+	export let openMenu = () => {
 		open = !open;
 	};
 </script>
 
-<button on:click={onClick} class:open aria-expanded={open} aria-label="toggle menu" id="hamburger">
+<button on:click={openMenu} class:open aria-expanded={open} aria-label="toggle menu" id="hamburger">
 	<span />
 	<span />
 	<span />

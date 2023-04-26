@@ -92,6 +92,35 @@ if (isset($_GET['init'])) {
     $response['columns'] = $columns;
 }
 
+
+if (isset($_GET['test'])) {
+    echo "<pre>";
+    $md = createMarkdownContent();
+    echo $md['title'];
+    print_r($md);
+}
+
+
+function createMarkdownContent()
+{
+    $titles = array('dog', 'cat', 'bird', 'fish', 'snake', 'lizard', 'frog', 'turtle', 'hamster', 'rabbit', 'mouse', 'cow', 'horse', 'pig', 'sheep', 'goat', 'chicken', 'duck', 'goose', 'turkey', 'deer', 'bear', 'wolf', 'fox', 'lion', 'tiger', 'elephant', 'giraffe', 'zebra', 'monkey', 'gorilla', 'panda', 'koala', 'hippo', 'rhino', 'dolphin', 'whale', 'shark', 'seal', 'walrus', 'penguin', 'owl', 'eagle', 'hawk', 'sparrow', 'ant', 'bee', 'butterfly', 'dragonfly', 'mosquito', 'fly', 'spider', 'scorpion', 'crab', 'lobster', 'shrimp', 'snail', 'slug', 'octopus', 'squid', 'starfish', 'seahorse', 'jellyfish', 'clam', 'mushroom', 'tree', 'flower', 'grass', 'leaf', 'bush', 'cactus', 'rock', 'mountain', 'hill', 'valley', 'ocean', 'lake', 'river', 'pond', 'island', 'desert', 'forest', 'cave', 'cloud', 'rain', 'snow', 'sun', 'moon', 'star', 'planet', 'galaxy', 'universe', 'wind', 'rainbow', 'lightning', 'thunder', 'fire', 'water', 'ice', 'earth', 'air', 'time', 'space', 'music', 'dance', 'poetry', 'art', 'painting', 'drawing', 'sculpture', 'photography', 'film', 'television', 'computer', 'phone', 'book', 'magazine', 'newspaper', 'pen', 'pencil', 'eraser', 'notebook', 'paper', 'glass', 'cup', 'plate', 'bowl', 'fork', 'knife', 'spoon', 'chair', 'table', 'bed', 'lamp', 'door', 'window', 'car', 'truck', 'bus', 'train', 'plane', 'boat', 'ship');
+    $content = array('Lorem ipsum dolor sit amet, consec tetur adipiscing elit. Nullam auctor,  Nullam auctor, nisl nec luctus aliquam, nunc nisl aliquet nunc, vel aliquet nisl nunc vel nisl.', 'Lorem ipsum dolor sit amet, consec tetur adipiscing elit. Nullam auctor, nisl nec luctus aliquam, nunc nisl aliquet nunc, vel aliquet nisl nunc vel nisl. Nullam auctor, nisl nec luctus aliquam, nunc nisl aliquet nunc, vel aliquet nisl nunc vel nisl.', 'Lorem ipsum dolor sit amet, consec tetur adipiscing elit. Nullam auctor, nisl nec luctus aliquam, nunc nisl aliquet nunc, vel aliquet nisl nunc vel nisl. Nullam auctor, nisl nec luctus aliquam, nunc nisl aliquet nunc, vel aliquet nisl nunc vel nisl.', 'Lorem ipsum dolor sit amet, consec tetur adipiscing elit. Nullam auctor, nisl nec luctus aliquam, nunc nisl aliquet nunc, vel aliquet nisl nunc vel nisl. Nullam auctor, nisl nec luctus aliquam, nunc nisl aliquet nunc, vel aliquet nisl nunc vel nisl.', 'Lorem ipsum dolor sit amet, consec tetur adipiscing elit. Nullam auctor, nisl nec luctus aliquam, nunc nisl aliquet nunc, vel aliquet nisl nunc vel nisl. Nullam auctor, nisl nec luctus aliquam, nunc nisl aliquet nunc, vel aliquet nisl nunc vel nisl.', 'Lorem ipsum dolor sit amet, consec tetur adipiscing elit. Nullam auctor, nisl nec luctus aliquam, nunc nisl aliquet nunc, vel aliquet nisl nunc vel nisl. Nullam auctor, nisl nec luctus aliquam, nunc nisl aliquet nunc, vel aliquet nisl nunc vel nisl.', 'Lorem ipsum dolor sit amet, consec tetur adipiscing elit. Nullam auctor, nisl nec ');
+    $list = array('Lorem', 'ipsum', 'dolor', 'sit', 'amet', 'consec', 'tetur', 'adipiscing', 'elit', 'Nullam', 'auctor', 'nisl', 'nec', 'luctus', 'aliquam', 'nunc', 'aliquet', 'vel', 'nunc', 'vel', 'nisl', 'Nullam', 'auctor', 'nisl', 'nec', 'luctus', 'aliquam', 'nunc', 'aliquet', 'vel', 'nunc', 'vel', 'nisl', 'Nullam', 'auctor', 'nisl', 'nec', 'luctus', 'aliquam', 'nunc', 'aliquet', 'vel', 'nunc', 'vel', 'nisl', 'Nullam', 'auctor', 'nisl', 'nec', 'luctus', 'aliquam', 'nunc', 'aliquet', 'vel', 'nunc', 'vel', 'nisl', 'Nullam', 'auctor', 'nisl', 'nec', 'luctus', 'aliquam', 'nunc', 'aliquet', 'vel', 'nunc', 'vel', 'nisl', 'Nullam', 'auctor', 'nisl', 'nec', 'luctus', 'aliquam', 'nunc', 'aliquet', 'vel', 'nunc', 'vel', 'nisl', 'Nullam', 'auctor', 'nisl', 'nec', 'luctus', 'aliquam', 'nunc', 'aliquet', 'vel', 'nunc', 'vel', 'nisl');
+    $markdown = array();
+    $title =  $titles[rand(0, count($titles)-1)];
+
+    $markdown['title'] = $title;
+    $markdown['content'] = '# ' . $title. "\n";
+    $markdown['content'] .= $content[rand(0, count($content)-1)] . "\n";
+    for ($j=0; $j < rand(2, 7); $j++) {
+        $markdown['content'] .= '- ' . $list[rand(0, count($list)-1)] . "\n";
+    }
+    $markdown['content'] .= '## ' . $titles[rand(0, count($titles)-1)] . "\n";
+    $markdown['content'] .= $content[rand(0, count($content)-1)] . "\n";
+    return $markdown;
+}
+
+
 if (isset($_GET['dummy'])) {
     global $db, $columns;
 
@@ -102,15 +131,19 @@ if (isset($_GET['dummy'])) {
     // array with animal names
     $title = array('dog', 'cat', 'bird', 'fish', 'snake', 'lizard', 'frog', 'turtle', 'hamster', 'rabbit', 'mouse', 'cow', 'horse', 'pig', 'sheep', 'goat', 'chicken', 'duck', 'goose', 'turkey', 'deer', 'bear', 'wolf', 'fox', 'lion', 'tiger', 'elephant', 'giraffe', 'zebra', 'monkey', 'gorilla', 'panda', 'koala', 'hippo', 'rhino', 'dolphin', 'whale', 'shark', 'seal', 'walrus', 'penguin', 'owl', 'eagle', 'hawk', 'sparrow', 'ant', 'bee', 'butterfly', 'dragonfly', 'mosquito', 'fly', 'spider', 'scorpion', 'crab', 'lobster', 'shrimp', 'snail', 'slug', 'octopus', 'squid', 'starfish', 'seahorse', 'jellyfish', 'clam', 'mushroom', 'tree', 'flower', 'grass', 'leaf', 'bush', 'cactus', 'rock', 'mountain', 'hill', 'valley', 'ocean', 'lake', 'river', 'pond', 'island', 'desert', 'forest', 'cave', 'cloud', 'rain', 'snow', 'sun', 'moon', 'star', 'planet', 'galaxy', 'universe', 'wind', 'rainbow', 'lightning', 'thunder', 'fire', 'water', 'ice', 'earth', 'air', 'time', 'space', 'music', 'dance', 'poetry', 'art', 'painting', 'drawing', 'sculpture', 'photography', 'film', 'television', 'computer', 'phone', 'book', 'magazine', 'newspaper', 'pen', 'pencil', 'eraser', 'notebook', 'paper', 'glass', 'cup', 'plate', 'bowl', 'fork', 'knife', 'spoon', 'chair', 'table', 'bed', 'lamp', 'door', 'window', 'car', 'truck', 'bus', 'train', 'plane', 'boat', 'ship');
     $content = array('Lorem ipsum dolor sit amet, consec tetur adipiscing elit. Nullam auctor, nisl nec luctus aliquam, nunc nisl aliquet nunc, vel aliquet nisl nunc vel nisl. Nullam auctor, nisl nec luctus aliquam, nunc nisl aliquet nunc, vel aliquet nisl nunc vel nisl.', 'Lorem ipsum dolor sit amet, consec tetur adipiscing elit. Nullam auctor, nisl nec luctus aliquam, nunc nisl aliquet nunc, vel aliquet nisl nunc vel nisl. Nullam auctor, nisl nec luctus aliquam, nunc nisl aliquet nunc, vel aliquet nisl nunc vel nisl.', 'Lorem ipsum dolor sit amet, consec tetur adipiscing elit. Nullam auctor, nisl nec luctus aliquam, nunc nisl aliquet nunc, vel aliquet nisl nunc vel nisl. Nullam auctor, nisl nec luctus aliquam, nunc nisl aliquet nunc, vel aliquet nisl nunc vel nisl.', 'Lorem ipsum dolor sit amet, consec tetur adipiscing elit. Nullam auctor, nisl nec luctus aliquam, nunc nisl aliquet nunc, vel aliquet nisl nunc vel nisl. Nullam auctor, nisl nec luctus aliquam, nunc nisl aliquet nunc, vel aliquet nisl nunc vel nisl.', 'Lorem ipsum dolor sit amet, consec tetur adipiscing elit. Nullam auctor, nisl nec luctus aliquam, nunc nisl aliquet nunc, vel aliquet nisl nunc vel nisl. Nullam auctor, nisl nec luctus aliquam, nunc nisl aliquet nunc, vel aliquet nisl nunc vel nisl.', 'Lorem ipsum dolor sit amet, consec tetur adipiscing elit. Nullam auctor, nisl nec luctus aliquam, nunc nisl aliquet nunc, vel aliquet nisl nunc vel nisl. Nullam auctor, nisl nec luctus aliquam, nunc nisl aliquet nunc, vel aliquet nisl nunc vel nisl.', 'Lorem ipsum dolor sit amet, consec tetur adipiscing elit. Nullam auctor, nisl nec ');
+
+
+
     // create ten topics
     for ($i=0; $i < $topic_count; $i++) {
         $stmt = $db->prepare("INSERT INTO topic (position, column, created, content, title, author, color) VALUES (:position, :column, datetime('now'), :content, :title, :author,:color)");
         $column_id= rand(0, count($columns));
         $position = $i;
+        $md = createMarkdownContent();
         $stmt->bindParam(':position', $position);
         $stmt->bindParam(':column', $column_id);
-        $stmt->bindParam(':title', $title[rand(0, count($title)-1)]);
-        $stmt->bindParam(':content', $content[rand(0, count($content)-1)]);
+        $stmt->bindParam(':title', $md['title']);
+        $stmt->bindParam(':content', $md['content']);
         $stmt->bindParam(':author', $authors[rand(0, count($authors)-1)]);
         $stmt->bindParam(':color', $colors[rand(0, count($colors)-1)]);
         $stmt->execute();
@@ -277,11 +310,13 @@ if (isset($_GET['start'])) {
     $stmt = $db->prepare("SELECT * FROM topic ORDER BY position ASC");
     $stmt->execute();
     $topics = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+    $response['meta']['topicCount'] =  count($topics);
 
     // get all columns
     $stmt = $db->prepare("SELECT * FROM columns ORDER BY position ASC");
     $stmt->execute();
     $columns = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+    $response['meta']['columnCount'] =  count($columns);
 
     // loop over columns and add topics
     foreach ($columns as $key => $column) {
@@ -293,8 +328,9 @@ if (isset($_GET['start'])) {
             }
         }
     }
+    $response['columns'] = $columns;
 
-    response($columns);
+    response($response);
 }
 
 

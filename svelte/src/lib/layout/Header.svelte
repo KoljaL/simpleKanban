@@ -1,15 +1,17 @@
 <script>
-	import { browser } from '$app/environment';
+	// import onMount from 'svelte';
 	import ThemeToggle from '$lib/components/ThemeToggle.svelte';
 	import { fade } from 'svelte/transition';
 	import { clickOutside } from '$lib/utils.js';
 	import Github from '$lib/icons/Github.svelte';
+	import LayoutCustomizer from '$lib/components/LayoutCustomizer.svelte';
 	import Hamburger from '$lib/components/Hamburger.svelte';
 	export let open = false;
-	export let onClick = () => {
-		console.log('click', open);
+	open = true;
+	export let openMenu = () => {
 		open = !open;
 	};
+	// $: console.log(open);
 </script>
 
 <svelte:head>
@@ -31,9 +33,9 @@
 		<span class="pagename"> Skanban </span>
 	</div>
 	<div class="header_right" use:clickOutside on:click_outside={() => (open = false)}>
-		<Hamburger {open} {onClick} />
+		<Hamburger {open} {openMenu} />
 		{#if open}
-			<nav transition:fade={{ duration: 200 }}>
+			<nav transition:fade={{ duration: 100 }}>
 				<ul>
 					<li>
 						<button class="styleLessButton">new Column</button>
@@ -41,6 +43,7 @@
 					<li>
 						<button class="styleLessButton">...</button>
 					</li>
+					<LayoutCustomizer />
 					<li class="bottom">
 						<a class="ghLink" href="http://" target="_blank" rel="noopener noreferrer"><Github /></a
 						>
@@ -98,10 +101,13 @@
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
-		margin-top: auto;
+		/* margin-top: 1rem; */
 		margin-inline: -1rem;
-		margin-bottom: -0.2rem;
-		padding-inline: 0.5rem;
+		margin-bottom: 0.25rem;
+		padding-top: 0.25rem;
+		padding-left: 0.5rem;
+		padding-right: 0.75rem;
+		border-top: 1px solid var(--color-border);
 		/* background-color: var(--bg-color-primary);
 		border-bottom-left-radius: var(--border-radius-m);
 		border-bottom-right-radius: var(--border-radius-m); */
@@ -113,8 +119,8 @@
 
 	.ghLink :global(svg) {
 		margin-top: 0.35rem;
-		width: 1.25rem;
-		height: 1.25rem;
+		width: 1.5rem;
+		height: 1.5rem;
 		fill: var(--text-color-secondary);
 		transition: fill var(--duration-hover) ease-in-out;
 	}

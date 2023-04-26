@@ -178,10 +178,11 @@
 					aria-label="drag-handle"
 					style={dragTopicDisabled ? 'cursor: grab' : 'cursor: grabbing'}
 					on:mousedown={startDragByHandle}
-					on:touchstart={startDragByHandle}
 					on:keydown={handleKeyDownByHandle}
 					tabindex="-1"
 				>
+					<!-- on:touchstart={startDragByHandle} -->
+
 					<span class="topicTitleWrapper">
 						<span class="topicTitle" style="color:{topic.color}">{topic.title}</span>
 					</span>

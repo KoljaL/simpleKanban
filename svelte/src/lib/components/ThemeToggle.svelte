@@ -12,17 +12,6 @@
 	}
 </script>
 
-<!-- <svelte:head>
-	<script>
-		var dataTheme;
-		dataTheme = window.localStorage.getItem('Skanban-theme') || '';
-		if (!dataTheme) {
-			dataTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-		}
-		document.documentElement.setAttribute('data-theme', dataTheme);
-	</script>
-</svelte:head> -->
-
 <button
 	class="theme-toggle"
 	type="button"
@@ -68,6 +57,7 @@
 		border: none;
 		padding: 0;
 		margin: 0;
+		margin-top: 0.25rem;
 		width: 2rem;
 		height: 2rem;
 		color: var(--text-color-secondary);

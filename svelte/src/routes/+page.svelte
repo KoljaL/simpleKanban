@@ -11,7 +11,8 @@
 	import MoveH from '$lib/icons/MoveH.svelte';
 	// get data from page.js and add it to the store
 	export let data;
-	$topicStore = data.data;
+	console.log('data', data);
+	$topicStore = data.data.columns;
 	// define variables
 	const flipDurationMs = 200;
 	let sliderColumns;
@@ -205,12 +206,14 @@
 	}
 
 	.column {
-		min-width: 365px;
-		max-width: 100%;
+		min-width: var(--min-width-column);
+		max-width: 95vw;
+		width: 10rem;
 		min-height: 0;
 		max-height: 100%;
 		margin: 0;
 		padding: 0;
+		transition: width 0.5s ease-in-out, min-width 0.5s ease-in-out;
 
 		/* border: 1px solid var(--color-border);
 		--border-radius-column: 0.5rem;
