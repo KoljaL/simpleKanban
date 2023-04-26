@@ -1,7 +1,7 @@
 <script>
 	import { PUBLIC_API_URL } from '$env/static/public';
 	import { topicStore, isModalOpen, modalMessage } from '$lib/store.js';
-
+	import { API_editTopic } from '$lib/api.js';
 	// COMPONENTS
 	import TopicForm from '$lib/components/TopicForm.svelte';
 	// ICONS
@@ -30,7 +30,7 @@
 				}
 			});
 		});
-		console.log('topicData', topicData);
+		// console.log('topicData', topicData);
 	}
 
 	function editTopicApiCall(e) {
@@ -40,17 +40,17 @@
 		let data = Object.fromEntries(formData);
 		data.id = topicId;
 		console.log('data', data);
-
-		fetch(PUBLIC_API_URL + 'editTopic', {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json'
-			},
-			body: JSON.stringify(data)
-		})
-			.then((res) => res.json())
+		API_editTopic(data)
+			// fet ch(PUBLIC_API_URL + 'editTopic', {
+			// 	method: 'POST',
+			// 	headers: {
+			// 		'Content-Type': 'application/json'
+			// 	},
+			// 	body: JSON.stringify(data)
+			// })
+			// .then((res) => res.json())
 			.then((res) => {
-				// console.log(res);
+				console.log(res);
 				if (res.message === 'success') {
 					// let columnId = parseInt(data.column);
 

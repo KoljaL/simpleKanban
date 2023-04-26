@@ -3,14 +3,16 @@
 	import Header from '$lib/layout/Header.svelte';
 	import Footer from '$lib/layout/Footer.svelte';
 	import ScrollArea from '$lib/components/ScrollArea.svelte';
-	import { layoutCustomisation } from '$lib/store.js';
-
+	import { layoutCustomisation, dbHash } from '$lib/store.js';
+	$dbHash = 'abc';
 	$layoutCustomisation = {
 		maxWidthPage: 70,
 		minWidthColumn: 20
 	};
 
 	onMount(() => {
+		$dbHash = localStorage.getItem('Skanban-dbHash') || 'abc';
+
 		$layoutCustomisation.maxWidthPage =
 			localStorage.getItem('Skanban-maxWidthPage') || $layoutCustomisation.maxWidthPage;
 		$layoutCustomisation.minWidthColumn =

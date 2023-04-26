@@ -4,6 +4,7 @@
 	import { onMount } from 'svelte';
 	import { dndzone, SOURCES, TRIGGERS } from 'svelte-dnd-action';
 	import { topicStore } from '$lib/store.js';
+	import { API_updateColumnPositions } from '$lib/api.js';
 	// components
 	import Topics from '$lib/components/Topics.svelte';
 	import NewTopic from '$lib/components/NewTopic.svelte';
@@ -12,7 +13,7 @@
 	// get data from page.js and add it to the store
 	export let data;
 	console.log('data', data);
-	$topicStore = data.data.columns;
+	$topicStore = data.db.columns;
 	// define variables
 	const flipDurationMs = 200;
 	let sliderColumns;
@@ -94,18 +95,10 @@
 		// update store
 		$topicStore = columns;
 
-		// update position in db
-		fetch(PUBLIC_API_URL + 'updatecolumnpositions', {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json'
-			},
-			body: JSON.stringify(getColumnPositions())
-		})
-			.then((res) => res.json())
-			.then((data) => {
-				// console.log('data', data);
-			});
+		// update position in db via API
+		API_updateColumnPositions(getColumnPositions()).then((data) => {
+			console.log('data', data);
+		});
 		if (source === SOURCES.POINTER) {
 			dragColumnDisabled = true;
 		}

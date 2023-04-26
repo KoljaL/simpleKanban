@@ -15,6 +15,7 @@ if ('OPTIONS' === $_SERVER['REQUEST_METHOD']) {
 
 
 
+
 // show all errors
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
@@ -27,14 +28,32 @@ $colors = array('#e5c07b','#e06c75','#5c6370','#f44747','#56b6c2','#98c379','#7f
 
 $response = array();
 
+
+if (isset($_GET['db'])) {
+    $db_name = $_GET['db'];
+    $response['meta']['db']['name'] = $db_name;
+    if (!file_exists($db_name)) {
+        $response['meta']['new file'] = 'new file created';
+        $_GET['init'] = 'true';
+    }
+    $response['meta']['GET'] = $_GET;
+
+// response($response);
+} else {
+    $response['error'] = 'no db name';
+    response($response);
+}
+
+
+
 if (isset($_GET['init'])) {
     // remove db file
-    unlink('comments.db');
-    $response['db'][] = 'old file removed';
+    @unlink($db_name);
+    $response['meta']['db']['old file removed'] = true;
 }
 
 // create a sqlite database
-$db = new PDO('sqlite:comments.db');
+$db = new PDO('sqlite:'.$db_name);
 $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 if (isset($_GET['init'])) {
@@ -71,7 +90,7 @@ if (isset($_GET['init'])) {
           topic_id int(11) NOT NULL,
           parent_id int(11) NOT NULL
         ) ");
-    $response['db'][] = 'new file created';
+    $response['meta']['db']['new file created'] = true;
 
 
     // create columns
@@ -89,7 +108,7 @@ if (isset($_GET['init'])) {
     $columns = array_map(function ($column) {
         return $column['column_name'];
     }, $columns);
-    $response['columns'] = $columns;
+    $response['meta']['columns'] = $columns;
 }
 
 
@@ -149,7 +168,7 @@ if (isset($_GET['dummy'])) {
         $stmt->execute();
     }
 
-    $response['dummy'] = "created ".$topic_count." topics";
+    $response['meta']['dummy'] = "created ".$topic_count." topics";
 
     // // create 100 comments
     // for ($i=0; $i < 100; $i++) {

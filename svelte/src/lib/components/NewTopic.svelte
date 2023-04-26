@@ -5,7 +5,7 @@
 	import { onMount } from 'svelte';
 	import TopicForm from '$lib/components/TopicForm.svelte';
 	import Plus from '$lib/icons/Plus.svelte';
-
+	import { API_addTopic } from '$lib/api.js';
 	export let columnId;
 	export let columns;
 
@@ -46,15 +46,7 @@
 		let data = Object.fromEntries(formData);
 		data.created = getDatetimeNow();
 		window.localStorage.setItem('SkanbanName', data.author);
-
-		fetch(PUBLIC_API_URL + 'addTopic', {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json'
-			},
-			body: JSON.stringify(data)
-		})
-			.then((res) => res.json())
+		API_addTopic(data)
 			.then((res) => {
 				// console.log(res);
 				if (res.message === 'success') {

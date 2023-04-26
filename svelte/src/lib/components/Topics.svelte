@@ -9,6 +9,7 @@
 	import TopicForm from '$lib/components/TopicForm.svelte';
 	import EditTopic from '$lib/components/EditTopic.svelte';
 	import ExpandedTopic from '$lib/components/ExpandedTopic.svelte';
+	import { API_updateTopicPositions } from '$lib/api.js';
 	// ICONS
 	import Shrink from '$lib/icons/Shrink.svelte';
 	import Expand from '$lib/icons/Expand.svelte';
@@ -92,18 +93,11 @@
 		$topicStore[colIdx].topics = topics;
 		$topicStore = [...$topicStore];
 
-		// update position in db
-		fetch(PUBLIC_API_URL + 'updatetopicpositions', {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json'
-			},
-			body: JSON.stringify(getTopicPositions())
-		})
-			.then((res) => res.json())
-			.then((data) => {
-				console.log('data', data);
-			});
+		// update position in db via API
+		const data = getTopicPositions();
+		API_updateTopicPositions(data).then((data) => {
+			console.log('data', data);
+		});
 		if (source === SOURCES.POINTER) {
 			dragTopicDisabled = true;
 		}
