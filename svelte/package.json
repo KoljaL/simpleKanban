@@ -32,6 +32,7 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"svead": "^0.0.4",
 		"svelte-a11y-dialog": "^0.2.0"
 	}
 }

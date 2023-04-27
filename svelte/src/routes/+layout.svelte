@@ -5,24 +5,41 @@
 	import Header from '$lib/layout/Header.svelte';
 	import Footer from '$lib/layout/Footer.svelte';
 	import ScrollArea from '$lib/components/ScrollArea.svelte';
-	import { layoutCustomisation, dbHash } from '$lib/store.js';
-	$dbHash = 'abc';
-	$layoutCustomisation = {
-		maxWidthPage: 70,
-		minWidthColumn: 20
-	};
+	import { customLayout, topicStore } from '$lib/store.js';
+	import { setDebug } from '$lib/utils.js';
 
-	onMount(() => {
-		$dbHash = localStorage.getItem('Skanban-dbHash') || 'abc';
+	import { page } from '$app/stores';
+	import { Head } from 'svead';
 
-		$layoutCustomisation.maxWidthPage =
-			localStorage.getItem('Skanban-maxWidthPage') || $layoutCustomisation.maxWidthPage;
-		$layoutCustomisation.minWidthColumn =
-			localStorage.getItem('Skanban-minWidthColumn') || $layoutCustomisation.minWidthColumn;
-		console.log('onMount');
-		// console.log($layoutCustomisation.maxWidthPage);
-		// console.log($layoutCustomisation.minWidthColumn);
-	});
+	setDebug(0);
+
+	$: $customLayout = $customLayout;
+
+	$: deb.y('customLayout layout.sveslte', $customLayout);
+	deb.y('topicStsore', $topicStore);
+
+	let title = 'Skanban';
+	let description = 'A Kanban made with Svelte';
+	let url = $page.url.toString();
+	$: deb.y('customLayout layout.svelte', $customLayout);
+
+	// $dbHash = 'abc';
+	// $customLayout = {
+	// 	maxWidthPage: 70,
+	// 	minWidthColumn: 20
+	// };
+
+	// onMount(() => {
+	// 	$dbHash = localStorage.getItem('Skanban-dbHash') || 'abc';
+
+	// 	$customLayout.maxWidthPage =
+	// 		localStorage.getItem('Skanban-maxWidthPage') || $customLayout.maxWidthPage;
+	// 	$customLayout.minWidthColumn =
+	// 		localStorage.getItem('Skanban-minWidthColumn') || $customLayout.minWidthColumn;
+	// 	console.log('onMount');
+	// 	// console.log($customLayout.maxWidthPage);
+	// 	// console.log($customLayout.minWidthColumn);
+	// });
 
 	// import '$lib/styles/pico.css';
 	// import '$lib/styles/ui.css';
@@ -30,16 +47,18 @@
 	import '$lib/styles/styles.css';
 </script>
 
-<svelte:head>
+<Head {title} {description} {url} />
+
+<!-- <svelte:head>
 	{@html `
   <style>
     :root {
-      --max-width-page: ${$layoutCustomisation.maxWidthPage}rem;
-      --min-width-column: ${$layoutCustomisation.minWidthColumn}rem;
+      --max-width-page: ${$customLayout.maxWidthPage}rem;
+      --min-width-column: ${$customLayout.minWidthColumn}rem;
     }
     </style>
     `}
-</svelte:head>
+</svelte:head> -->
 
 <Header />
 <main>

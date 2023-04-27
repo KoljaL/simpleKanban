@@ -3,52 +3,44 @@
 	import ThemeToggle from '$lib/components/ThemeToggle.svelte';
 	import { fade } from 'svelte/transition';
 	import { clickOutside } from '$lib/utils.js';
-	import { layoutCustomisation } from '$lib/store.js';
+	import { customLayout } from '$lib/store.js';
 	import Github from '$lib/icons/Github.svelte';
 	import Typewriter from 'svelte-typewriter';
 	import Delete from '$lib/icons/Delete.svelte';
 	import LayoutCustomizer from '$lib/components/LayoutCustomizer.svelte';
 	import Hamburger from '$lib/components/Hamburger.svelte';
+	// console.log('$customLayout Header.svelte', $customLayout);
 	export let open = false;
 	// $: $layoutCustomisation = $layoutCustomisation;
-	open = true;
+	// open = true;
 	export let openMenu = () => {
 		open = !open;
 	};
 	// $: console.log(open);
 
+	/**
+	 * @description delete all localStorage entries that start with 'Skanban-'
+	 *
+	 * @returns {void}
+	 */
 	function deleteLocalStorage() {
-		// remove all entries from local storage starts with Skanban-
 		Object.keys(localStorage)
 			.filter((key) => key.startsWith('Skanban-'))
 			.forEach((key) => localStorage.removeItem(key));
 	}
 </script>
 
-<svelte:head>
-	<title>Skanban</title>
-	<meta name="description" content="Simple Kanban task management" />
-	<script>
-		var dataTheme;
-		dataTheme = window.localStorage.getItem('Skanban-theme') || '';
-		if (!dataTheme) {
-			dataTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-		}
-		document.documentElement.setAttribute('data-theme', dataTheme);
-	</script>
-</svelte:head>
-
 <header>
 	<div class="header_left">
 		<div class="dbKey">
-			{$layoutCustomisation.dbKey}
+			<!-- {$dbKey} -->
 		</div>
 	</div>
 
 	<div class="header_center">
-		<span class="pagename">
-			<Typewriter interval={50} cursor={false}>Skanban</Typewriter>
-		</span>
+		<div class="pagename">
+			<Typewriter interval={100} cursor={false}>Skanban</Typewriter>
+		</div>
 	</div>
 
 	<div class="header_right" use:clickOutside on:click_outside={() => (open = false)}>
@@ -85,6 +77,7 @@
 		align-items: center;
 	}
 	.pagename {
+		width: 120px;
 		font-size: 1.75rem;
 	}
 

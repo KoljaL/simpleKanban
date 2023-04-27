@@ -1,13 +1,25 @@
 import { PUBLIC_API_URL } from '$env/static/public';
-import { dbHash } from '$lib/store.js';
+// import { dbKeys } from '$lib/store.js';
+// import { topicStore, customLayout, dbKeys, user } from '$lib/store.js';
+
 import { onMount } from 'svelte';
-let $dbHash = 'abs';
-// onMount(() => {
-// 	$dbHash = localStorage.getItem('Skanban-dbHash') || 'abc';
-// });
+import { browser, building, dev, version } from '$app/environment';
+// let dbKey = $dbKeys.currentKey;
+// let dbName = $dbKeys.currentName;
+// console.log('dbKey', $dbKeys);
+let dbKey = false;
+if (browser) {
+	// try to get dbKeys from localStorage
+	let dbKeys = localStorage.getItem('Skanban-dbKeys') || false;
+	dbKeys = JSON.parse(dbKeys);
+	console.log('dbKeys', dbKeys);
+	dbKeys.sort((a, b) => (a.timestamp < b.timestamp ? 1 : -1));
+	dbKey = dbKeys[0].key;
+	console.log('dbKey', dbKey);
+}
 
 // console.log(PUBLIC_API_URL);
-// const dbHash = $dbHash;
+// const dbKey = $dbKey;
 /**
  * @description API call to get all data to initialize the app
  */
@@ -22,7 +34,7 @@ export function API_start(dbKey) {
 }
 
 export function API_editTopic(data) {
-	return fetch(PUBLIC_API_URL + 'editTopic&dbKey=' + $dbHash, {
+	return fetch(PUBLIC_API_URL + 'editTopic&dbKey=' + dbKey, {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json'
@@ -35,8 +47,8 @@ export function API_editTopic(data) {
 		});
 }
 
-export function API_addTopic(data) {
-	return fetch(PUBLIC_API_URL + 'addTopic&dbKey=' + $dbHash, {
+export function API_addTopic(dbKey, data) {
+	return fetch(PUBLIC_API_URL + 'addTopic&dbKey=' + dbKey, {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json'
@@ -50,7 +62,7 @@ export function API_addTopic(data) {
 }
 
 export function API_updateColumnPositions(data) {
-	return fetch(PUBLIC_API_URL + 'updatecolumnpositions&dbKey=' + $dbHash, {
+	return fetch(PUBLIC_API_URL + 'updatecolumnpositions&dbKey=' + dbKey, {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json'
@@ -64,7 +76,7 @@ export function API_updateColumnPositions(data) {
 }
 
 export function API_updateTopicPositions(data) {
-	return fetch(PUBLIC_API_URL + 'updatetopicpositions&dbKey=' + $dbHash, {
+	return fetch(PUBLIC_API_URL + 'updatetopicpositions&dbKey=' + dbKey, {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json'

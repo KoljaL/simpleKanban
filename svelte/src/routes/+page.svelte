@@ -1,23 +1,29 @@
 <script>
-	// console.info('+page.svelte');
-
-	import { PUBLIC_API_URL } from '$env/static/public';
+	console.info('+page.svelte');
 	import { flip } from 'svelte/animate';
 	import { onMount } from 'svelte';
-	import { fade } from 'svelte/transition';
-
+	import { fade, fly } from 'svelte/transition';
+	import { setDebug } from '$lib/utils.js';
 	import { dndzone, SOURCES, TRIGGERS } from 'svelte-dnd-action';
-	import { topicStore } from '$lib/store.js';
+	import { topicStore, customLayout, dbKeys, user } from '$lib/store.js';
 	import { API_updateColumnPositions } from '$lib/api.js';
 	// components
 	import Topics from '$lib/components/Topics.svelte';
 	import NewTopic from '$lib/components/NewTopic.svelte';
 	// icons
 	import MoveH from '$lib/icons/MoveH.svelte';
+	// enable debug mode
+	setDebug(1);
 	// get data from page.js and add it to the store
 	export let data;
-	console.log('data', data);
-	$topicStore = data.db?.columns || [];
+	$topicStore = data?.db?.columns || [];
+	$customLayout = data?.customLayout || {};
+	$dbKeys = data?.dbKeys || [];
+	$user = data?.user || {};
+	deb.g('data', data);
+	deb.g('customLayout page.svelte', $customLayout);
+	deb.g('topicStore', $topicStore);
+	deb.g('$dbKeys', $dbKeys);
 
 	// define variables
 	const flipDurationMs = 200;
@@ -30,7 +36,7 @@
 	let dragColumnDisabled = true;
 	let errorMessage = 'missing database key';
 
-	$: if (data.db.error) {
+	$: if (data?.db?.error) {
 		console.error(data.db.error);
 		errorMessage = 'database not found';
 	}
@@ -137,6 +143,9 @@
 	{JSON.stringify($topicStore, null, 2)}
 </pre>
 {/if} -->
+
+<!-- transition:fade={{ duration: 1000 }} -->
+
 {#if $topicStore.length > 0}
 	<section
 		class="columns"
@@ -161,7 +170,6 @@
 				id="column_{column.id}"
 				bind:this={draggedColumn}
 				animate:flip={{ duration: flipDurationMs }}
-				transition:fade={{ duration: flipDurationMs }}
 			>
 				<header class="column_header">
 					<div

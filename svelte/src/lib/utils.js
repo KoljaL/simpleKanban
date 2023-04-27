@@ -1,4 +1,10 @@
-/** Dispatch event on click outside of node */
+/**
+ * @description this code adds a click_outside event to a node
+ * it's used in the menu component to close the menu when it's open and a click happens outside the menu
+
+* @param {node} node
+ * @returns {object} destroy
+ */
 export function clickOutside(node) {
 	const handleClick = (event) => {
 		if (node && !node.contains(event.target) && !event.defaultPrevented) {
@@ -6,9 +12,7 @@ export function clickOutside(node) {
 			node.dispatchEvent(new CustomEvent('click_outside', node));
 		}
 	};
-
 	document.addEventListener('click', handleClick, true);
-
 	return {
 		destroy() {
 			document.removeEventListener('click', handleClick, true);
@@ -16,6 +20,11 @@ export function clickOutside(node) {
 	};
 }
 
+/**
+ * @description get current date and time
+ *
+ * @returns {string} yyyy-mm-dd hh:mm:ss
+ */
 export function getDatetimeNow() {
 	const date = new Date();
 	const year = date.getFullYear();
@@ -28,21 +37,79 @@ export function getDatetimeNow() {
 	return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
 }
 
+// export function formatDatetime_old(datetime) {
+// 	const date = new Date(datetime);
+// 	const year = date.getFullYear();
+// 	const month = date.getMonth() + 1;
+// 	const day = date.getDate();
+// 	const hours = date.getHours();
+// 	const minutes = date.getMinutes();
+// 	const seconds = date.getSeconds();
+// 	// console.log('formatDate', `${day}.${month}.${year} ${hours}:${minutes}`);
+// 	return `${day}.${month}.${year} ${hours}:${minutes}`;
+// }
+
+/**
+ * @description format datetime to dd.mm.yyyy hh:mm
+ *
+ * @param {string} datetime
+ * @returns {string} dd.mm.yyyy hh:mm
+ */
 export function formatDatetime(datetime) {
-	const date = new Date(datetime);
-	const year = date.getFullYear();
-	const month = date.getMonth() + 1;
-	const day = date.getDate();
-	const hours = date.getHours();
-	const minutes = date.getMinutes();
-	const seconds = date.getSeconds();
-	// console.log('formatDate', `${day}.${month}.${year} ${hours}:${minutes}`);
-	return `${day}.${month}.${year} ${hours}:${minutes}`;
+	const d = new Date(datetime);
+	const year = d.getFullYear();
+	const month = ('0' + (d.getMonth() + 1)).slice(-2);
+	const day = ('0' + d.getDate()).slice(-2);
+	const hour = ('0' + d.getHours()).slice(-2);
+	const minute = ('0' + d.getMinutes()).slice(-2);
+	return `${day}.${month}.${year} ${hour}:${minute}`;
 }
 
-// https://gist.github.com/plugnburn/f0d12e38b6416a77c098
+/**
+ * @description colorfull console.log
+ * This code sets up a global variable called "deb" that contains logging functions.
+ * When in debug mode, the functions will log to the console, and when in production mode, the functions will do nothing.
+ */
+export function setDebug(isDebug) {
+	if (isDebug) {
+		window.deb = {
+			r: window.console.log.bind(window.console, '%c%s', 'color: #e06c75; font-weight: bold;'),
+			b: window.console.log.bind(window.console, '%c%s', 'color: #61afef; font-weight: bold;'),
+			y: window.console.log.bind(window.console, '%c%s', 'color: #d19a66; font-weight: bold;'),
+			g: window.console.log.bind(window.console, '%c%s', 'color: #98c379; font-weight: bold;'),
+			w: window.console.log.bind(window.console, '%c%s', 'color: #abb2bf; font-weight: bold;'),
+			p: window.console.log.bind(window.console, '%c%s', 'color: #c678dd; font-weight: bold;'),
+			log: window.console.log.bind(window.console, 'log: %s'),
+			error: window.console.error.bind(window.console, 'error: %s'),
+			info: window.console.info.bind(window.console, 'info: %s'),
+			warn: window.console.warn.bind(window.console, 'warn: %s')
+		};
+	} else {
+		var __no_op = function () {};
+
+		window.deb = {
+			r: __no_op,
+			b: __no_op,
+			y: __no_op,
+			g: __no_op,
+			w: __no_op,
+			p: __no_op,
+			error: __no_op,
+			warn: __no_op,
+			info: __no_op
+		};
+	}
+}
+// setDebug(1);let test = 'test';deb.r('wat', test);deb.b('wat', test);deb.y('wat', test);deb.g('wat', test);deb.w('wat', test);deb.p('wat', test);
+
+/**
+ * @description Convert markdown to html
+ * https://gist.github.com/plugnburn/f0d12e38b6416a77c098
+ *
+ * @param {string} text
+ * @returns {string}
+ */
 export function md(text) {
-	// return 'text';
 	var esc = function (s) {
 			s = s.replace(/\&/g, '&amp;');
 			var escChars = '\'#<>`*-~_=:"![]()nt',
@@ -57,30 +124,6 @@ export function md(text) {
 		},
 		rules = [
 			{ p: /\r\n/g, r: '\n' },
-			// {
-			// 	p: /\n\s*```\n([^]*?)\n\s*```\s*\n/g,
-			// 	r: function (m, grp) {
-			// 		return '<pre>' + esc(grp) + '</pre>';
-			// 	}
-			// },
-			// {
-			// 	p: /`(.*?)`/g,
-			// 	r: function (m, grp) {
-			// 		return '<code>' + esc(grp) + '</code>';
-			// 	}
-			// },
-			// {
-			// 	p: /\n\s*(#+)(.*?)/g,
-			// 	r: function (m, hset, hval) {
-			// 		m = hset.length;
-			// 		console.log('hval', hval);
-			// 		return '<h' + m + '>' + hval.trim() + '</h' + m + '>';
-			// 	}
-			// },
-			// {
-			// 	p: /^([A-Za-z \t]*)```([A-Za-z]*)?\n([\s\S]*?)```([A-Za-z \t]*)*$/gm,
-			// 	r: '\n<pre>$1</pre>\n'
-			// },
 			{ p: /######\s(?!#)(.*)/g, r: '\n<h6>$1</h6>\n' },
 			{ p: /#####\s(?!#)(.*)/g, r: '\n<h5>$1</h5>\n' },
 			{ p: /####\s(?!#)(.*)/g, r: '\n<h4>$1</h4>\n' },
@@ -100,31 +143,11 @@ export function md(text) {
 			{ p: /<\/(ul|ol|blockquote)>\s*<\1>/g, r: ' ' },
 			{ p: /\n\s*\*{5,}\s*\n/g, r: '\n<hr>' },
 			{ p: /\n{3,}/g, r: '\n\n' },
-			// {
-			// 	p: /\n([^\n]+)\n/g,
-			// 	r: function (m, grp) {
-			// 		grp = grp.trim();
-			// 		return /^\<\/?(ul|ol|bl|h\d|p).*/.test(grp.slice(0, 9)) ? grp : '<p>' + grp + '</p>';
-			// 	}
-			// },
 			{ p: />\s+</g, r: '><' }
 		];
-
-	// let md = `
-	// # Header 12
-	// ## Header 12
-	// 	- test
-	// 	- test
-	// 	___u___
-	// 	`;
-	// text = md;
-	// let j = 4;
-	// md = md.replace(rules[j].p, rules[j].r);
-	// console.log('md', md);
-
 	if ((text = text || '')) {
 		text = '\n' + text.trim() + '\n';
-		for (var i = 0; i < rules.length; i++) text = text.replace(rules[i].p, rules[i].r);
+		for (let i = 0; i < rules.length; i++) text = text.replace(rules[i].p, rules[i].r);
 	}
 	return text;
 }

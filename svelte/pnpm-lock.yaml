@@ -1,6 +1,9 @@
 lockfileVersion: '6.0'
 
 dependencies:
+  svead:
+    specifier: ^0.0.4
+    version: 0.0.4
   svelte-a11y-dialog:
     specifier: ^0.2.0
     version: 0.2.0(svelte@3.58.0)
@@ -1381,6 +1384,10 @@ packages:
     resolution: {integrity: sha512-ot0WnXS9fgdkgIcePe6RHNk1WA8+muPa6cSjeR3V8K27q9BB1rTE3R1p7Hv0z1ZyAc8s6Vvv8DIyWf681MAt0w==}
     engines: {node: '>= 0.4'}
     dev: true
+
+  /svead@0.0.4:
+    resolution: {integrity: sha512-BrS8WAvrdUs6nbXyZN/kABjLBcPFqA1QBnbpJQiRzxfdA/8XchNJmiRmcPFTElw5NA5k7AG/eYWjj91V+8+Heg==}
+    dev: false
 
   /svelte-a11y-dialog@0.2.0(svelte@3.58.0):
     resolution: {integrity: sha512-sVJ6SbLABFfbeNNcsFpHA7VY4S1MXC8rZ9AzNtOMWjxwiwTc0Xl3ZSUYbz7ixbxLr4tDDVoZmb7xQTzLbTyZag==}

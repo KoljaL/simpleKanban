@@ -1,7 +1,7 @@
 <script>
 	import { PUBLIC_API_URL } from '$env/static/public';
 	import { getDatetimeNow } from '$lib/utils.js';
-	import { topicStore, isModalOpen, modalMessage } from '$lib/store.js';
+	import { topicStore, isModalOpen, dbKeys, modalMessage } from '$lib/store.js';
 	import { onMount } from 'svelte';
 	import TopicForm from '$lib/components/TopicForm.svelte';
 	import Plus from '$lib/icons/Plus.svelte';
@@ -9,6 +9,8 @@
 	export let columnId;
 	export let columns;
 
+	let dbKey = $dbKeys.currentKey;
+	console.log('dbKey', dbKey);
 	let openModal = false;
 	let topicData = {
 		id: '',
@@ -29,7 +31,7 @@
 
 	// $: modalPosition = modalPosition;
 	onMount(() => {
-		topicData.authorName = window.localStorage.getItem('SkanbanName') || '';
+		topicData.authorName = window.localStorage.getItem('Skanban-Name') || '';
 	});
 
 	function openNewTopicForm(e) {
@@ -45,8 +47,8 @@
 		const formData = new FormData(e.target);
 		let data = Object.fromEntries(formData);
 		data.created = getDatetimeNow();
-		window.localStorage.setItem('SkanbanName', data.author);
-		API_addTopic(data)
+		window.localStorage.setItem('Skanban-Name', data.author);
+		API_addTopic(dbKey, data)
 			.then((res) => {
 				// console.log(res);
 				if (res.message === 'success') {

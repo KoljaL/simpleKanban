@@ -1,16 +1,16 @@
 <script>
 	import { onMount } from 'svelte';
-	import { layoutCustomisation } from '$lib/store.js';
+	import { customLayout } from '$lib/store.js';
 
-	// $: maxWidthPage = $layoutCustomisation.maxWidthPage;
-	// $: minWidthColumn = $layoutCustomisation.minWidthColumn;
+	// $: maxWidthPage = $customLayout.maxWidthPage;
+	// $: minWidthColumn = $customLayout.minWidthColumn;
 
-	$: $layoutCustomisation.maxWidthPage;
-	$: $layoutCustomisation.minWidthColumn;
+	$: $customLayout.maxWidthPage;
+	$: $customLayout.minWidthColumn;
 
 	// let maxWidthPage;
 	// let minWidthColumn;
-	// $: $layoutCustomisation = {
+	// $: $customLayout = {
 	// 	maxWidthPage,
 	// 	minWidthColumn
 	// };
@@ -43,10 +43,10 @@
 
 		switch (name) {
 			case 'maxWidthPage':
-				$layoutCustomisation.maxWidthPage = value;
+				$customLayout.maxWidthPage = value;
 				break;
 			case 'minWidthColumn':
-				$layoutCustomisation.minWidthColumn = value;
+				$customLayout.minWidthColumn = value;
 				break;
 		}
 		console.log('storeLocal', e.target.parentElement.name);
@@ -74,7 +74,7 @@
 			{#each Object.keys(selectColumnWidths) as key}
 				<option
 					value={selectColumnWidths[key]}
-					selected={selectColumnWidths[key] === $layoutCustomisation.minWidthColumn}>{key}</option
+					selected={selectColumnWidths[key] === $customLayout.minWidthColumn}>{key}</option
 				>
 			{/each}
 		</select>
@@ -97,7 +97,7 @@
 			{#each Object.keys(selectPageWidths) as key}
 				<option
 					value={selectPageWidths[key]}
-					selected={selectPageWidths[key] === $layoutCustomisation.maxWidthPage}>{key}</option
+					selected={selectPageWidths[key] === $customLayout.maxWidthPage}>{key}</option
 				>
 			{/each}
 		</select>
