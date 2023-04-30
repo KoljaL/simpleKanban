@@ -192,9 +192,9 @@
 					>
 						{column.column_name}
 					</h2>
-					<div class="newTopic">
-						<NewTopic columnId={column.id} columns={$topicStore} />
-					</div>
+					<!-- <div class="newTopic"> -->
+					<NewTopic columnId={column.id} columns={$topicStore} />
+					<!-- </div> -->
 				</header>
 
 				<Topics topics={column.topics} columnId={column.id} />

@@ -273,7 +273,7 @@ input {
 }
 
 .styleLessButton:active {
-	color: var(--color-svelte);
+	/* color: var(--color-svelte); */
 	filter: brightness(1);
 }
 

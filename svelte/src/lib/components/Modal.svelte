@@ -102,7 +102,7 @@
 		>
 			<div class="modal-header">
 				<button
-					class="openNewTopicButton styleLessButton expand-modal-button"
+					class="styleLessButton expand-modal-button"
 					title="expand Modal"
 					on:click={() => {
 						expanded = !expanded;
@@ -118,7 +118,7 @@
 					{/if}
 				</button>
 				<button
-					class="openNewTopicButton styleLessButton close-modal-button"
+					class="styleLessButton close-modal-button"
 					title="close Modal"
 					on:click={() => close(true)}
 					on:keyup={() => close(true)}

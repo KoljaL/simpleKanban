@@ -90,7 +90,7 @@
 </script>
 
 <button
-	class="openNewTopicButton styleLessButton"
+	class="styleLessButton"
 	title="add new Topic"
 	on:click={(e) => {
 		openEditTopicForm(e);

@@ -103,7 +103,7 @@ function getCustomLayout() {
 	if (customLayout) {
 		return JSON.parse(customLayout);
 	} else {
-		return false;
+		return {};
 	}
 }
 

@@ -7,14 +7,16 @@ import { browser, building, dev, version } from '$app/environment';
 // let dbKey = $dbKeys.currentKey;
 // let dbName = $dbKeys.currentName;
 // console.log('dbKey', $dbKeys);
-let dbKey = false;
+let dbKey = 'ergergergerger';
 if (browser) {
 	// try to get dbKeys from localStorage
 	let dbKeys = localStorage.getItem('Skanban-dbKeys') || false;
 	dbKeys = JSON.parse(dbKeys);
 	console.log('dbKeys', dbKeys);
-	dbKeys.sort((a, b) => (a.timestamp < b.timestamp ? 1 : -1));
-	dbKey = dbKeys[0].key;
+	if (dbKeys) {
+		dbKeys.sort((a, b) => (a.timestamp < b.timestamp ? 1 : -1));
+		dbKey = dbKeys[0].key;
+	}
 	console.log('dbKey', dbKey);
 }
 

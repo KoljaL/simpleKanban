@@ -80,53 +80,9 @@
 
 <TopicForm {openModal} {topicData} callback={(e) => createNewTopic(e)} />
 
-<!-- {#if openModal}
-	<Modal bind:openModal position={modalPosition}>
-		<TopicForm {topicData} callback={(e) => createNewTopic(e)} />
-	</Modal>
-{/if} -->
-
 <style>
-	/* .row {
-		display: flex;
-		flex-direction: row;
-		gap: 0.5rem;
+	.openNewTopicButton:hover {
+		filter: brightness(0.7);
+		color: var(--green);
 	}
-
-	.newTopic_header {
-		display: flex;
-		flex-direction: row;
-		justify-content: space-between;
-		align-items: center;
-		padding-left: 1rem;
-		padding-right: 2rem;
-		padding-top: 0.5rem;
-		padding-bottom: 0.5rem;
-		border-bottom: 1px solid var(--border-color);
-	}
-
-	.newTopic_header h2 {
-		color: var(--color-text);
-		text-align: center;
-		font-size: 1.2rem;
-		margin: 0;
-	}
-
-	.newTopic_form {
-		display: flex;
-		flex-direction: column;
-		gap: 0.5rem;
-	}
-
-	.newTopicMissingInput {
-		padding-left: 1rem;
-		color: var(--error);
-	}
-
-	.column {
-		margin-left: 0.5rem;
-	}
-	textarea {
-		height: 5rem;
-	} */
 </style>
