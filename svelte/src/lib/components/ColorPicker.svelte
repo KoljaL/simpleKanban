@@ -160,7 +160,7 @@
 		display: grid;
 		grid-template-columns: var(--grid-template-columns);
 		gap: 0.25rem;
-		border: 1px solid var(--color-border);
+		border: 1px solid var(--border-color);
 		border-radius: var(--border-radius-m);
 		padding: 0.5rem;
 		background-color: var(--bg-color-primary);
@@ -168,7 +168,7 @@
 
 	button {
 		background-color: transparent;
-		border: 1px solid var(--color-border);
+		border: 1px solid var(--border-color);
 		border-radius: var(--border-radius-m);
 		padding: 0.25rem 0.5rem;
 		width: 1.5rem;

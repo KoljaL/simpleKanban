@@ -73,7 +73,7 @@
 		padding: 0.25rem;
 		padding-inline: 0.5rem;
 		padding-top: 0.4rem;
-		border-bottom: 1px solid var(--color-border);
+		border-bottom: 1px solid var(--border-color);
 		margin-inline: -0.75rem;
 		margin-bottom: -1px;
 		background-color: var(--bg-color-secondary);

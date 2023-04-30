@@ -93,7 +93,7 @@
 		width: max-content;
 		padding: 0.25rem 1rem;
 		background-color: var(--bg-color-secondary);
-		border: 1px solid var(--color-border);
+		border: 1px solid var(--border-color);
 		border-radius: var(--border-radius-m);
 	}
 	ul {
@@ -123,7 +123,7 @@
 		padding-top: 0.25rem;
 		padding-left: 0.5rem;
 		padding-right: 0.75rem;
-		border-top: 1px solid var(--color-border);
+		border-top: 1px solid var(--border-color);
 		/* background-color: var(--bg-color-primary);
 		border-bottom-left-radius: var(--border-radius-m);
 		border-bottom-right-radius: var(--border-radius-m); */

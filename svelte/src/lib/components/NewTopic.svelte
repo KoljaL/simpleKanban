@@ -102,7 +102,7 @@
 		padding-right: 2rem;
 		padding-top: 0.5rem;
 		padding-bottom: 0.5rem;
-		border-bottom: 1px solid var(--color-border);
+		border-bottom: 1px solid var(--border-color);
 	}
 
 	.newTopic_header h2 {

@@ -166,7 +166,7 @@
 	>
 		{#each $topicStore as column (column.id)}
 			<article
-				class="column"
+				class="column boxShadow"
 				id="column_{column.id}"
 				bind:this={draggedColumn}
 				animate:flip={{ duration: flipDurationMs }}
@@ -229,10 +229,10 @@
 		margin: 0;
 		padding: 0;
 		transition: width 0.5s ease-in-out, min-width 0.5s ease-in-out;
-
-		/* border: 1px solid var(--color-border);
-		--border-radius-column: 0.5rem;
-		border-radius: var(--border-radius-column); */
+		background-color: var(--bg-color-tertiary);
+		/* border: 1px solid var(--border-color); */
+		/* --border-radius-column: 0.5rem; */
+		/* border-radius: var(--border-radius-column); */
 	}
 	.column_header {
 		position: relative;
@@ -241,9 +241,10 @@
 		justify-content: space-between;
 		align-items: center;
 		padding-inline: 0.5rem;
-		/* background-color: var(--bg-color-secondary);
-		border-top-left-radius: var(--border-radius-column);
-		border-top-right-radius: var(--border-radius-column); */
+		white-space: nowrap;
+		/* background-color: var(--bg-color-secondary); */
+		/* border-top-left-radius: var(--border-radius-column); */
+		/* border-top-right-radius: var(--border-radius-column); */
 	}
 
 	.dragHandle :global(path) {

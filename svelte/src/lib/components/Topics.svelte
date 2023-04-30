@@ -166,7 +166,12 @@
 			on:keydown={handleClickOnTopic}
 			on:dblclick={(e) => handleDblClick(e)}
 		>
-			<details id="topic_{topic.id}" class="topicWrapper" class:expanded use:animatedDetails>
+			<details
+				id="topic_{topic.id}"
+				class="topicWrapper boxShadow"
+				class:expanded
+				use:animatedDetails
+			>
 				<summary
 					class="topicHeader dragHandle"
 					aria-label="drag-handle"
@@ -233,12 +238,24 @@
 	.topicWrapper {
 		position: relative;
 		overflow: hidden;
-		background-color: var(--bg-color-secondary);
-		border: 1px solid var(--color-border);
-		border-radius: var(--border-radius-m);
-		box-shadow: var(--shadow-4);
+		/* background-color: var(--bg-color-secondary); */
+		/* border: 1px solid var(--border-color); */
+		/* border-radius: var(--border-radius-m); */
+		/* box-shadow: var(--box-shadow); */
 		--transition: all 0.1s linear;
 	}
+	/* .topicWrapper:after {
+		position: absolute;
+		top: 0;
+		left: 0;
+		display: block;
+		width: 100%;
+		height: 100%;
+		pointer-events: none;
+		content: '';
+		border-radius: inherit;
+		box-shadow: var(--box-shadow-after);
+	} */
 
 	.topicHeader {
 		display: flex;
@@ -248,7 +265,7 @@
 		padding: 0.25rem;
 		padding-inline: 0.5rem;
 		padding-top: 0.4rem;
-		border-bottom: 1px solid var(--color-border);
+		border-bottom: 1px solid var(--border-color);
 		margin-bottom: -1px;
 		background-color: var(--bg-color-secondary);
 	}
@@ -314,7 +331,7 @@
 		align-items: center;
 		padding: 0.25rem;
 		padding-inline: 0.5rem;
-		border-top: 1px solid var(--color-border);
+		border-top: 1px solid var(--border-color);
 		background-color: var(--bg-color-secondary);
 	}
 

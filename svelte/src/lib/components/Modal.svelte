@@ -93,6 +93,7 @@
 	>
 		<div
 			id="modal-container"
+			class="boxShadow"
 			class:expanded
 			style={position}
 			bind:clientWidth={modalWidth}
@@ -152,10 +153,10 @@
 		left: 50%; */
 		/* transform: translate(-50%); */
 		/* margin-top: 1rem; */
-		border: 1px solid var(--color-border);
+		/* border: 1px solid var(--border-color); */
+		/* box-shadow: var(--shadow-4); */
+		/* background: var(--bg-color-primary); */
 		border-radius: var(--border-radius-m);
-		box-shadow: var(--shadow-4);
-		background: var(--bg-color-primary);
 		padding: 0.75rem;
 		padding-top: 0;
 		width: 370px;

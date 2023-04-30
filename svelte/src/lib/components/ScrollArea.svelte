@@ -80,7 +80,7 @@
 		height: 100%;
 		width: var(--element-width);
 		background-color: var(--bg-color-secondary);
-		border: 1px solid var(--color-border);
+		border: 1px solid var(--border-color);
 		border-radius: var(--border-radius-m);
 		opacity: 0;
 		transition: opacity var(--duration-hover) ease-in-out;
