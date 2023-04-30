@@ -2,11 +2,19 @@
 export const prerender = true;
 export const ssr = false;
 
-import { PUBLIC_API_URL } from '$env/static/public';
+// import { PUBLIC_API_URL } from '$env/static/public';
 import { building } from '$app/environment';
 import { API_start } from '$lib/api';
-import { page } from '$app/stores';
-import { onMount } from 'svelte';
+// import { page } from '$app/stores';
+// import { onMount } from 'svelte';
+// let dbKey = 'ergergergerger';
+
+// let dbKey = false;
+// let dbName = false;
+let dbKeys = {};
+
+// http://localhost:5173/?dbKey=ergergergerger
+// http://localhost:5173/?dbKey=test
 
 /**
  * @description load data to initialize the app
@@ -17,50 +25,83 @@ import { onMount } from 'svelte';
  *
  * @returns {Object} data
  */
-export const load = async ({ fetch, params, url }) => {
+export const load = async ({ url }) => {
 	// load no data if building
 	if (building) return;
 
 	// initLocalstorage();
 
-	let dbKey = false;
-	let dbName = false;
+	// get dbKey from url
+	let dbKey = url.searchParams.get('dbKey') || false;
 	// try to get dbKeys from localStorage
-	let dbKeys = localStorage.getItem('Skanban-dbKeys') || false;
+	let dbKeysLocal = localStorage.getItem('Skanban-dbKeys') || [];
 
-	// try to get dbKey from url
-	if (url.searchParams.get('dbKey')) {
-		dbKey = url.searchParams.get('dbKey');
-		console.log('dbKey from url', dbKey);
-		const dbKeysOld = localStorage.getItem('Skanban-dbKeys');
-		// daa key from url to localStorage keys
-		if (dbKeysOld) {
-			const dbKeysOldObj = JSON.parse(dbKeysOld);
-			dbKeysOldObj.push({ key: dbKey, timestamp: Date.now() });
-			localStorage.setItem('Skanban-dbKeys', JSON.stringify(dbKeysOldObj));
-		} else {
-			localStorage.setItem(
-				'Skanban-dbKeys',
-				JSON.stringify([{ key: dbKey, timestamp: Date.now() }])
-			);
+	// if no dbKey in url and no dbKeys in localStorage, return because no data to load
+	if (!dbKey && !dbKeysLocal.length > 0) {
+		console.log('no dbKey and no dbKeysLocal');
+		return;
+	}
+	/// debug
+	// else {
+	// 	console.log('dbKey', dbKey);
+	// 	console.log('dbKeysLocal', dbKeysLocal);
+	// }
+
+	// handle dbKeys from localStorage
+	if (dbKeysLocal.length > 0) {
+		dbKeys = JSON.parse(dbKeysLocal);
+		// if dbKey in url, add it to dbKeys
+		if (dbKey) {
+			// find dbKey in dbKeys and replace it with new timestamp
+			dbKeys = dbKeys.filter((item) => item.key !== dbKey);
+			dbKeys.push({ key: dbKey, timestamp: Date.now() });
 		}
+		// sort dbKeys by timestamp
+		dbKeys.sort((a, b) => (a.timestamp < b.timestamp ? 1 : -1));
+		dbKey = dbKeys[0].key;
+	}
+	// if no dbKeys in localStorage, add dbKey from url
+	else {
+		dbKeys = [{ key: dbKey, timestamp: Date.now() }];
 	}
 
-	if (!dbKey) {
-		if (dbKeys) {
-			dbKeys = JSON.parse(dbKeys);
-			// console.log('unordered', dbKeys);
-			dbKeys.sort((a, b) => (a.timestamp < b.timestamp ? 1 : -1));
-			// console.log('ordered', dbKeys);
-			dbKey = dbKeys[0].key;
-			dbName = dbKeys[0].name;
-		} else {
-			dbKey = false;
-			dbName = false;
-		}
-	}
+	// save dbKeys to localStorage
+	localStorage.setItem('Skanban-dbKeys', JSON.stringify(dbKeys));
 
+	// // try to get dbKey from url
+	// if (url.searchParams.get('dbKey')) {
+	// 	dbKey = url.searchParams.get('dbKey');
+	// 	console.log('dbKey from url', dbKey);
+	// 	const dbKeysOld = localStorage.getItem('Skanban-dbKeys');
+	// 	// daa key from url to localStorage keys
+	// 	if (dbKeysOld) {
+	// 		const dbKeysOldObj = JSON.parse(dbKeysOld);
+	// 		dbKeysOldObj.push({ key: dbKey, timestamp: Date.now() });
+	// 		localStorage.setItem('Skanban-dbKeys', JSON.stringify(dbKeysOldObj));
+	// 	} else {
+	// 		localStorage.setItem(
+	// 			'Skanban-dbKeys',
+	// 			JSON.stringify([{ key: dbKey, timestamp: Date.now() }])
+	// 		);
+	// 	}
+	// }
+	// if (!dbKey) {
+	// 	if (dbKeys) {
+	// 		dbKeys = JSON.parse(dbKeys);
+	// 		// console.log('unordered', dbKeys);
+	// 		dbKeys.sort((a, b) => (a.timestamp < b.timestamp ? 1 : -1));
+	// 		// console.log('ordered', dbKeys);
+	// 		dbKey = dbKeys[0].key;
+	// 		// dbName = dbKeys[0].name;
+	// 	} else {
+	// 		dbKey = false;
+	// 		// dbName = false;
+	// 	}
+	// }
+
+	//
 	// collect all data to initialize the app
+	//
 	const customLayout = getCustomLayout();
 	customLayout.theme = setTheme();
 	const authorName = window.localStorage.getItem('Skanban-Name') || '';
@@ -69,8 +110,8 @@ export const load = async ({ fetch, params, url }) => {
 		db: db,
 		dbKeys: {
 			allKeys: dbKeys,
-			currentKey: dbKey,
-			currentName: dbName
+			currentKey: dbKeys[0].key
+			// currentName: dbName
 		},
 		user: { name: authorName },
 		customLayout: customLayout
@@ -78,15 +119,6 @@ export const load = async ({ fetch, params, url }) => {
 
 	return data;
 };
-
-// function API_start(dbKey) {
-// 	if (!dbKey) return;
-// 	return fetch(PUBLIC_API_URL + 'start&dbKey=' + dbKey)
-// 		.then((res) => res.json())
-// 		.then((data) => {
-// 			return data;
-// 		});
-// }
 
 function setTheme() {
 	var dataTheme;

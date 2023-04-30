@@ -3,22 +3,22 @@ import { PUBLIC_API_URL } from '$env/static/public';
 // import { topicStore, customLayout, dbKeys, user } from '$lib/store.js';
 
 import { onMount } from 'svelte';
-import { browser, building, dev, version } from '$app/environment';
+import { browser } from '$app/environment';
 // let dbKey = $dbKeys.currentKey;
 // let dbName = $dbKeys.currentName;
 // console.log('dbKey', $dbKeys);
-let dbKey = 'ergergergerger';
-if (browser) {
-	// try to get dbKeys from localStorage
-	let dbKeys = localStorage.getItem('Skanban-dbKeys') || false;
-	dbKeys = JSON.parse(dbKeys);
-	console.log('dbKeys', dbKeys);
-	if (dbKeys) {
-		dbKeys.sort((a, b) => (a.timestamp < b.timestamp ? 1 : -1));
-		dbKey = dbKeys[0].key;
-	}
-	console.log('dbKey', dbKey);
-}
+// let dbKey = 'ergergergerger';
+// if (browser) {
+// 	// try to get dbKeys from localStorage
+// 	let dbKeys = localStorage.getItem('Skanban-dbKeys') || false;
+// 	dbKeys = JSON.parse(dbKeys);
+// 	console.log('dbKeys', dbKeys);
+// 	if (dbKeys) {
+// 		dbKeys.sort((a, b) => (a.timestamp < b.timestamp ? 1 : -1));
+// 		dbKey = dbKeys[0].key;
+// 	}
+// 	console.log('dbKey', dbKey);
+// }
 
 // console.log(PUBLIC_API_URL);
 // const dbKey = $dbKey;
