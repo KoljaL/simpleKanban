@@ -140,9 +140,9 @@
 	}
 
 	.colorValueInput {
-		height: 2.15rem;
+		height: 1.8rem;
 		padding: 0.25rem;
-		width: 2.15rem;
+		width: 1.8rem;
 	}
 
 	.colorValueInput::-webkit-color-swatch {

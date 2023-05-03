@@ -1,25 +1,15 @@
 <script>
-	function toggleTheme() {
-		var currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
-		var targetTheme = 'light';
-		// faviconEl.setAttribute('href', 'img/favicon-light.png');
-		if (currentTheme === 'light') {
-			targetTheme = 'dark';
-			// faviconEl.setAttribute('href', 'img/favicon-dark.png');
-		}
-		document.documentElement.setAttribute('data-theme', targetTheme);
-		localStorage.setItem('Skanban-theme', targetTheme);
+	var currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
+
+	function toggleTheme(e) {
+		console.log('toggleTheme', e.target);
+		currentTheme = e.target.value;
+		document.documentElement.setAttribute('data-theme', currentTheme);
+		localStorage.setItem('Skanban-theme', currentTheme);
 	}
 </script>
 
-<button
-	class="theme-toggle"
-	type="button"
-	title="Toggle theme"
-	aria-label="Toggle theme"
-	on:click={toggleTheme}
-	on:keydown={toggleTheme}
->
+<div class="theme-toggle-wrapper">
 	<svg
 		xmlns="http://www.w3.org/2000/svg"
 		aria-hidden="true"
@@ -27,7 +17,7 @@
 		height="2rem"
 		fill="currentColor"
 		stroke-linecap="round"
-		class="sun_to_moon"
+		class="sun_to_moon theme-toggle"
 		viewBox="0 0 32 32"
 	>
 		<clipPath id="sun_to_moon__cutout">
@@ -47,9 +37,23 @@
 			</g>
 		</g>
 	</svg>
-</button>
+
+	<label>
+		<span>Theme Color</span>
+		<!-- bind:value={currentTheme} -->
+		<select name="themeToggle" on:change={toggleTheme}>
+			<option value="light" selected={currentTheme === 'light'}>Light</option>
+			<option value="dark" selected={currentTheme === 'dark'}>Dark</option>
+		</select>
+	</label>
+</div>
 
 <style>
+	.theme-toggle-wrapper {
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+	}
 	.theme-toggle {
 		--duration: 500ms;
 		cursor: pointer;
@@ -64,9 +68,9 @@
 		transition: all var(--duration) ease-in-out;
 		transition: color var(--duration-hover) ease-in-out;
 	}
-	.theme-toggle:hover {
+	/* .theme-toggle:hover {
 		color: var(--color-svelte);
-	}
+	} */
 	.sun_to_moon path {
 		transition-timing-function: cubic-bezier(0, 0, 0.15, 1.25);
 		transform-origin: center;

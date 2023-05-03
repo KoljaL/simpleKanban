@@ -5,7 +5,8 @@
 	import animatedDetails from 'svelte-animated-details';
 	import { formatDatetime, md } from '$lib/utils.js';
 	import { dndzone, SOURCES, TRIGGERS } from 'svelte-dnd-action';
-	import { topicStore, isModalOpen } from '$lib/store.js';
+	import { topicStore, isModalOpen, dbKeys } from '$lib/store.js';
+
 	import TopicForm from '$lib/components/TopicForm.svelte';
 	import EditTopic from '$lib/components/EditTopic.svelte';
 	import ExpandedTopic from '$lib/components/ExpandedTopic.svelte';
@@ -17,6 +18,10 @@
 
 	export let columnId;
 	export let topics;
+
+	// $dbKeys = data?.dbKeys || [];
+	let dbKey = $dbKeys.currentKey;
+
 	const flipDurationMs = 200;
 	let dragTopicDisabled = true;
 	let editTopic = false;
@@ -95,7 +100,7 @@
 
 		// update position in db via API
 		const data = getTopicPositions();
-		API_updateTopicPositions(data).then((data) => {
+		API_updateTopicPositions(dbKey, data).then((data) => {
 			console.log('data', data);
 		});
 		if (source === SOURCES.POINTER) {
@@ -119,7 +124,14 @@
 	}
 
 	function startDragByHandle(e) {
+		setTimeout(() => {
+			// dragTopicDisabled = true;
+			// e.preventDefault();
+			e.target.style.color = 'red';
+			// console.log('startDragByHandle');
+		}, 100);
 		e.preventDefault();
+
 		dragTopicDisabled = false;
 	}
 	function handleKeyDownByHandle(e) {
@@ -178,10 +190,9 @@
 					style={dragTopicDisabled ? 'cursor: grab' : 'cursor: grabbing'}
 					on:mousedown={startDragByHandle}
 					on:keydown={handleKeyDownByHandle}
+					on:touchstart={startDragByHandle}
 					tabindex="-1"
 				>
-					<!-- on:touchstart={startDragByHandle} -->
-
 					<span class="topicTitleWrapper">
 						<span class="topicTitle" style="color:{topic.color}">{topic.title}</span>
 					</span>
@@ -223,12 +234,15 @@
 
 <style>
 	.column_content {
+		max-height: 100%;
+		overflow-y: auto;
 		list-style: none;
+		margin: 0;
 		padding-inline: 0.25rem;
 		min-height: 2rem;
 		display: flex;
 		flex-direction: column;
-		gap: 0.5rem;
+		gap: 0.25rem;
 	}
 
 	.listItem {
@@ -238,6 +252,7 @@
 	.topicWrapper {
 		position: relative;
 		overflow: hidden;
+		margin-block: 0.25rem;
 		/* background-color: var(--bg-color-secondary); */
 		/* border: 1px solid var(--border-color); */
 		/* border-radius: var(--border-radius-m); */

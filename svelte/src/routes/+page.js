@@ -102,8 +102,9 @@ export const load = async ({ url }) => {
 	//
 	// collect all data to initialize the app
 	//
-	const customLayout = getCustomLayout();
-	customLayout.theme = setTheme();
+	const customLayout = await getCustomLayout();
+	// console.log('customLayout', customLayout);
+	setTheme();
 	const authorName = window.localStorage.getItem('Skanban-Name') || '';
 	const db = await API_start(dbKey);
 	const data = {
@@ -111,7 +112,6 @@ export const load = async ({ url }) => {
 		dbKeys: {
 			allKeys: dbKeys,
 			currentKey: dbKeys[0].key
-			// currentName: dbName
 		},
 		user: { name: authorName },
 		customLayout: customLayout
@@ -130,19 +130,25 @@ function setTheme() {
 	return dataTheme;
 }
 
-function getCustomLayout() {
-	const customLayout = window.localStorage.getItem('Skanban-customLayout');
+async function getCustomLayout() {
+	let customLayout = window.localStorage.getItem('Skanban-customLayout');
 	if (customLayout) {
-		return JSON.parse(customLayout);
+		try {
+			customLayout = JSON.parse(customLayout);
+			return customLayout;
+		} catch (e) {
+			console.log('error parsing customLayout', e);
+			return { pageWidth: '50', columnWidth: '15' };
+		}
 	} else {
-		return {};
+		return { pageWidth: '50', columnWidth: '15' };
 	}
 }
 
 function initLocalstorage() {
 	const customLayout = {
-		maxWidthPage: 80,
-		minWidthColumn: 20
+		pageWidth: 80,
+		columnWidth: 20
 	};
 	localStorage.setItem('Skanban-customLayout', JSON.stringify(customLayout));
 

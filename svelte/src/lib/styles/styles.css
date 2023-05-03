@@ -35,8 +35,8 @@
 	--header-height: 3rem;
 	--footer-height: 2rem;
 	--main-height: calc(100svh - var(--header-height) - var(--footer-height));
-	--max-width-page: 70rem;
-	--min-width-column: 10rem;
+	--max-width-page: 50vw;
+	--min-width-column: 15rem;
 
 	--bg-color-primary: #282c34;
 	--bg-color-secondary: #3e4451;
@@ -156,7 +156,7 @@
 } */
 
 :root[data-theme='dark'] {
-	--text-color: hsl(223, 16%, 82%);
+	--text-color: hsl(223, 16%, 72%);
 	--text-color-secondary: hsl(208.2, 7.3%, 45.7%);
 	--bg-color-primary: hsl(218.2, 26.8%, 8%);
 	--bg-color-secondary: hsl(222, 16.1%, 12.2%);
@@ -168,7 +168,7 @@
 	--bg-color-primary: hsl(216, 28%, 7%);
 	--bg-color-secondary: hsl(215, 22%, 11%);
 	--bg-color-tertiary: hsl(213, 13%, 17%);
-	--text-color: hsl(200, 0%, 57%);
+	/* --text-color: hsl(200, 0%, 57%); */
 	--box-shadow: 0 0 0 1px hsl(0, 0%, 0%), 0 30px 30px hsla(0, 0%, 0%, 0.07),
 		0 15px 15px hsla(0, 0%, 0%, 0.06), 0 10px 8px hsla(0, 0%, 0%, 0.05),
 		0 4px 4px hsla(0, 0%, 0%, 0.04), 0 2px 2px hsla(0, 0%, 0%, 0.03);
@@ -243,6 +243,7 @@ form label {
 	color: var(--text-color-secondary);
 	font-size: 0.9rem;
 }
+.ButtonWithIcon,
 textarea,
 select,
 input {
@@ -254,6 +255,39 @@ input {
 	color: var(--color-text);
 	font-family: var(--font-family);
 	font-size: 1rem;
+	/* NEW */
+	padding-top: 0.25rem;
+	padding-bottom: 0.1rem;
+	background-color: var(--bg-color-secondary);
+	border-radius: var(--border-radius-m);
+	border: 1px solid var(--bg-color-primary);
+	cursor: pointer;
+}
+.ButtonWithIcon {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 0.5rem;
+}
+
+.ButtonWithIcon svg {
+	position: relative;
+	top: -0.1rem;
+	width: 1rem;
+	height: 1rem;
+}
+
+.labelWithIcon {
+	display: flex;
+	align-items: baseline;
+	gap: 0.5rem;
+	padding-right: 1rem;
+}
+.labelWithIcon svg {
+	position: relative;
+	top: 0.35rem;
+	width: 1.5rem;
+	height: 1.5rem;
 }
 
 .styleLessButton {
@@ -266,6 +300,7 @@ input {
 	color: var(--malibu);
 	transition: all 0.2s;
 	filter: brightness(0.6);
+	line-height: 0;
 }
 .styleLessButton:hover {
 	color: var(--color-svelte);
@@ -278,12 +313,13 @@ input {
 }
 
 .styleLessButton:focus {
-	outline: 2px solid var(--color-svelte);
+	outline: 1px solid var(--color-svelte);
+	border-radius: var(--border-radius-m);
 }
 
 .styleLessButton:disabled {
 	color: var(--border-color);
-	filter: brightness(1);
+	filter: brightness(0.5);
 }
 
 .styleLessButton.small svg {
@@ -291,11 +327,21 @@ input {
 	height: 1.2rem;
 }
 
+.withIcon {
+	display: flex;
+	align-items: center;
+}
+.floatRight {
+	display: flex;
+	justify-content: flex-end;
+}
+
 .boxShadow {
 	position: relative;
 	overflow: hidden;
 	background-color: var(--bg-color-secondary);
 	border-radius: var(--border-radius-m);
+	border: none;
 	box-shadow: var(--box-shadow);
 	--transition: all 0.1s linear;
 }

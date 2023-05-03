@@ -1,70 +1,49 @@
 <script>
 	// console.info('+layout.svelte');
-
-	import { onMount } from 'svelte';
 	import Header from '$lib/layout/Header.svelte';
 	import Footer from '$lib/layout/Footer.svelte';
 	import ScrollArea from '$lib/components/ScrollArea.svelte';
 	import { customLayout, topicStore } from '$lib/store.js';
 	import { setDebug } from '$lib/utils.js';
-
 	import { page } from '$app/stores';
 	import { Head } from 'svead';
-
 	setDebug(0);
 
-	$: $customLayout = $customLayout;
+	// $: $customLayout = $customLayout;
+	$: $customLayout?.pageWidth;
+	$: $customLayout?.columnWidth;
 
-	$: deb.y('customLayout layout.sveslte', $customLayout);
 	deb.y('topicStsore', $topicStore);
+	$: deb.y('$customLayout.', $customLayout);
 
 	let title = 'Skanban';
 	let description = 'A Kanban made with Svelte';
 	let url = $page.url.toString();
-	$: deb.y('customLayout layout.svelte', $customLayout);
 
-	// $dbHash = 'abc';
-	// $customLayout = {
-	// 	maxWidthPage: 70,
-	// 	minWidthColumn: 20
-	// };
-
-	// onMount(() => {
-	// 	$dbHash = localStorage.getItem('Skanban-dbHash') || 'abc';
-
-	// 	$customLayout.maxWidthPage =
-	// 		localStorage.getItem('Skanban-maxWidthPage') || $customLayout.maxWidthPage;
-	// 	$customLayout.minWidthColumn =
-	// 		localStorage.getItem('Skanban-minWidthColumn') || $customLayout.minWidthColumn;
-	// 	console.log('onMount');
-	// 	// console.log($customLayout.maxWidthPage);
-	// 	// console.log($customLayout.minWidthColumn);
-	// });
-
-	// import '$lib/styles/pico.css';
-	// import '$lib/styles/ui.css';
-	// import '$lib/styles/tooltip.css';
 	import '$lib/styles/styles.css';
 </script>
 
 <Head {title} {description} {url} />
 
-<!-- <svelte:head>
-	{@html `
+<svelte:head>
+	{#if $customLayout.pageWidth && $customLayout.columnWidth}
+		{deb.r('customLayout style to head', $customLayout)}
+		{@html `
   <style>
     :root {
-      --max-width-page: ${$customLayout.maxWidthPage}rem;
-      --min-width-column: ${$customLayout.minWidthColumn}rem;
+			--max-width-page: ${$customLayout.pageWidth}vw;
+      --min-width-column: ${$customLayout.columnWidth}rem;
     }
     </style>
     `}
-</svelte:head> -->
+	{/if}
+</svelte:head>
 
 <Header />
 <main>
-	<ScrollArea>
-		<slot />
-	</ScrollArea>
+	<!-- <ScrollArea> -->
+	<slot />
+	<!-- </ScrollArea> -->
 </main>
 
 <Footer />
@@ -75,9 +54,10 @@
 		max-width: var(--max-width-page);
 		height: var(--header-height);
 		padding: 0;
+		padding-inline: 1rem;
 		margin: 0 auto;
 		background-color: var(--bg-color-primary);
-		color: var(--color-svelte);
+		/* color: var(--color-svelte); */
 		transition: width 0.5s ease-in-out, max-width 0.5s ease-in-out;
 	}
 
@@ -87,7 +67,7 @@
 		width: 100%;
 		max-width: var(--max-width-page);
 		height: var(--main-height);
-		padding: 0;
+		padding-inline: 0.5rem;
 		margin: 0 auto;
 		background-color: var(--bg-color-primary);
 		transition: width 0.5s ease-in-out, max-width 0.5s ease-in-out;
@@ -97,7 +77,7 @@
 		width: 100%;
 		max-width: var(--max-width-page);
 		height: var(--footer-height);
-		padding: 0;
+		padding-inline: 1rem;
 		margin: 0 auto;
 		background-color: var(--bg-color-primary);
 		color: var(--color-text);

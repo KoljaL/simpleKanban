@@ -7,6 +7,7 @@
 	import { dndzone, SOURCES, TRIGGERS } from 'svelte-dnd-action';
 	import { topicStore, customLayout, dbKeys, user } from '$lib/store.js';
 	import { API_updateColumnPositions } from '$lib/api.js';
+
 	// components
 	import Topics from '$lib/components/Topics.svelte';
 	import NewTopic from '$lib/components/NewTopic.svelte';
@@ -19,12 +20,18 @@
 	$topicStore = data?.db?.columns || [];
 	$customLayout = data?.customLayout || {};
 	$dbKeys = data?.dbKeys || [];
+	let dbKey = $dbKeys.currentKey;
+
 	$user = data?.user || {};
 	deb.g('data', data);
 	deb.g('customLayout page.svelte', $customLayout);
 	deb.g('topicStore', $topicStore);
 	deb.g('$dbKeys', $dbKeys);
 
+	// $: pageWidth = $customLayout?.pageWidth || false;
+	// $: columnWidth = $customLayout?.columnWidth || false;
+
+	// pageWidth;
 	// define variables
 	const flipDurationMs = 200;
 	let sliderColumns;
@@ -113,7 +120,7 @@
 		$topicStore = columns;
 
 		// update position in db via API
-		API_updateColumnPositions(getColumnPositions()).then((data) => {
+		API_updateColumnPositions(dbKey, getColumnPositions()).then((data) => {
 			console.log('data', data);
 		});
 		if (source === SOURCES.POINTER) {
@@ -134,7 +141,8 @@
 	// REACTIVE CONSOLE OUTPUT
 	//
 	// $: console.log('$columnPositions', columnPositions);
-	// $: console.log('dragColumnDisabled', dragColumnDisabled);
+	// $: console.log('$customLayout.columnWidth', $customLayout.columnWidth);
+	// $: console.log('columnWidth', columnWidth);
 	// $: console.log('$topicStore page.svelte', $topicStore);
 </script>
 
@@ -145,6 +153,8 @@
 {/if} -->
 
 <!-- transition:fade={{ duration: 1000 }} -->
+<!-- style:width={pageWidth === false ? null : pageWidth + 'rem'} -->
+<!-- style:width={columnWidth === false ? null : columnWidth + 'rem'} -->
 
 {#if $topicStore.length > 0}
 	<section
@@ -226,8 +236,11 @@
 		width: 10rem;
 		min-height: 0;
 		max-height: 100%;
+		margin-block: 0.25rem;
+
 		margin: 0;
 		padding: 0;
+		padding-inline: 0.5rem;
 		transition: width 0.5s ease-in-out, min-width 0.5s ease-in-out;
 		background-color: var(--bg-color-tertiary);
 		/* border: 1px solid var(--border-color); */
@@ -239,7 +252,7 @@
 		display: flex;
 		flex-direction: row;
 		justify-content: space-between;
-		align-items: center;
+		align-items: baseline;
 		padding-inline: 0.5rem;
 		white-space: nowrap;
 		/* background-color: var(--bg-color-secondary); */

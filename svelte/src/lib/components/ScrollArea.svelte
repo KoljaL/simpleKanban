@@ -11,7 +11,14 @@
 
 	onMount(() => {
 		handleScroll();
+		console.log(is_touch_enabled());
 	});
+
+	function is_touch_enabled() {
+		return (
+			'ontouchstart' in window || navigator.maxTouchPoints > 0 || navigator.msMaxTouchPoints > 0
+		);
+	}
 
 	function handleScrollRight(e) {
 		let contentElement = e.target.previousElementSibling;

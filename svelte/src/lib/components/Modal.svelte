@@ -155,7 +155,7 @@
 		/* margin-top: 1rem; */
 		/* border: 1px solid var(--border-color); */
 		/* box-shadow: var(--shadow-4); */
-		/* background: var(--bg-color-primary); */
+		background: var(--bg-color-tertiary);
 		border-radius: var(--border-radius-m);
 		padding: 0.75rem;
 		padding-top: 0;
