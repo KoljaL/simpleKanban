@@ -6,6 +6,8 @@
 	export let openModal = false;
 	export let columnData;
 	export let callback;
+	// console.log('columnData', columnData);
+	// console.log('callback', callback);
 
 	// if (columnData && columnData.color === '') {
 	// 	columnData.color = 'hsl(219, 14%, 71%)';
@@ -16,7 +18,7 @@
 	$: if ($modalMessage) {
 		missingInput = $modalMessage;
 	}
-	$: console.log(openModal);
+	// $: console.log(openModal);
 </script>
 
 {#if openModal}
@@ -28,13 +30,17 @@
 
 			<div class="row">
 				<label>
-					Title
-					<input type="text" name="title" placeholder="Topic title" value={columnData.title} />
+					Name
+					<input
+						type="text"
+						name="column_name"
+						placeholder="Column name"
+						value={columnData.column_name}
+					/>
 				</label>
 				<ColorPicker colorValue={columnData.color} />
 			</div>
 			<footer class="newTopic_footer">
-				<input type="hidden" name="created" value={columnData.created} />
 				<input type="submit" value="submit" />
 				<span class="newTopicMissingInput">{missingInput}</span>
 			</footer>
@@ -78,17 +84,5 @@
 	.newTopicMissingInput {
 		padding-left: 1rem;
 		color: var(--error);
-	}
-
-	.column {
-		margin-left: 0.5rem;
-	}
-	textarea {
-		height: 5rem;
-		transition: all 0.3s ease;
-	}
-
-	:global(.expanded) textarea {
-		height: 50vh;
 	}
 </style>

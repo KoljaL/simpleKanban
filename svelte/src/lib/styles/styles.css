@@ -263,6 +263,13 @@ input {
 	border: 1px solid var(--bg-color-primary);
 	cursor: pointer;
 }
+select {
+	padding-top: 0.25rem;
+	padding-bottom: 0.1rem;
+	background-color: var(--bg-color-secondary);
+	border-radius: var(--border-radius-m);
+	border: 1px solid var(--bg-color-primary);
+}
 .ButtonWithIcon {
 	display: flex;
 	align-items: center;

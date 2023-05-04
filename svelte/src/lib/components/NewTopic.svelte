@@ -10,7 +10,7 @@
 	export let columns;
 
 	let dbKey = $dbKeys.currentKey;
-	console.log('dbKey', dbKey);
+	// console.log('dbKey', dbKey);
 	let openModal = false;
 	let topicData = {
 		id: '',
@@ -36,9 +36,20 @@
 
 	function openNewTopicForm(e) {
 		topicData.position = e;
-		// console.log(topicData);
 		openModal = true;
-		topicData.columnName = columns[columnId].column_name;
+		console.log('$topicStore', $topicStore);
+		console.log('topicData', topicData);
+		console.log('columns', columns);
+		console.log('columnId', columnId);
+		// console.log('columns[columnId].column_name', columns[columnId].column_name);
+		// find column name from columnId
+		// let name = columns.find((col) => col.id === parseInt(columnId)).column_name;
+		// console.log('name', name);
+		// columns.forEach((element) => {
+		// 	console.log(element);
+		// 	console.log(element.id);
+		// });
+		topicData.columnName = columns.find((col) => col.id === parseInt(columnId)).column_name;
 	}
 
 	function createNewTopic(e) {

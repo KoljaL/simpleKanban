@@ -7,7 +7,7 @@
 	import { API_addColumn } from '$lib/api.js';
 	export let columnId = null;
 
-	let dbKey = $dbKeys.currentKey;
+	$: dbKey = $dbKeys.currentKey;
 	// console.log('dbKey', dbKey);
 	let openModal = false;
 	let columnData = {
@@ -35,18 +35,29 @@
 		const formData = new FormData(e.target);
 		let data = Object.fromEntries(formData);
 		data.created = getDatetimeNow();
-		window.localStorage.setItem('Skanban-Name', data.author);
+		// find highest position in $topicstore araays
+		data.position =
+			$topicStore.reduce(
+				(max, p) => (p.position > max ? p.position : max),
+				$topicStore[0].position
+			) + 1;
+		// data.position = Math.floor(Math.random() * 900) + 100;
+		console.log(data);
 		API_addColumn(dbKey, data)
 			.then((res) => {
 				// console.log(res);
 				if (res.message === 'success') {
 					// delete data.column;
-					data.id = res.column_id;
+
+					data.id = parseInt(res.column_id);
+					// convertr string to number
+
+					data.topics = [];
 					// add data to column in store
-					var col = $topicStore.find((col) => col.id === columnId);
-					col.columns.push(data);
+					// var col = $topicStore.find((col) => col.id === columnId);
+					$topicStore.push(data);
 					$topicStore = $topicStore;
-					// console.log($topicStore[columnId]);
+					console.log($topicStore);
 					openModal = false;
 				} else {
 					$modalMessage = res.message;
@@ -61,8 +72,9 @@
 <button class="addColumn ButtonWithIcon" title="add new Column" on:click={openNewColumnForm}>
 	add
 </button>
-
-<ColumnForm {openModal} {columnData} callback={(e) => createNewColumn(e)} />
+{#if openModal}
+	<ColumnForm {openModal} {columnData} callback={(e) => createNewColumn(e)} />
+{/if}
 
 <style>
 	.addColumn {

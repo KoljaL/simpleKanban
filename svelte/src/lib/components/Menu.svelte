@@ -5,7 +5,8 @@
 	import ColumnWidth from '$lib/icons/ColumnWidth.svelte';
 	import PageWidth from '$lib/icons/PageWidth.svelte';
 	import NewColumn from '$lib/components/NewColumn.svelte';
-	let newColumnModal = false;
+	import Edit from '$lib/icons/Edit.svelte';
+	import EditColumn from '$lib/components/EditColumn.svelte';
 	var currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
 
 	// $: $customLayout = $customLayout;
@@ -71,12 +72,25 @@
 			<span>new Column</span>
 		</label>
 		<NewColumn columnId={1} columns={$topicStore} />
-		<!-- <button
-			class="ButtonWithIcon addColumn"
-			on:click={addNewColumnModal}
-			on:keydown={addNewColumnModal}>add</button
-		> -->
 	</li>
+
+	<li class="menuListItem">
+		<label class="labelWithIcon" for="addNewColumn">
+			<Edit />
+			<span>edit Column</span>
+		</label>
+		<EditColumn />
+	</li>
+
+	<li class="menuListItem">
+		<label class="labelWithIcon" for="addNewColumn">
+			<Delete />
+			<span>remove Column</span>
+		</label>
+		<EditColumn columnId={1} columns={$topicStore} />
+	</li>
+
+	<hr />
 
 	<li class="menuListItem">
 		<label class="labelWithIcon" for="pageWidth">
@@ -175,14 +189,6 @@
 		padding: 0.5rem 0;
 	}
 
-	select {
-		padding-top: 0.25rem;
-		padding-bottom: 0.1rem;
-		background-color: var(--bg-color-secondary);
-		border-radius: var(--border-radius-m);
-		border: 1px solid var(--bg-color-primary);
-	}
-
 	.theme-toggle {
 		--duration: 500ms;
 		background: none;
@@ -195,9 +201,7 @@
 		transition: all var(--duration) ease-in-out;
 		transition: color var(--duration-hover) ease-in-out;
 	}
-	/* .theme-toggle:hover {
-		color: var(--color-svelte);
-	} */
+
 	.sun_to_moon path {
 		transition-timing-function: cubic-bezier(0, 0, 0.15, 1.25);
 		transform-origin: center;
@@ -215,31 +219,8 @@
 		opacity: 0;
 		transition-delay: 0s;
 	}
-	/* [data-theme='light'] .sun_to_moon :first-child path {
-		d: path('M-12 5h30a1 1 0 0 0 9 13v24h-39Z');
-		transition-delay: calc(var(--duration) * 0.2);
-	}
-	@supports not (d: path('')) { */
 	[data-theme='light'] .sun_to_moon :first-child path {
 		transform: translate3d(-12px, 10px, 0);
-	}
-	/* } */
-	.addColumn,
-	.removeAllSettings {
-		opacity: 0.7;
-		transition: all 0.2s ease-in-out;
-	}
-
-	.addColumn {
-		color: var(--green);
-	}
-	.removeAllSettings {
-		color: var(--red);
-	}
-
-	.addColumn:hover,
-	.removeAllSettings:hover {
-		opacity: 1;
 	}
 
 	ul {

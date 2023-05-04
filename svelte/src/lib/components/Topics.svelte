@@ -164,7 +164,7 @@
 		flipDurationMs,
 		dropTargetStyle: {
 			outline: 'rgba(255, 64, 0, 0.5) solid 2px',
-			outlineOffset: '2px',
+			outlineOffset: '1px',
 			'border-radius': '5px'
 		}
 	}}

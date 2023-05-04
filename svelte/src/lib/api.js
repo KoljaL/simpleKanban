@@ -78,6 +78,20 @@ export function API_addColumn(dbKey, data) {
 		});
 }
 
+export function API_editColumn(dbKey, data) {
+	return fetch(PUBLIC_API_URL + 'editColumn&dbKey=' + dbKey, {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify(data)
+	})
+		.then((res) => res.json())
+		.then((data) => {
+			return data;
+		});
+}
+
 export function API_updateColumnPositions(dbKey, data) {
 	return fetch(PUBLIC_API_URL + 'updatecolumnpositions&dbKey=' + dbKey, {
 		method: 'POST',

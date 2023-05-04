@@ -2,6 +2,7 @@
 	// import onMount from 'svelte';
 	import { fade } from 'svelte/transition';
 	import { clickOutside } from '$lib/utils.js';
+	import Skanban from '$lib/icons/Skanban.svelte';
 	// import { customLayout } from '$lib/store.js';
 	// import Github from '$lib/icons/Github.svelte';
 	import Typewriter from 'svelte-typewriter';
@@ -26,6 +27,7 @@
 
 	<div class="header_center">
 		<div class="pagename">
+			<!-- <Skanban /> -->
 			<Typewriter interval={100} cursor={false}>Skanban</Typewriter>
 		</div>
 	</div>
@@ -51,6 +53,9 @@
 		font-size: 1.75rem;
 		color: var(--color-svelte);
 	}
+	/* .pagename :global(svg) {
+		transform: scale(0.5) translateY(0.5rem);
+	} */
 
 	.header_right {
 		position: relative;

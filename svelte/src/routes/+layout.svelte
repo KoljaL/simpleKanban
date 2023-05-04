@@ -13,8 +13,8 @@
 	$: $customLayout?.pageWidth;
 	$: $customLayout?.columnWidth;
 
-	deb.y('topicStsore', $topicStore);
-	$: deb.y('$customLayout.', $customLayout);
+	// deb.y('topicStsore', $topicStore);
+	// $: deb.y('$customLayout.', $customLayout);
 
 	let title = 'Skanban';
 	let description = 'A Kanban made with Svelte';
@@ -27,7 +27,7 @@
 
 <svelte:head>
 	{#if $customLayout.pageWidth && $customLayout.columnWidth}
-		{deb.r('customLayout style to head', $customLayout)}
+		<!-- {deb.r('customLayout style to head', $customLayout)} -->
 		{@html `
   <style>
     :root {

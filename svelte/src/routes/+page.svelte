@@ -23,10 +23,10 @@
 	let dbKey = $dbKeys.currentKey;
 
 	$user = data?.user || {};
-	deb.g('data', data);
-	deb.g('customLayout page.svelte', $customLayout);
-	deb.g('topicStore', $topicStore);
-	deb.g('$dbKeys', $dbKeys);
+	// deb.g('data', data);
+	// deb.g('customLayout page.svelte', $customLayout);
+	// deb.g('topicStore', $topicStore);
+	// deb.g('$dbKeys', $dbKeys);
 
 	// $: pageWidth = $customLayout?.pageWidth || false;
 	// $: columnWidth = $customLayout?.columnWidth || false;
@@ -199,12 +199,12 @@
 						on:mouseup={columnSliderOnMouseUp}
 						on:mousemove={columnSliderOnMouseMove}
 						style="color:{column.color}"
+						class="columnName"
 					>
 						{column.column_name}
 					</h2>
-					<!-- <div class="newTopic"> -->
 					<NewTopic columnId={column.id} columns={$topicStore} />
-					<!-- </div> -->
+					<!-- {console.log('column', column)} -->
 				</header>
 
 				<Topics topics={column.topics} columnId={column.id} />
@@ -237,10 +237,9 @@
 		min-height: 0;
 		max-height: 100%;
 		margin-block: 0.25rem;
-
 		margin: 0;
 		padding: 0;
-		padding-inline: 0.5rem;
+		padding-inline: 0.15rem;
 		transition: width 0.5s ease-in-out, min-width 0.5s ease-in-out;
 		background-color: var(--bg-color-tertiary);
 		/* border: 1px solid var(--border-color); */
@@ -253,11 +252,17 @@
 		flex-direction: row;
 		justify-content: space-between;
 		align-items: baseline;
-		padding-inline: 0.5rem;
+		padding-inline: 0.25rem;
 		white-space: nowrap;
 		/* background-color: var(--bg-color-secondary); */
 		/* border-top-left-radius: var(--border-radius-column); */
 		/* border-top-right-radius: var(--border-radius-column); */
+	}
+	.columnName {
+		overflow: hidden;
+		white-space: nowrap;
+		text-overflow: ellipsis '..';
+		max-width: 100%;
 	}
 
 	.dragHandle :global(path) {

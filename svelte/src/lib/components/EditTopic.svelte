@@ -1,6 +1,6 @@
 <script>
 	import { PUBLIC_API_URL } from '$env/static/public';
-	import { topicStore, isModalOpen, modalMessage } from '$lib/store.js';
+	import { topicStore, dbKeys, isModalOpen, modalMessage } from '$lib/store.js';
 	import { API_editTopic } from '$lib/api.js';
 	// COMPONENTS
 	import TopicForm from '$lib/components/TopicForm.svelte';
@@ -8,6 +8,8 @@
 	import Edit from '$lib/icons/Edit.svelte';
 
 	export let topicId;
+	$: dbKey = $dbKeys.currentKey;
+
 	let topicData;
 	let openModal = false;
 
@@ -40,15 +42,7 @@
 		let data = Object.fromEntries(formData);
 		data.id = topicId;
 		console.log('data', data);
-		API_editTopic(data)
-			// fet ch(PUBLIC_API_URL + 'editTopic', {
-			// 	method: 'POST',
-			// 	headers: {
-			// 		'Content-Type': 'application/json'
-			// 	},
-			// 	body: JSON.stringify(data)
-			// })
-			// .then((res) => res.json())
+		API_editTopic(dbKey, data)
 			.then((res) => {
 				console.log(res);
 				if (res.message === 'success') {
@@ -98,5 +92,6 @@
 >
 	<Edit />
 </button>
-
-<TopicForm {openModal} {topicData} callback={(e) => editTopicApiCall(e)} />
+{#if openModal}
+	<TopicForm {openModal} {topicData} callback={(e) => editTopicApiCall(e)} />
+{/if}
