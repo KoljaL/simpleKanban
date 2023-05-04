@@ -46,13 +46,14 @@
 			.then((res) => {
 				console.log(res);
 				if (res.message === 'success') {
-					// let columnId = parseInt(data.column);
+					let columnId = parseInt(data.column);
 
 					topicStore.update((old) => {
-						const column_id = old.findIndex((column) => column.id === data.column);
-						console.log('column_id', column_id);
-						const topic_id = old[column_id].topics.findIndex((topic) => topic.id === data.id);
-						old[column_id].topics[topic_id] = data;
+						const column_idx = old.findIndex((column) => column.id === columnId);
+						console.log('data.column', data.column);
+						console.log('column_id', column_idx);
+						const topic_idx = old[column_id].topics.findIndex((topic) => topic.id === data.id);
+						old[column_idx].topics[topic_idx] = data;
 						return old;
 					});
 
