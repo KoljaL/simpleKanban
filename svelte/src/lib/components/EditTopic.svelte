@@ -48,25 +48,33 @@
 				if (res.message === 'success') {
 					// let columnId = parseInt(data.column);
 
-					topicStore.update((topicStore) => {
-						return topicStore.map((column) => {
-							if (column.id === data.column) {
-								return {
-									...column,
-									topics: column.topics.map((topic) => {
-										if (topic.id === topicId) {
-											return {
-												...topic,
-												...data
-											};
-										}
-										return topic;
-									})
-								};
-							}
-							return column;
-						});
+					topicStore.update((old) => {
+						const column_id = old.findIndex((column) => column.id === data.column);
+						console.log('column_id', column_id);
+						const topic_id = old[column_id].topics.findIndex((topic) => topic.id === data.id);
+						old[column_id].topics[topic_id] = data;
+						return old;
 					});
+
+					// topicStore.update((topicStore) => {
+					// 	return topicStore.map((column) => {
+					// 		if (column.id === data.column) {
+					// 			return {
+					// 				...column,
+					// 				topics: column.topics.map((topic) => {
+					// 					if (topic.id === topicId) {
+					// 						return {
+					// 							...topic,
+					// 							...data
+					// 						};
+					// 					}
+					// 					return topic;
+					// 				})
+					// 			};
+					// 		}
+					// 		return column;
+					// 	});
+					// });
 
 					// $topicStore = $topicStore;
 					// console.log('topicStore', $topicStore);
